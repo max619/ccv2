@@ -210,7 +210,7 @@ nuiModule *nuiFactory::createPipeline(nuiModuleDescriptor* descriptor)
 
 		nuiEndpoint* sourceEndpoint = NULL;
 		nuiEndpoint* destinationEndpoint = NULL;
-		if (sourceModule != pipeline) 
+		if (sourceModule != pipeline && sourceModule != NULL) 
 		{
 			sourceEndpoint = sourceModule->getOutputEndpoint(dataStreamDescriptor->sourcePort);
 		}
@@ -219,7 +219,7 @@ nuiModule *nuiFactory::createPipeline(nuiModuleDescriptor* descriptor)
 			sourceEndpoint = pipeline->outputInternalEndpoints[dataStreamDescriptor->sourcePort];
 		}
 
-		if (destinationModule != pipeline)
+		if (destinationModule != pipeline && destinationModule != NULL)
 		{
 			destinationEndpoint = destinationModule->getInputEndpoint(dataStreamDescriptor->destinationPort);
 		}

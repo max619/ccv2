@@ -29,7 +29,7 @@
 
 #ifdef _MSC_VER
 #include <stdint.h>
-#define snprintf _snprintf
+//#define snprintf _snprintf
 #endif
 #include "winsock2.h"
 #include "windows.h"  

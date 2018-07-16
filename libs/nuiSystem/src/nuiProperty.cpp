@@ -15,10 +15,6 @@
 
 #include "nuiProperty.h"
 
-#ifdef _WIN32
-	#define snprintf _snprintf
-#endif
-
 #define CASTEDGET(x) x value = *(static_cast<x*>(val));
 
 #define AUTOCONVERT(typein, value) \

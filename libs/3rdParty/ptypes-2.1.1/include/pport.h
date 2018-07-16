@@ -157,7 +157,7 @@ typedef int*            pint;
 
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #  define strcasecmp stricmp
-#  define snprintf _snprintf
+//#  define snprintf _snprintf
 #endif
 
 

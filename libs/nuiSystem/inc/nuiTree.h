@@ -144,6 +144,22 @@ public:
 			currentNode = currentNode->rightSibling;
 		return *this;
 	}
+	void operator++(int)
+	{
+		if (currentNode->child != NULL)
+		{
+			currentNode = currentNode->child;
+		}
+		if (currentNode->rightSibling != NULL)
+		{
+			currentNode = currentNode->rightSibling;
+		}
+		currentNode = currentNode->parent;
+		while ((currentNode != NULL) && (currentNode->rightSibling == NULL))
+			currentNode = currentNode->parent;
+		if (currentNode != NULL)
+			currentNode = currentNode->rightSibling;
+	}
 	bool operator==(const nuiTreeDFSIterator<TKey,TValue>& rhs) {return currentNode==rhs.currentNode;}
 	bool operator!=(const nuiTreeDFSIterator<TKey,TValue>& rhs) {return currentNode!=rhs.currentNode;}
 	nuiTreeNode<TKey,TValue>* &operator*() {return currentNode;}
