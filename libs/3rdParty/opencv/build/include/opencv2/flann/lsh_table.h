@@ -40,6 +40,11 @@
 #include <iomanip>
 #include <limits.h>
 // TODO as soon as we use C++0x, use the code in USE_UNORDERED_MAP
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#  define USE_UNORDERED_MAP 1
+#else
+#  define USE_UNORDERED_MAP 0
+#endif
 #if USE_UNORDERED_MAP
 #include <unordered_map>
 #else
@@ -141,6 +146,9 @@ public:
      */
     LshTable()
     {
+        key_size_ = 0;
+        feature_size_ = 0;
+        speed_level_ = kArray;
     }
 
     /** Default constructor
@@ -148,8 +156,10 @@ public:
      * @param feature_size is the size of the feature (considered as a ElementType[])
      * @param key_size is the number of bits that are turned on in the feature
      */
-    LshTable(unsigned int /*feature_size*/, unsigned int /*key_size*/)
+    LshTable(unsigned int feature_size, unsigned int key_size)
     {
+        feature_size_ = feature_size;
+        (void)key_size;
         std::cerr << "LSH is not implemented for that type" << std::endl;
         assert(0);
     }
@@ -188,7 +198,7 @@ public:
     void add(Matrix<ElementType> dataset)
     {
 #if USE_UNORDERED_MAP
-        if (!use_speed_) buckets_space_.rehash((buckets_space_.size() + dataset.rows) * 1.2);
+        buckets_space_.rehash((buckets_space_.size() + dataset.rows) * 1.2);
 #endif
         // Add the features to the table
         for (unsigned int i = 0; i < dataset.rows; ++i) add(i, dataset[i]);
@@ -256,6 +266,14 @@ private:
      */
     void initialize(size_t key_size)
     {
+        const size_t key_size_lower_bound = 1;
+        //a value (size_t(1) << key_size) must fit the size_t type so key_size has to be strictly less than size of size_t
+        const size_t key_size_upper_bound = (std::min)(sizeof(BucketKey) * CHAR_BIT + 1, sizeof(size_t) * CHAR_BIT);
+        if (key_size < key_size_lower_bound || key_size >= key_size_upper_bound)
+        {
+            CV_Error(cv::Error::StsBadArg, cv::format("Invalid key_size (=%d). Valid values for your system are %d <= key_size < %d.", (int)key_size, (int)key_size_lower_bound, (int)key_size_upper_bound));
+        }
+
         speed_level_ = kHash;
         key_size_ = (unsigned)key_size;
     }
@@ -268,10 +286,10 @@ private:
         if (speed_level_ == kArray) return;
 
         // Use an array if it will be more than half full
-        if (buckets_space_.size() > (unsigned int)((1 << key_size_) / 2)) {
+        if (buckets_space_.size() > ((size_t(1) << key_size_) / 2)) {
             speed_level_ = kArray;
             // Fill the array version of it
-            buckets_speed_.resize(1 << key_size_);
+            buckets_speed_.resize(size_t(1) << key_size_);
             for (BucketsSpace::const_iterator key_bucket = buckets_space_.begin(); key_bucket != buckets_space_.end(); ++key_bucket) buckets_speed_[key_bucket->first] = key_bucket->second;
 
             // Empty the hash table
@@ -282,9 +300,9 @@ private:
         // If the bitset is going to use less than 10% of the RAM of the hash map (at least 1 size_t for the key and two
         // for the vector) or less than 512MB (key_size_ <= 30)
         if (((std::max(buckets_space_.size(), buckets_speed_.size()) * CHAR_BIT * 3 * sizeof(BucketKey)) / 10
-             >= size_t(1 << key_size_)) || (key_size_ <= 32)) {
+             >= (size_t(1) << key_size_)) || (key_size_ <= 32)) {
             speed_level_ = kBitsetHash;
-            key_bitset_.resize(1 << key_size_);
+            key_bitset_.resize(size_t(1) << key_size_);
             key_bitset_.reset();
             // Try with the BucketsSpace
             for (BucketsSpace::const_iterator key_bucket = buckets_space_.begin(); key_bucket != buckets_space_.end(); ++key_bucket) key_bitset_.set(key_bucket->first);
@@ -315,6 +333,8 @@ private:
      */
     unsigned int key_size_;
 
+    unsigned int feature_size_;
+
     // Members only used for the unsigned char specialization
     /** The mask to apply to a feature to get the hash key
      * Only used in the unsigned char case
@@ -328,14 +348,19 @@ private:
 template<>
 inline LshTable<unsigned char>::LshTable(unsigned int feature_size, unsigned int subsignature_size)
 {
+    feature_size_ = feature_size;
     initialize(subsignature_size);
     // Allocate the mask
-    mask_ = std::vector<size_t>((size_t)ceil((float)(feature_size * sizeof(char)) / (float)sizeof(size_t)), 0);
+    mask_ = std::vector<size_t>((feature_size * sizeof(char) + sizeof(size_t) - 1) / sizeof(size_t), 0);
 
     // A bit brutal but fast to code
-    std::vector<size_t> indices(feature_size * CHAR_BIT);
-    for (size_t i = 0; i < feature_size * CHAR_BIT; ++i) indices[i] = i;
+    std::vector<int> indices(feature_size * CHAR_BIT);
+    for (size_t i = 0; i < feature_size * CHAR_BIT; ++i) indices[i] = (int)i;
+#ifndef OPENCV_FLANN_USE_STD_RAND
+    cv::randShuffle(indices);
+#else
     std::random_shuffle(indices.begin(), indices.end());
+#endif
 
     // Generate a random set of order of subsignature_size_ bits
     for (unsigned int i = 0; i < key_size_; ++i) {
@@ -371,7 +396,8 @@ inline size_t LshTable<unsigned char>::getKey(const unsigned char* feature) cons
 {
     // no need to check if T is dividable by sizeof(size_t) like in the Hamming
     // distance computation as we have a mask
-    const size_t* feature_block_ptr = reinterpret_cast<const size_t*> (feature);
+    // FIXIT: This is bad assumption, because we reading tail bytes after of the allocated features buffer
+    const size_t* feature_block_ptr = reinterpret_cast<const size_t*> ((const void*)feature);
 
     // Figure out the subsignature of the feature
     // Given the feature ABCDEF, and the mask 001011, the output will be
@@ -379,10 +405,20 @@ inline size_t LshTable<unsigned char>::getKey(const unsigned char* feature) cons
     size_t subsignature = 0;
     size_t bit_index = 1;
 
-    for (std::vector<size_t>::const_iterator pmask_block = mask_.begin(); pmask_block != mask_.end(); ++pmask_block) {
+    for (unsigned i = 0; i < feature_size_; i += sizeof(size_t)) {
         // get the mask and signature blocks
-        size_t feature_block = *feature_block_ptr;
-        size_t mask_block = *pmask_block;
+        size_t feature_block;
+        if (i <= feature_size_ - sizeof(size_t))
+        {
+            feature_block = *feature_block_ptr;
+        }
+        else
+        {
+            size_t tmp = 0;
+            memcpy(&tmp, feature_block_ptr, feature_size_ - i); // preserve bytes order
+            feature_block = tmp;
+        }
+        size_t mask_block = mask_[i / sizeof(size_t)];
         while (mask_block) {
             // Get the lowest set bit in the mask block
             size_t lowest_bit = mask_block & (-(ptrdiff_t)mask_block);

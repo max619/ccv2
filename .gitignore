@@ -146,6 +146,7 @@ pip-log.txt
 .Trashes
 
 # C++ stuff
+.vs/
 
 # Compiled Object files
 *.slo

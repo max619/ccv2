@@ -17,6 +17,8 @@
 #include "nuiDebugLogger.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
+#include "opencv2/video/background_segm.hpp"
+
 
 NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(BackgroundSubtractModule, IplImage*)
 
@@ -35,7 +37,7 @@ private:
 	nuiDataPacket* outputDataPacket;
     
 	IplImage* filterFrame;
-	cv::BackgroundSubtractorMOG2 bg;
+	cv::Ptr<cv::BackgroundSubtractorMOG2> bg;
 	std::vector<std::vector<cv::Point> > contours;
 
 	MODULE_INTERNALS();

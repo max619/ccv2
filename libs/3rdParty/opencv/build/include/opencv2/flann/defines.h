@@ -35,7 +35,7 @@
 #ifdef FLANN_EXPORT
 #undef FLANN_EXPORT
 #endif
-#ifdef WIN32
+#ifdef _WIN32
 /* win32 dll export/import directives */
  #ifdef FLANN_EXPORTS
   #define FLANN_EXPORT __declspec(dllexport)
@@ -50,22 +50,9 @@
 #endif
 
 
-#ifdef FLANN_DEPRECATED
-#undef FLANN_DEPRECATED
-#endif
-#ifdef __GNUC__
-#define FLANN_DEPRECATED __attribute__ ((deprecated))
-#elif defined(_MSC_VER)
-#define FLANN_DEPRECATED __declspec(deprecated)
-#else
-#pragma message("WARNING: You need to implement FLANN_DEPRECATED for this compiler")
-#define FLANN_DEPRECATED
-#endif
-
-
 #undef FLANN_PLATFORM_32_BIT
 #undef FLANN_PLATFORM_64_BIT
-#if __amd64__ || __x86_64__ || _WIN64 || _M_X64
+#if defined __amd64__ || defined __x86_64__ || defined _WIN64 || defined _M_X64
 #define FLANN_PLATFORM_64_BIT
 #else
 #define FLANN_PLATFORM_32_BIT
@@ -107,6 +94,7 @@ enum flann_centers_init_t
     FLANN_CENTERS_RANDOM = 0,
     FLANN_CENTERS_GONZALES = 1,
     FLANN_CENTERS_KMEANSPP = 2,
+    FLANN_CENTERS_GROUPWISE = 3,
 
     // deprecated constants, should use the FLANN_CENTERS_* ones instead
     CENTERS_RANDOM = 0,
@@ -137,6 +125,7 @@ enum flann_distance_t
     FLANN_DIST_CS         = 7,
     FLANN_DIST_KULLBACK_LEIBLER  = 8,
     FLANN_DIST_KL                = 8,
+    FLANN_DIST_HAMMING          = 9,
 
     // deprecated constants, should use the FLANN_DIST_* ones instead
     EUCLIDEAN = 1,

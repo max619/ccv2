@@ -14,7 +14,7 @@
     <ProjectGuid>{C07E7C37-CAE5-422F-B072-3F9DC71B0DB2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>jsoncpp</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

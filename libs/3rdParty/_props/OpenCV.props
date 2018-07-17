@@ -9,7 +9,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\..\libs\3rdParty\opencv\build\x86\vc10\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_core240d.lib;opencv_highgui240d.lib;opencv_imgproc240d.lib;opencv_video240d.lib;opencv_objdetect240d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core341d.lib;opencv_highgui341d.lib;opencv_imgproc341d.lib;opencv_video341d.lib;opencv_videoio341d.lib;opencv_objdetect341d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

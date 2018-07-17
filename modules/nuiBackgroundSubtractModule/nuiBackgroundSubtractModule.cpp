@@ -48,7 +48,7 @@ MODULE_DECLARE(BackgroundSubtractModule, "native", "Filter out background");
 
 nuiBackgroundSubtractModule::nuiBackgroundSubtractModule() : nuiModule() {
     MODULE_INIT();
-
+	this->bg = cv::createBackgroundSubtractorMOG2();
 	this->input = new nuiEndpoint(this);
     this->input->setTypeDescriptor(std::string("IplImage"));
     this->setInputEndpointCount(1);
@@ -60,12 +60,13 @@ nuiBackgroundSubtractModule::nuiBackgroundSubtractModule() : nuiModule() {
 	this->setOutputEndpointCount(2);
 	this->setOutputEndpoint(0,this->frameOutput);
 	this->setOutputEndpoint(1,this->bgOutput);
-
+	
 	this->outputDataPacket = new nuiBackgroundSubtractModuleDataPacket();
 
 }
 
 nuiBackgroundSubtractModule::~nuiBackgroundSubtractModule() {
+	bg.release();
 }
 
 void nuiBackgroundSubtractModule::update() {  
@@ -82,7 +83,7 @@ void nuiBackgroundSubtractModule::update() {
 	cv::Mat matFrame = cv::cvarrToMat(filterFrame, true);
 	cv::Mat foreFrame;
 	cv::Mat backImage;
-	bg.operator ()(matFrame,foreFrame);
+	bg->apply(matFrame,foreFrame);
 	//bg.getBackgroundImage(backImage);
 	backImage = foreFrame;
 	this->outputDataPacket->packData(new IplImage(foreFrame));

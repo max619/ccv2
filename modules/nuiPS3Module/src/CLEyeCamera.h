@@ -29,7 +29,7 @@ public:
 	void getFrame(IplImage* pFrame)
 	{
 		PBYTE pCapBuffer = NULL;
-		cvGetImageRawData( pFrame, &pCapBuffer );
+		cvGetRawData( pFrame, &pCapBuffer );
 		CLEyeCameraGetFrame( _camera, pCapBuffer );
 	}
 

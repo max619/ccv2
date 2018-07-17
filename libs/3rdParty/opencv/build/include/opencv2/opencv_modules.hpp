@@ -1,27 +1,30 @@
 /*
- *      ** File generated automatically, do not modify ** 
+ *      ** File generated automatically, do not modify **
  *
  * This file defines the list of modules available in current build configuration
  *
  *
 */
 
-#define HAVE_OPENCV_CALIB3D 1
-#define HAVE_OPENCV_CONTRIB 1
-#define HAVE_OPENCV_CORE 1
-#define HAVE_OPENCV_FEATURES2D 1
-#define HAVE_OPENCV_FLANN 1
-#define HAVE_OPENCV_GPU 1
-#define HAVE_OPENCV_HIGHGUI 1
-#define HAVE_OPENCV_IMGPROC 1
-#define HAVE_OPENCV_LEGACY 1
-#define HAVE_OPENCV_ML 1
-#define HAVE_OPENCV_NONFREE 1
-#define HAVE_OPENCV_OBJDETECT 1
-#define HAVE_OPENCV_PHOTO 1
-#define HAVE_OPENCV_STITCHING 1
-#define HAVE_OPENCV_TS 1
-#define HAVE_OPENCV_VIDEO 1
-#define HAVE_OPENCV_VIDEOSTAB 1
+// This definition means that OpenCV is built with enabled non-free code.
+// For example, patented algorithms for non-profit/non-commercial use only.
+/* #undef OPENCV_ENABLE_NONFREE */
+
+#define HAVE_OPENCV_CALIB3D
+#define HAVE_OPENCV_CORE
+#define HAVE_OPENCV_FEATURES2D
+#define HAVE_OPENCV_FLANN
+#define HAVE_OPENCV_HIGHGUI
+#define HAVE_OPENCV_IMGCODECS
+#define HAVE_OPENCV_IMGPROC
+#define HAVE_OPENCV_ML
+#define HAVE_OPENCV_OBJDETECT
+#define HAVE_OPENCV_PHOTO
+#define HAVE_OPENCV_SHAPE
+#define HAVE_OPENCV_STITCHING
+#define HAVE_OPENCV_SUPERRES
+#define HAVE_OPENCV_VIDEO
+#define HAVE_OPENCV_VIDEOIO
+#define HAVE_OPENCV_VIDEOSTAB
 
 

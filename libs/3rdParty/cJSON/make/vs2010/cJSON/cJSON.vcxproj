@@ -14,7 +14,7 @@
     <ProjectGuid>{F02CF2EF-E645-41B7-93CB-A1F89DECFAAA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>cJSON</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

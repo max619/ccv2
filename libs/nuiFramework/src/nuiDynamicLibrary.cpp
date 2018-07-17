@@ -27,42 +27,45 @@ namespace nuiPluginFramework
 	  }
 	}
 
-	nuiDynamicLibrary *nuiDynamicLibrary::load(const std::string & name,  std::string & errorString)
+	nuiDynamicLibrary *nuiDynamicLibrary::load(const std::string & name, std::string & errorString)
 	{
-	  if (name.empty()) 
-	  {
-		errorString = "Empty path.";
-		return NULL;
-	  }
-  
-	  void * handle = NULL;
+		if (name.empty())
+		{
+			errorString = "Empty path.";
+			return NULL;
+		}
+		char* fullpath = new char[255];
+		GetFullPathNameA(name.c_str(), 255, fullpath, NULL);
 
-		#ifdef WIN32
-		handle = LoadLibrary(name.c_str());
+		void * handle = NULL;
+
+#ifdef WIN32
+		handle = LoadLibraryA(fullpath);
 		if (handle == NULL)
 		{
-		  DWORD errorCode = GetLastError();
-		  std::stringstream ss;
-		  ss << std::string("LoadLibrary(") << name 
-			 << std::string(") Failed. errorCode: ") 
-			 << errorCode; 
-		  errorString = ss.str();
+			DWORD errorCode = GetLastError();
+			std::stringstream ss;
+			ss << std::string("LoadLibrary(") << name
+				<< std::string(") Failed. errorCode: ")
+				<< errorCode;
+			errorString = ss.str();
 		}
-	  #else
+#else
 		handle = dlopen(name.c_str(), RTLD_NOW);
-		if (!handle) 
+		if (!handle)
 		{
-		  std::string dlErrorString;
-		  const char *zErrorString = ::dlerror();
-		  if (zErrorString)
-			dlErrorString = zErrorString;
-		  errorString += "Failed to load \"" + name + '"';
-		  if(dlErrorString.size())
-			errorString += ": " + dlErrorString;
-		  return NULL;
+			std::string dlErrorString;
+			const char *zErrorString = ::dlerror();
+			if (zErrorString)
+				dlErrorString = zErrorString;
+			errorString += "Failed to load \"" + name + '"';
+			if (dlErrorString.size())
+				errorString += ": " + dlErrorString;
+			return NULL;
 		}
-	  #endif
-	  return new nuiDynamicLibrary(handle);
+#endif
+		delete fullpath;
+		return new nuiDynamicLibrary(handle);
 	}
 
 	void *nuiDynamicLibrary::getSymbol(const std::string &symbol)
