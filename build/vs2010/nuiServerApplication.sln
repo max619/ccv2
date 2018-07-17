@@ -91,6 +91,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nuiBackgroundSubtractModule
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E54B6C2F-FD72-4266-A610-BF9FC7EFA34E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nuiWebcamModule", "..\..\modules\nuiWebcamModule\nuiWebcamModule.vcxproj", "{3CAAB155-4387-4416-B5D8-68157E16A044}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -167,6 +169,10 @@ Global
 		{071F4BD0-2A6C-4B0F-9250-05B5243B8DAE}.Debug|Win32.Build.0 = Debug|Win32
 		{071F4BD0-2A6C-4B0F-9250-05B5243B8DAE}.Release|Win32.ActiveCfg = Release|Win32
 		{071F4BD0-2A6C-4B0F-9250-05B5243B8DAE}.Release|Win32.Build.0 = Release|Win32
+		{3CAAB155-4387-4416-B5D8-68157E16A044}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3CAAB155-4387-4416-B5D8-68157E16A044}.Debug|Win32.Build.0 = Debug|Win32
+		{3CAAB155-4387-4416-B5D8-68157E16A044}.Release|Win32.ActiveCfg = Release|Win32
+		{3CAAB155-4387-4416-B5D8-68157E16A044}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,6 +198,7 @@ Global
 		{DB9C713D-93EF-4710-992C-0DD1CBB6CD81} = {E54B6C2F-FD72-4266-A610-BF9FC7EFA34E}
 		{BE7207F0-01E2-4C74-BA1F-A788092614F5} = {E54B6C2F-FD72-4266-A610-BF9FC7EFA34E}
 		{071F4BD0-2A6C-4B0F-9250-05B5243B8DAE} = {E54B6C2F-FD72-4266-A610-BF9FC7EFA34E}
+		{3CAAB155-4387-4416-B5D8-68157E16A044} = {E54B6C2F-FD72-4266-A610-BF9FC7EFA34E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B652BF8-6B7B-4E44-A90F-B8CCBF039EC7}
