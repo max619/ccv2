@@ -82,7 +82,11 @@ void nuiExampleModule::update() {
 	this->output->transmitData();
 	this->output->unlock();
 	cvReleaseImage(&filterFrame);
-	delete packet;
+
+	if (packet->isLocalCopy())
+	{
+		nuiReleaseDataPacket(&packet);
+	}
 }
 
 void nuiExampleModule::start() {

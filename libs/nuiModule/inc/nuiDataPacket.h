@@ -43,3 +43,5 @@ private:
 }; 
 
 #endif//_NUI_DATA_PACKET_
+
+void nuiReleaseDataPacket(nuiDataPacket ** packet);

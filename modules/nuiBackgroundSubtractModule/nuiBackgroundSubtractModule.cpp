@@ -90,11 +90,11 @@ void nuiBackgroundSubtractModule::update() {
 	this->frameOutput->setData(this->outputDataPacket);
 	this->frameOutput->transmitData();
 	this->frameOutput->unlock();
-	this->outputDataPacket->packData(new IplImage(foreFrame));
-	this->bgOutput->setData(this->outputDataPacket);
-	this->bgOutput->transmitData();
-	this->bgOutput->unlock();
 	cvReleaseImage(&filterFrame);
+	if (packet->isLocalCopy())
+	{
+		nuiReleaseDataPacket(&packet);
+	}
 }
 
 void nuiBackgroundSubtractModule::start() {

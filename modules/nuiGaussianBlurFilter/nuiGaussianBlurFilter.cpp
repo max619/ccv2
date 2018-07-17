@@ -73,18 +73,23 @@ void nuiGaussianBlurFilter::update() {
 	packet->unpackData(data);
 	IplImage* frame = (IplImage*)data;
 	filterFrame = cvCloneImage(frame);
-	cv::Mat& newFrame = cv::cvarrToMat(filterFrame, true);
-	cv::Mat& blur = cv::cvarrToMat(filterFrame);
+	cv::Mat newFrame = cv::cvarrToMat(filterFrame, true);
+	cv::Mat blur = cv::cvarrToMat(filterFrame);
 	int amount = this->property("amount").asInteger();
 	if(dev) cv::cvtColor(newFrame, blur, CV_BGR2GRAY, 3);
-	if(!this->property("disable").asBool()) cv::GaussianBlur(blur, blur, cv::Size(amount,amount), 1.5, 1.5);
+	if(!this->property("disable").asBool()) cv::GaussianBlur(blur, blur, cv::Size(amount,amount), 4, 4);
 	IplImage* oldImage = new IplImage(blur);
 	this->outputDataPacket->packData(oldImage);
 	this->output->setData(this->outputDataPacket);
 	this->output->transmitData();
 	this->output->unlock();
+	newFrame.release();
+	blur.release();
 	cvReleaseImage(&filterFrame);
-	delete packet;
+	if (packet->isLocalCopy())
+	{
+		nuiReleaseDataPacket(&packet);
+	}
 }
 
 void nuiGaussianBlurFilter::start() {

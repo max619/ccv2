@@ -29,6 +29,8 @@ public:
 private:
     nuiEndpoint* input;
 
+	CvFont font;
+
 	IplImage *dispFrame;
     
 	MODULE_INTERNALS();
