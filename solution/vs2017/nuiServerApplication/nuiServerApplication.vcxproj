@@ -67,7 +67,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>__WINDOW_DS__;__WINDOWS_DS__;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -92,8 +92,8 @@
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>xcopy /e /y "$(SolutionDir)..\..\data" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
-xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*d.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
-xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc10\tbb_debug.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
+xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc10\tbb.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
     </PreBuildEvent>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -104,7 +104,7 @@ xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc1
       <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
@@ -124,12 +124,12 @@ xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc1
       <AdditionalDependencies>ws2_32.lib;user32.lib;ptypes.lib;nuiFramework.lib;nuiModule.lib;nuiSystem.lib;cJSON.lib;json-rpc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)$(TargetFileName)" "$(SolutionDir)\..\bin" /s /i /y
-xcopy "$(SolutionDir)\modules\*.dll" "$(SolutionDir)\..\bin\modules" /s /i /y</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>xcopy /e /y "$(SolutionDir)..\..\data" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
-xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*1.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
+xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
 xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc10\tbb.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

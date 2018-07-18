@@ -30,7 +30,7 @@ nuiDataPacket* nuiHighpassFilterDataPacket::copyPacketData(nuiDataPacketError &e
 	nuiHighpassFilterDataPacket* newDataPacket = new nuiHighpassFilterDataPacket();
 
 	//! TODO : Test if this implies deep copy
-	IplImage* newData = cvCloneImage(this->data));
+	IplImage* newData = cvCloneImage(this->data);
 
 	newDataPacket->packData(newData);
 	newDataPacket->setLocalCopy(true);

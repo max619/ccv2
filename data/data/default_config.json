@@ -50,7 +50,7 @@
                     "properties": {
                         "use_thread": "true",
                         "oscillator_mode": "false",
-                        "history": 500,
+                        "history": 1500,
                         "detectshadows": "false",
                         "threshold": 15
                     }

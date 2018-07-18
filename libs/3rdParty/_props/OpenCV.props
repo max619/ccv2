@@ -7,9 +7,13 @@
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\..\libs\3rdParty\opencv\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
+    <Link Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       <AdditionalLibraryDirectories>$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_core341d.lib;opencv_highgui341d.lib;opencv_imgproc341d.lib;opencv_video341d.lib;opencv_videoio341d.lib;opencv_objdetect341d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Link Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_core341.lib;opencv_highgui341.lib;opencv_imgproc341.lib;opencv_video341.lib;opencv_videoio341.lib;opencv_objdetect341.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
