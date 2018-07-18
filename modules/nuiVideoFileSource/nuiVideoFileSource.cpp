@@ -74,11 +74,7 @@ void nuiVideoFileSource::update()
 		cap = cvCaptureFromAVI(this->property("path").asString().c_str());
 		frame = cvQueryFrame(cap);
 	}
-	CvFont font;
-    double hScale=0.5;
-    double vScale=0.5;
-    int    lineWidth=1;
-    cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX|CV_FONT_ITALIC, hScale,vScale,0,lineWidth);
+	
 	std::ostringstream oss;
 	oss << "~ " << this->timer->getAverageFPS() << " FPS";
 	cvRectangle(frame, cvPoint(150,0), cvPoint(300,20), cvScalar(0,0,0), CV_FILLED, CV_AA);
@@ -94,6 +90,10 @@ void nuiVideoFileSource::update()
 
 void nuiVideoFileSource::start()
 {
+	double hScale = 0.5;
+	double vScale = 0.5;
+	int    lineWidth = 1;
+	cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX | CV_FONT_ITALIC, hScale, vScale, 0, lineWidth);
 	cap = cvCaptureFromAVI(this->property("path").asString().c_str());
 	nuiModule::start();
 };

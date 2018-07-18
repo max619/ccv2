@@ -31,7 +31,8 @@ private:
 	nuiDataPacket* outputDataPacket;
 
 	CvCapture* cap;
-	IplImage* frame;
+	IplImage* frame; 
+	CvFont font;
 
 	MODULE_INTERNALS();
 };
