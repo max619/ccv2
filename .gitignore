@@ -41,6 +41,9 @@ libs/3rdParty/boost_*
 *.vspscc
 .builds
 *.dotCover
+obj/
+build/
+.vs/
 
 ## TODO: If you have NuGet Package Restore enabled, uncomment this
 #packages/

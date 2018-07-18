@@ -55,11 +55,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)\modules</OutDir>
+    <OutDir>$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\modules\</OutDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)</IntDir>
+    <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)</IntDir>
+    <OutDir>$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\modules\</OutDir>
+    <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
