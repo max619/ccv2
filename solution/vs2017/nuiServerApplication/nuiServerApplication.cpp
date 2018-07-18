@@ -23,6 +23,12 @@ int main(int argc, char **argv)
 	// Initialize Debug
 	nuiDebugLogger::init(config_syslog);
 
+	char* path = argv[0];
+	std::string str_path = std::string(path);
+	size_t pos = str_path.find_last_of('\\');
+	std::string dir = str_path.substr(0, pos) + '\\';
+
+	nuiFrameworkManager::getInstance()->setStartupPath((char *)dir.c_str());
 	// Initialize JSON Configuration
 	nuiFrameworkManagerErrorCode loadCode = nuiFrameworkManager::getInstance()->loadSettingsFromJson("data/default_config.json");
 	if(loadCode != NUI_FRAMEWORK_MANAGER_OK){

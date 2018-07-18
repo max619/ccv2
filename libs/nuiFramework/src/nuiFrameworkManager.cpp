@@ -63,7 +63,8 @@ nuiFrameworkManagerErrorCode nuiFrameworkManager::initializeFrameworkManager()
 
 nuiFrameworkManagerErrorCode nuiFrameworkManager::loadSettingsFromJson(const char* fileName) {
 	// OPEN FILE
-	std::ifstream settingsFile(fileName);
+	std::string rootpath = getRootPath(std::string(fileName));
+	std::ifstream settingsFile(rootpath);
 	Json::Value root;
 	Json::Reader reader;
 	bool parsingSuccessful = reader.parse(settingsFile, root);
@@ -72,7 +73,7 @@ nuiFrameworkManagerErrorCode nuiFrameworkManager::loadSettingsFromJson(const cha
 	Json::Value modules = root.get("module_library", NULL);
 	for (Json::Value::iterator i = modules.begin(); i != modules.end(); i++) 
 	{
-		std::string path = (*i).get("path", NULL).asString();
+		std::string path = getRootPath((*i).get("path", NULL).asString());
 		nuiPluginManager::getInstance()->loadLibrary(path);
 
 		//Json::Value moduleNames = (*i).get("modules", NULL).asString();
@@ -1389,6 +1390,20 @@ nuiModuleDescriptor *nuiFrameworkManager::navigatePop( )
     pathToCurrent.pop_back();
     return nuiFactory::getInstance()->getDescriptor(getCurrent()->getName());
 }
+
+void nuiFrameworkManager::setStartupPath(std::string path)
+{
+	startupPath = path;
+}
+
+std::string nuiFrameworkManager::getRootPath(std::string path)
+{
+	if (startupPath.at(startupPath.size() - 1) != '\\')
+		startupPath += '\\';
+
+	return startupPath + path;
+}
+
 
 nuiPipelineModule *nuiFrameworkManager::getCurrent()
 {

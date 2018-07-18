@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\nuiServerApplication.cpp" />
+    <ClCompile Include="nuiServerApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\nuiServerApplication.h" />
+    <ClInclude Include="nuiServerApplication.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6EFD0DFD-EF69-4D51-B1BE-8F6D0AF5B6A7}</ProjectGuid>
@@ -41,11 +41,11 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\libs\3rdParty\_props\ptypes.props" />
+    <Import Project="..\..\..\libs\3rdParty\_props\ptypes.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\libs\3rdParty\_props\ptypes.props" />
+    <Import Project="..\..\..\libs\3rdParty\_props\ptypes.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -76,7 +76,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\libs\3rdParty\XgetOpt\;..\..\libs\nuiSystem\inc;..\..\libs\nuiFramework\inc;..\..\libs\nuiModule\inc;..\..\libs\3rdParty\cJSON;..\inc;..\..\libs\3rdParty\ptypes-2.1.1\include;..\..\libs\3rdParty\ptypes-2.1.1\include\WIN32-Code\;..\..\libs\3rdParty\libevent-1.4.13-stable\compat\;..\..\libs\3rdParty\libevent-1.4.13-stable;..\..\libs\3rdParty\libevent-1.4.13-stable\WIN32-Code\;..\..\libs\3rdParty\json-cpp\include;..\..\libs\3rdParty\json-rpc\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\libs\3rdParty\XgetOpt\;..\..\..\libs\nuiSystem\inc;..\..\..\libs\nuiFramework\inc;..\..\..\libs\nuiModule\inc;..\..\..\libs\3rdParty\cJSON;..\..\inc;..\..\..\libs\3rdParty\ptypes-2.1.1\include;..\..\..\libs\3rdParty\ptypes-2.1.1\include\WIN32-Code\;..\..\..\libs\3rdParty\libevent-1.4.13-stable\compat\;..\..\..\libs\3rdParty\libevent-1.4.13-stable;..\..\..\libs\3rdParty\libevent-1.4.13-stable\WIN32-Code\;..\..\..\libs\3rdParty\json-cpp\include;..\..\..\libs\3rdParty\json-rpc\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -112,7 +112,7 @@ xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc1
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>
       </DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\libs\3rdParty\XgetOpt\;..\..\libs\nuiSystem\inc;..\..\libs\nuiFramework\inc;..\..\libs\nuiModule\inc;..\..\libs\3rdParty\cJSON;..\inc;..\..\libs\3rdParty\ptypes-2.1.1\include;..\..\libs\3rdParty\ptypes-2.1.1\include\WIN32-Code\;..\..\libs\3rdParty\libevent-1.4.13-stable\compat\;..\..\libs\3rdParty\libevent-1.4.13-stable;..\..\libs\3rdParty\libevent-1.4.13-stable\WIN32-Code\;..\..\libs\3rdParty\json-cpp\include;..\..\libs\3rdParty\json-rpc\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\libs\3rdParty\XgetOpt\;..\..\..\libs\nuiSystem\inc;..\..\..\libs\nuiFramework\inc;..\..\..\libs\nuiModule\inc;..\..\..\libs\3rdParty\cJSON;..\..\inc;..\..\..\libs\3rdParty\ptypes-2.1.1\include;..\..\..\libs\3rdParty\ptypes-2.1.1\include\WIN32-Code\;..\..\..\libs\3rdParty\libevent-1.4.13-stable\compat\;..\..\..\libs\3rdParty\libevent-1.4.13-stable;..\..\..\libs\3rdParty\libevent-1.4.13-stable\WIN32-Code\;..\..\..\libs\3rdParty\json-cpp\include;..\..\..\libs\3rdParty\json-rpc\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

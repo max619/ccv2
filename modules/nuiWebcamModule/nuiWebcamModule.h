@@ -29,12 +29,13 @@ public:
 	void start();
 
 private:
-	CvCapture * capture;
+	cv::VideoCapture * capture;
 	nuiEndpoint* output;
 	nuiDataPacket* outputDataPacket;
 	void initCapture();
 
-	IplImage* frame;
+	cv::Mat frame;
+	IplImage* img;
 
 	MODULE_INTERNALS();
 };
@@ -42,14 +43,13 @@ private:
 IMPLEMENT_ALLOCATOR(nuiWebcamModule)
 IMPLEMENT_DEALLOCATOR(nuiWebcamModule)
 
-START_IMPLEMENT_DESCRIPTOR(nuiWebcamModule, "native", "Input module to grab video from webcameras.")
-descriptor->setInputEndpointsCount(1);
+START_IMPLEMENT_DESCRIPTOR(nuiWebcamModule, "native", "Get video data from webcam")
 descriptor->setOutputEndpointsCount(1);
-nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor("IplImage");
-descriptor->addInputEndpointDescriptor(inputDescriptor, 0);
 nuiEndpointDescriptor* outputDescriptor = new nuiEndpointDescriptor("IplImage");
 descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
-descriptor->property("use_thread").set(false);
+//descriptor->property("use_thread").set(true);
+//descriptor->property("oscillator_mode").set(true);
+//descriptor->property("oscillator_wait").set(50);
 END_IMPLEMENT_DESCRIPTOR(nuiWebcamModule)
 
 START_MODULE_EXIT()

@@ -49,6 +49,11 @@ MODULE_DECLARE(WebcamModule, "native", "Input module to grab video from webcamer
 
 nuiWebcamModule::nuiWebcamModule() : nuiModule() {
 	MODULE_INIT();
+
+	capture = new cv::VideoCapture();
+	img = NULL;
+
+
 	this->output = new nuiEndpoint(this);
 	this->output->setTypeDescriptor(std::string("IplImage"));
 	this->setOutputEndpointCount(1);
@@ -58,43 +63,39 @@ nuiWebcamModule::nuiWebcamModule() : nuiModule() {
 }
 
 nuiWebcamModule::~nuiWebcamModule() {
-	cvReleaseCapture(&capture);
-	cvReleaseImage(&frame);
+	delete capture;
 }
 
 void nuiWebcamModule::update() {
 	this->output->lock();
 	this->output->clear();
 
-	frame = cvQueryFrame(capture);
-	if (frame == NULL) {
-		cvReleaseCapture(&capture);
-		cvReleaseImage(&frame);
-		initCapture();
-		frame = cvQueryFrame(capture);
+	if (capture == NULL)
+		return;
+	
+	if (capture->read(frame))
+	{
+		if (img == NULL)
+			img = new IplImage(frame);
+		this->outputDataPacket->packData(img);
+		this->output->setData(this->outputDataPacket);
+		this->output->transmitData();		
 	}
-
-
-	this->outputDataPacket->packData(frame);
-	this->output->setData(this->outputDataPacket);
-	this->output->transmitData();
 	this->output->unlock();
-	//cvReleaseImage(&frame);
-	//delete packet;
-	cvReleaseImage(&frame);
 }
 
 void nuiWebcamModule::start() {
 	
 	initCapture();
-	
+
 	LOG(NUI_DEBUG, "Starting nuiWebcamModule");
+	nuiModule::start();
 }
 
 void nuiWebcamModule::initCapture()
 {
 	/*DeviceEnumerator enumer = DeviceEnumerator();
 	auto map = enumer.getVideoDevicesMap();*/
-	int camid = this->property("camid").asInteger();
-	capture = cvCaptureFromCAM(camid + CV_CAP_ANY);
+	int camid = this->hasProperty("camid") ? this->property("camid").asInteger() : 0;
+	capture->open(camid);
 }

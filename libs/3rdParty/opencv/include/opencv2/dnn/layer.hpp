@@ -10,8 +10,7 @@
 //                           License Agreement
 //                For Open Source Computer Vision Library
 //
-// Copyright (C) 2000-2008, Intel Corporation, all rights reserved.
-// Copyright (C) 2009-2010, Willow Garage Inc., all rights reserved.
+// Copyright (C) 2013, OpenCV Foundation, all rights reserved.
 // Third party copyrights are property of their respective owners.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -40,19 +39,47 @@
 //
 //M*/
 
-#ifndef OPENCV_WORLD_HPP
-#define OPENCV_WORLD_HPP
+#ifndef OPENCV_DNN_LAYER_HPP
+#define OPENCV_DNN_LAYER_HPP
+#include <opencv2/dnn.hpp>
 
-#include "opencv2/core.hpp"
+namespace cv {
+namespace dnn {
+CV__DNN_EXPERIMENTAL_NS_BEGIN
+//! @addtogroup dnn
+//! @{
+//!
+//! @defgroup dnnLayerFactory Utilities for New Layers Registration
+//! @{
 
-#ifdef __cplusplus
-namespace cv
+/** @brief %Layer factory allows to create instances of registered layers. */
+class CV_EXPORTS LayerFactory
 {
+public:
 
-CV_EXPORTS_W bool initAll();
+    //! Each Layer class must provide this function to the factory
+    typedef Ptr<Layer>(*Constuctor)(LayerParams &params);
 
+    //! Registers the layer class with typename @p type and specified @p constructor. Thread-safe.
+    static void registerLayer(const String &type, Constuctor constructor);
+
+    //! Unregisters registered layer with specified type name. Thread-safe.
+    static void unregisterLayer(const String &type);
+
+    /** @brief Creates instance of registered layer.
+     *  @param type type name of creating layer.
+     *  @param params parameters which will be used for layer initialization.
+     *  @note Thread-safe.
+     */
+    static Ptr<Layer> createLayerInstance(const String &type, LayerParams& params);
+
+private:
+    LayerFactory();
+};
+
+//! @}
+//! @}
+CV__DNN_EXPERIMENTAL_NS_END
 }
-
-#endif
-
+}
 #endif

@@ -124,6 +124,7 @@ public:
 	int getOutputEndpointIndex(nuiEndpoint *stream);
 public:
 	nuiProperty &property(std::string name);
+	bool hasProperty(std::string name);
 	std::map<std::string, nuiProperty*> &getProperties();
 	bool isStarted();
 	bool isOscillatorMode();

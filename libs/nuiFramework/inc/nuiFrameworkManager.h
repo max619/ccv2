@@ -113,6 +113,8 @@ public:
     //! returns back to upper pipeline
     //! \returns new current pipeline descriptor, NULL if action failed
     nuiModuleDescriptor *navigatePop( );
+public:
+	void setStartupPath(std::string path);
 private:
     //gets currently selected pipeline
     nuiPipelineModule *getCurrent();
@@ -133,7 +135,10 @@ private:
 private:
     nuiModule* currentModule;
 	nuiPipelineModule *rootPipeline;
-	nuiTree<int,nuiModule*> *dataObjectTree;
+	nuiTree<int,nuiModule*> *dataObjectTree; 
+private:
+	std::string startupPath;
+	std::string getRootPath(std::string path);
 };
 
 #endif//_NUI_FRAMEWORK_MANAGER_

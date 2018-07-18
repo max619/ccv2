@@ -230,6 +230,16 @@ nuiProperty &nuiModule::property(std::string str)
 	return *it->second;
 }
 
+bool nuiModule::hasProperty(std::string str)
+{
+	std::map<std::string, nuiProperty*>::iterator it;
+	it = this->properties.find(str);
+	if (it == this->properties.end()) {
+		return false;
+	}
+	return true;
+}
+
 std::map<std::string, nuiProperty*> &nuiModule::getProperties()
 {
 	return this->properties;

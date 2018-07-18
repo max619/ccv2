@@ -65,17 +65,17 @@
 /* #undef HAVE_DC1394_2 */
 
 /* DirectX */
-/* #undef HAVE_DIRECTX */
-/* #undef HAVE_DIRECTX_NV12 */
-/* #undef HAVE_D3D11 */
-/* #undef HAVE_D3D10 */
-/* #undef HAVE_D3D9 */
+#define HAVE_DIRECTX
+#define HAVE_DIRECTX_NV12
+#define HAVE_D3D11
+#define HAVE_D3D10
+#define HAVE_D3D9
 
 /* DirectShow Video Capture library */
-/* #undef HAVE_DSHOW */
+#define HAVE_DSHOW
 
 /* Eigen Matrix & Linear Algebra Library */
-/* #undef HAVE_EIGEN */
+#define HAVE_EIGEN
 
 /* FFMpeg video library */
 #define HAVE_FFMPEG
@@ -134,12 +134,12 @@
 /* #undef HAVE_NVCUVENC */
 
 /* OpenCL Support */
-/* #undef HAVE_OPENCL */
+#define HAVE_OPENCL
 /* #undef HAVE_OPENCL_STATIC */
 /* #undef HAVE_OPENCL_SVM */
 
 /* OpenEXR codec */
-/* #undef HAVE_OPENEXR */
+#define HAVE_OPENEXR
 
 /* OpenGL support*/
 /* #undef HAVE_OPENGL */

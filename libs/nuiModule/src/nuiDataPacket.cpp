@@ -4,6 +4,7 @@ nuiDataPacket::~nuiDataPacket(){ };
 
 void nuiReleaseDataPacket(nuiDataPacket** packet)
 {
-	delete packet[0];
+	if(packet[0]->isLocalCopy())
+		delete packet[0];
 	packet[0] = nullptr;
 }
