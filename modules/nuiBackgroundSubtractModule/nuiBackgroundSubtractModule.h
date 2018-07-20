@@ -20,7 +20,7 @@
 #include "opencv2/video/background_segm.hpp"
 
 
-NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(BackgroundSubtractModule, IplImage*)
+NUI_DATAPACKET_DEFAULT_DECLARATION(BackgroundSubtractModule, IplImage*)
 
 class nuiBackgroundSubtractModule : public nuiModule {
 public:

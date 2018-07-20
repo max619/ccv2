@@ -1,8 +1,10 @@
+#pragma once
+
 /////////////////////////////////////////////////////////////////////////////
-// Name:        modules/nuiExampleModule.h
+// Name:        modules/nuiWebcamModule.h
 // Purpose:     Example Module to be used for developments.
-// Author:      Christian Moore
-// Copyright:   (c) 2012 NUI Group
+// Author:      Maxim Bagryantsev
+// Copyright:   (c) 2018 NUI Group
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -18,7 +20,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
 
-NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(WebcamModule, IplImage*)
+NUI_DATAPACKET_DEFAULT_DECLARATION(WebcamModule, IplImage*)
 
 class nuiWebcamModule : public nuiModule {
 public:
@@ -52,12 +54,9 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 //descriptor->property("oscillator_wait").set(50);
 END_IMPLEMENT_DESCRIPTOR(nuiWebcamModule)
 
-START_MODULE_EXIT()
-END_MODULE_EXIT()
-
-START_MODULE_REGISTRATION()
-REGISTER_PLUGIN(nuiWebcamModule, "nuiWebcamModule", 1, 0)
-END_MODULE_REGISTRATION()
+START_EXPORT_MODULES()
+REGISTER_MODULE(nuiWebcamModule, "nuiWebcamModule", 1, 0)
+END_EXPORT_MODULES()
 
 #endif
 

@@ -26,7 +26,7 @@
 
 #include "CLEyeCamera.h"
 
-NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(PSModule, IplImage*)
+NUI_DATAPACKET_DEFAULT_DECLARATION(PSModule, IplImage*)
 
 class nuiPSModule : public nuiModule
 {

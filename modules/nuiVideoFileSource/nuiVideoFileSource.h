@@ -20,7 +20,7 @@
 #include <opencv\cv.h>
 #include <opencv\highgui.h>
 
-NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(VideoFileSource, IplImage*)
+NUI_DATAPACKET_DEFAULT_DECLARATION(VideoFileSource, IplImage*)
 
 class nuiVideoFileSource : public nuiModule
 {

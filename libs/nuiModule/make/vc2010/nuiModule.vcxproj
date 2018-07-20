@@ -21,6 +21,7 @@
     <ClCompile Include="..\..\src\nuiDataStream.cpp" />
     <ClCompile Include="..\..\src\nuiEndpoint.cpp" />
     <ClCompile Include="..\..\src\nuiModule.cpp" />
+    <ClCompile Include="nuiDataPacket.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{70A18341-3B6E-460D-B9A6-4F583D786C69}</ProjectGuid>

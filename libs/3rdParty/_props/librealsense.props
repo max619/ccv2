@@ -7,11 +7,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\libs\3rdParty\librealsense2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\3rdParty\librealsense2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="'$(Platform)'=='x64'">$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x64\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">$(SolutionDir)..\..\libs\3rdParty\librealsense2\x86\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Platform)'=='x64'">$(SolutionDir)..\..\libs\3rdParty\librealsense2\x64\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <!--<AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">C:\Program Files (x86)\Windows Kits\10\Lib\$(TargetUniversalCRTVersion)\um\x86;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalLibraryDirectories Condition="'$(Platform)'=='x64'">C:\Program Files (x86)\Windows Kits\10\Lib\$(TargetUniversalCRTVersion)\um\x64;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       --><!--$(TargetUniversalCRTVersion)-->
@@ -20,8 +20,8 @@
       <AdditionalDependencies Condition="'$(Configuration)'=='Debug'">realsense2d.lib;realsense-filed.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command Condition="'$(Platform)'=='Win32'">xcopy "$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
-      <Command Condition="'$(Platform)'=='x64'">xcopy "$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x64\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+      <Command Condition="'$(Platform)'=='Win32'">xcopy /y "$(SolutionDir)..\..\libs\3rdParty\librealsense2\x86\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+      <Command Condition="'$(Platform)'=='x64'">xcopy /y "$(SolutionDir)..\..\libs\3rdParty\librealsense2\x64\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
 </Project>

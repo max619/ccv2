@@ -18,7 +18,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
 
-NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(EdgeFilterModule, IplImage*)
+NUI_DATAPACKET_DEFAULT_DECLARATION(EdgeFilterModule, IplImage*)
 
 class nuiEdgeFilterModule : public nuiModule {
 public:

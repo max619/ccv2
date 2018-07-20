@@ -18,7 +18,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
 
-NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(GaussianBlurFilter, IplImage*)
+NUI_DATAPACKET_DEFAULT_DECLARATION(GaussianBlurFilter, IplImage*)
 
 class nuiGaussianBlurFilter : public nuiModule {
 public:

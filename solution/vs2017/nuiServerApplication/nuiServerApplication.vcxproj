@@ -17,7 +17,7 @@
     <ClInclude Include="nuiServerApplication.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6EFD0DFD-EF69-4D51-B1BE-8F6D0AF5B6A7}</ProjectGuid>
+    <ProjectGuid>{6D675F85-076E-40BE-8424-7272632B2849}</ProjectGuid>
     <RootNamespace>CommunityCoreVision</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>nuiServerApplication</ProjectName>

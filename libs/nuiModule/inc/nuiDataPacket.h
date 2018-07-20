@@ -9,6 +9,9 @@
 #ifndef NUI_DATA_PACKET
 #define NUI_DATA_PACKET
 
+#define NUI_DATAPACKET_OK nuiDataPacketError::NoError
+#define NUI_DATAPACKET_ERROR nuiDataPacketError::Error
+
 //! namespaced enum for errors that Datapacket can produce
 struct nuiDataPacketError
 {
@@ -20,7 +23,7 @@ struct nuiDataPacketError
 };
 
 //! macro for default datapacket skeleton implementation
-#define NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(moduleName, datatype) \
+#define NUI_DATAPACKET_DEFAULT_DECLARATION(moduleName, datatype) \
 class nui##moduleName##DataPacket : public nuiDataPacket \
 { \
 public: \
@@ -32,6 +35,42 @@ public: \
 private: \
   datatype## data; \
 }; \
+
+#define NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(moduleName) \
+nui##moduleName##DataPacket::~nui##moduleName##DataPacket()\
+{\
+	cvReleaseImage(&data);\
+};\
+nuiDataPacketError::err nui##moduleName##DataPacket::packData(const void *_data)\
+{\
+	this->setLocalCopy(false);\
+	this->data = (IplImage*)_data;\
+	return nuiDataPacketError::NoError;\
+};\
+\
+nuiDataPacketError::err nui##moduleName##DataPacket::unpackData(void* &_data)\
+{\
+	_data = (void*)this->data;\
+	return nuiDataPacketError::NoError;\
+};\
+\
+nuiDataPacket* nui##moduleName##DataPacket::copyPacketData(nuiDataPacketError::err &errorCode)\
+{\
+	nui##moduleName##DataPacket* newDataPacket = new nui##moduleName##DataPacket();\
+\
+	IplImage* newData = cvCloneImage((this->data));\
+\
+	newDataPacket->packData(newData);\
+	newDataPacket->setLocalCopy(true);\
+\
+	errorCode = nuiDataPacketError::NoError;\
+	return newDataPacket;\
+};\
+\
+char* nui##moduleName##DataPacket::getDataPacketType()\
+{\
+	return "IplImage";\
+};\
 
 //! \class datapacket interface. 
 //! DataPacket is data wrapper used to transfer data from one module to another
@@ -52,5 +91,8 @@ public:
 private:
   bool localCopy;
 }; 
+
+void nuiReleaseDataPacket(nuiDataPacket** packet);
+
 
 #endif// NUI_DATA_PACKET
