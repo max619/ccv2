@@ -3,18 +3,20 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <LibraryPath Condition="'$(Platform)'=='Win32'"> $(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\lib\;%(AdditionalLibraryDirectories)</LibraryPath>
-    <LibraryPath Condition="'$(Platform)'=='x64'"> $(SolutionDir)\..\..\libs\3rdParty\librealsense2\x64\lib\;%(AdditionalLibraryDirectories)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
-    
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\..\libs\3rdParty\librealsense2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link >
-      <AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>    
+    <Link>
+      <AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalLibraryDirectories Condition="'$(Platform)'=='x64'">$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x64\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>realsense2.lib;realsense-file.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!--<AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">C:\Program Files (x86)\Windows Kits\10\Lib\$(TargetUniversalCRTVersion)\um\x86;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Platform)'=='x64'">C:\Program Files (x86)\Windows Kits\10\Lib\$(TargetUniversalCRTVersion)\um\x64;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      --><!--$(TargetUniversalCRTVersion)-->
+
+      <AdditionalDependencies Condition="'$(Configuration)'=='Release'">realsense2.lib;realsense-file.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)'=='Debug'">realsense2d.lib;realsense-filed.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ItemGroup>
       <PostBuildEvent Condition="'$(Platform)'=='Win32'" >
