@@ -2,31 +2,27 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup>
+    <LibraryPath Condition="'$(Platform)'=='Win32'"> $(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\lib\;%(AdditionalLibraryDirectories)</LibraryPath>
+    <LibraryPath Condition="'$(Platform)'=='x64'"> $(SolutionDir)\..\..\libs\3rdParty\librealsense2\x64\lib\;%(AdditionalLibraryDirectories)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup>
+    
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\libs\3rdParty\librealsense\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\libs\3rdParty\librealsense2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link Condition="'$(Platform)'=='Win32'">
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\libs\3rdParty\librealsense\x86\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    <Link >
+      <AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>    
+      <AdditionalLibraryDirectories Condition="'$(Platform)'=='x64'">$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x64\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>realsense2.lib;realsense-file.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Link Condition="'$(Platform)'=='x64'">
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\libs\3rdParty\librealsense\x64\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>realsense2.lib;realsense-file.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
+    <ItemGroup>
+      <PostBuildEvent Condition="'$(Platform)'=='Win32'" >
+        <Command>xcopy $(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\bin\*.dll "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+      </PostBuildEvent>
+      <PostBuildEvent Condition="'$(Platform)'=='x64'">
+        <Command>xcopy $(SolutionDir)\..\..\libs\3rdParty\librealsense2\x64\bin\*.dll "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+      </PostBuildEvent>
+    </ItemGroup>
   </ItemDefinitionGroup>
-  <ItemGroup />
-  <ItemGroup Condition="'$(Platform)'=='Win32'">
-   <PostBuildEvent>  
-    <Command>xcopy $(SolutionDir)\..\..\libs\3rdParty\librealsense\x86\bin\*.dll "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
-    <Message>Making a copy of myproject.exe</Message>
-   </PostBuildEvent>
-  </ItemGroup>   
-  <ItemGroup Condition="'$(Platform)'=='x64'">
-   <PostBuildEvent>  
-    <Command>xcopy $(SolutionDir)\..\..\libs\3rdParty\librealsense\x64\bin\*.dll "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
-    <Message>Making a copy of myproject.exe</Message>
-   </PostBuildEvent>
-  </ItemGroup> 
 </Project>

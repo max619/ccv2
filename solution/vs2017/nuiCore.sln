@@ -85,6 +85,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nuiWebcamModule", "..\..\mo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nuiServerApplication", "nuiServerApplication\nuiServerApplication.vcxproj", "{6EFD0DFD-EF69-4D51-B1BE-8F6D0AF5B6A7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nuiRealSenseModule", "..\..\modules\nuiRealSenseModule\nuiRealSenseModule.vcxproj", "{D48E544A-4402-4F6E-A587-F9C9340DDD89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -165,6 +167,10 @@ Global
 		{6EFD0DFD-EF69-4D51-B1BE-8F6D0AF5B6A7}.Debug|Win32.Build.0 = Debug|Win32
 		{6EFD0DFD-EF69-4D51-B1BE-8F6D0AF5B6A7}.Release|Win32.ActiveCfg = Release|Win32
 		{6EFD0DFD-EF69-4D51-B1BE-8F6D0AF5B6A7}.Release|Win32.Build.0 = Release|Win32
+		{D48E544A-4402-4F6E-A587-F9C9340DDD89}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D48E544A-4402-4F6E-A587-F9C9340DDD89}.Debug|Win32.Build.0 = Debug|Win32
+		{D48E544A-4402-4F6E-A587-F9C9340DDD89}.Release|Win32.ActiveCfg = Release|Win32
+		{D48E544A-4402-4F6E-A587-F9C9340DDD89}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,6 +197,7 @@ Global
 		{071F4BD0-2A6C-4B0F-9250-05B5243B8DAE} = {E54B6C2F-FD72-4266-A610-BF9FC7EFA34E}
 		{3CAAB155-4387-4416-B5D8-68157E16A044} = {E54B6C2F-FD72-4266-A610-BF9FC7EFA34E}
 		{6EFD0DFD-EF69-4D51-B1BE-8F6D0AF5B6A7} = {CDD30EEA-E777-4703-92FE-26EC90B86CE4}
+		{D48E544A-4402-4F6E-A587-F9C9340DDD89} = {E54B6C2F-FD72-4266-A610-BF9FC7EFA34E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B652BF8-6B7B-4E44-A90F-B8CCBF039EC7}
