@@ -3,6 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
+    
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -18,13 +19,9 @@
       <AdditionalDependencies Condition="'$(Configuration)'=='Release'">realsense2.lib;realsense-file.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)'=='Debug'">realsense2d.lib;realsense-filed.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ItemGroup>
-      <PostBuildEvent Condition="'$(Platform)'=='Win32'" >
-        <Command>xcopy $(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\bin\*.dll "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
-      </PostBuildEvent>
-      <PostBuildEvent Condition="'$(Platform)'=='x64'">
-        <Command>xcopy $(SolutionDir)\..\..\libs\3rdParty\librealsense2\x64\bin\*.dll "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
-      </PostBuildEvent>
-    </ItemGroup>
+    <PostBuildEvent>
+      <Command Condition="'$(Platform)'=='Win32'">xcopy "$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x86\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+      <Command Condition="'$(Platform)'=='x64'">xcopy "$(SolutionDir)\..\..\libs\3rdParty\librealsense2\x64\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
 </Project>
