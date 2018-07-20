@@ -1,3 +1,11 @@
+/** 
+ * \file      nuiVideoFileSource.h 
+ *            Provide sample video input
+ * \author    Scott Halstvedt
+ * \date      2012-2013
+ * \copyright Copyright 2012 NUI Group. All rights reserved.
+ */
+
 #ifndef NUI_VIDEOFILESOURCE_H
 #define NUI_VIDEOFILESOURCE_H
 
@@ -49,11 +57,8 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 //descriptor->property("oscillator_wait").set(50);
 END_IMPLEMENT_DESCRIPTOR(nuiVideoFileSource)
 
-START_MODULE_EXIT()
-END_MODULE_EXIT()
-
-START_MODULE_REGISTRATION()	  
-REGISTER_PLUGIN(nuiVideoFileSource,"nuiVideoFileSource", 1, 0)
-END_MODULE_REGISTRATION()
+START_EXPORT_MODULES()	  
+REGISTER_MODULE(nuiVideoFileSource,"nuiVideoFileSource", 1, 0)
+END_EXPORT_MODULES()
 
 #endif

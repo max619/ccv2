@@ -1,3 +1,12 @@
+/** 
+ * \file      nuiFactory.h
+ * \author    Scott Halstvedt
+ * \author    Anatoly Lushnikov
+ * \author    Anatoly Churikov
+ * \date      2012-2013
+ * \copyright Copyright 2011 NUI Group. All rights reserved.
+ */
+
 #ifndef NUI_FACTORY_H
 #define NUI_FACTORY_H
 
@@ -5,36 +14,44 @@
 #include <map>
 #include <string>
 #include <list>
+
 #include "nuiDebugLogger.h"
 #include "nuiModule.h"
 #include "nuiPluginManager.h"
 
-using namespace nuiPluginFramework;
-
+/** \class nuiFactory
+ *  \brief Provides methods for plugin creation and removal
+ *  Singleton class. Provides methods for plugin creation and removal
+ *  Also allows to get descriptors for already created plugins
+ */
 class nuiFactory 
 {
 public:
-	static nuiFactory *getInstance();
-	~nuiFactory();
-	void loadDynamicModules();
-	void init();
-	static void cleanup();
-	std::vector<std::string> *listPipelineNames();
-	std::vector<std::string> *listModuleNames();
-	std::vector<std::string> *listAllNames();	
-	nuiModuleDescriptor* getDescriptor(const std::string &name);
-	nuiModuleDescriptor* getDescriptor(const std::string &pipelineName,int id);
+    //! Singleton wrapper
+    static nuiFactory& getInstance();
+    
+    //! Set module instance properties just like in descriptor
+    static void applyDescriptorProps(nuiModule* module, nuiModuleDescriptor* descriptor);
+
+    //! lists available pipeline names
+    std::vector<std::string>* listPipelines();
+    //! lists available module names
+    std::vector<std::string>* listModules();
+
+    //! Creates pipeline or module with specified name
+    nuiModule* create(const std::string& moduleName);
+    
+    //! registers pipeline descriptor
+    nuiPluginFrameworkErrorCode::err registerPipelineDescriptor(nuiModuleDescriptor* descriptor);
+
 private:
-	nuiModule *create(const std::string &name);
-	void remove(nuiModule *module);
-	nuiModule *createPipeline(nuiModuleDescriptor* descriptor);
-	void loadSettings(nuiModule* module, nuiModuleDescriptor* descriptor);
-private:
-	nuiFactory();
-	std::map<std::string, nuiModuleDescriptor*> pipelineDescriptors;
-	std::map<std::string, nuiModuleDescriptor*> moduleDescriptors;
-	friend class nuiFrameworkManager;
+    nuiFactory();
+    nuiFactory(const nuiFactory&);
+
+    //! Creates pipeline given pipeline descriptor
+    nuiModule* createPipeline(nuiModuleDescriptor* descriptor);
+    //! Creates module given module descriptor
+    nuiModule* createModule(nuiModuleLoaded* module);
 };
 
-#endif
-
+#endif //NUI_FACTORY_H

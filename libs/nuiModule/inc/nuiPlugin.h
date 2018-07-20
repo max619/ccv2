@@ -1,154 +1,165 @@
-/* nuiPlugin.h
-*  
-*  Created on 01/01/12.
-*  Copyright 2012 NUI Group. All rights reserved.
-*  Community Core Fusion
-*  Author: Anatoly Churikov
-*
-*/
+/** 
+ * \file      nuiPlugin.h
+ * \author    Anatoly Lushnikov
+ * \author    Anatoly Churikov 
+ * \date      2012-2013
+ * \copyright Copyright 2012 NUI Group. All rights reserved.
+ */
+
 #ifndef NUI_PLUGIN_H
 #define NUI_PLUGIN_H
 
-enum nuiPluginFrameworkErrorCode
-{
-	nuiPluginFrameworkOK,
-	nuiPluginRegistrationFailed,
-	nuiPluginNotRegistered,
-	nuiPluginObjectQueryingFailed,
-	nuiPluginObjectCastingFailed,
-	nuiPluginAlreadyRegistered,
-	nuiPluginNonCompatibleVersion,
-	nuiPluginCreationError,
-	nuiPluginReleaseError,
-	nuiPluginServiceNotFound,
-	nuiPluginServiceWrongObjectParams,
-	nuiPluginDescriptionAlreadyRemoved,
-	nuiPluginIstancesAlreadyRemoved,
-	nuiDynamicLibraryLoadingFailed,
-	nuiDynamicLibraryAlreadyLoaded,
-	nuiDynamicLibraryAlreadyUnloaded,
-	nuiDynamicLibraryEntryPointLoadingFailed,
-	nuiDynamicLibraryExitPointLoadingFailed
-};
+#ifdef WIN32
+#define DLLEXPORT __declspec(dllexport)
+#else
+#define DLLEXPORT
+#endif
 
+#include <string>
+
+class nuiModuleDescriptor;
 struct nuiPluginFrameworkService;
 
-typedef struct nuiObjectParameters
+//! namespaced enum
+struct nuiPluginFrameworkErrorCode
+{
+  enum err
+  {
+    Success,
+    UnexpectedError,
+    ModuleRegistrationFailed,
+    PluginLoadingFailed,
+    EntryPointNotFound,
+    IncompatibleVersion,
+    RepeatingModule,
+    DefaultSettingsCorrupted
+  };
+};
+
+struct nuiObjectParameters;
+struct nuiPluginFrameworkVersion;
+struct nuiRegisterModuleParameters;
+struct nuiPluginFrameworkService;
+
+typedef nuiModuleDescriptor *(*nuiGetDescriptorFunc)();
+typedef void *(*nuiAllocateFunc)(nuiObjectParameters *); 
+typedef nuiPluginFrameworkErrorCode::err (*nuiDeallocateFunc)(void *);
+typedef nuiPluginFrameworkErrorCode::err (*nuiRegisterModuleFunc)(const nuiRegisterModuleParameters *params);
+typedef nuiPluginFrameworkErrorCode::err (*nuiLibraryFreeFunc)();
+typedef nuiPluginFrameworkErrorCode::err (*nuiLibraryLoadFunc)(const nuiPluginFrameworkService *);
+
+//! structure passed to create plugin objects
+struct nuiObjectParameters
 {
   const char *objectType;
   const struct nuiPluginFrameworkService *frameworkServices;
-} nuiObjectParameters;
+};
 
-typedef struct nuiPluginFrameworkVersion
+//! structure holding version information
+struct nuiPluginFrameworkVersion
 {
+  //! major changes affect plugin compatibility. Older plugins must be rebuilt with newer version of nuiModule
   int major;
+  //! minor changes should not affect plugin compatibility
   int minor;
-} nuiPluginFrameworkVersion;
+};
 
-
-typedef void *(*nuiQueryInterface)(nuiObjectParameters *); 
-typedef nuiPluginFrameworkErrorCode (*nuiReleaseInterface)(void *);
-typedef nuiPluginFrameworkErrorCode (*nuiPluginManagerLoadedCallback)();
-class nuiModuleDescriptor;
-typedef nuiModuleDescriptor *(*nuiQueryDescriptor)();
-
-typedef struct nuiRegisterPluginParameters
+//! structure holding all information required to give framework control over module
+struct nuiRegisterModuleParameters
 {
   nuiPluginFrameworkVersion version;
-  nuiQueryInterface queryInterfaceFunc;
-  nuiReleaseInterface releaseInterfaceFunc;
-  nuiQueryDescriptor queryModuleDescriptorFunc;
-  nuiPluginManagerLoadedCallback pluginManagerLoadedCallback;
-} nuiRegisterPluginParameters;
+  std::string name;
+  nuiAllocateFunc allocateFunc;
+  nuiDeallocateFunc deallocateFunc;
+  nuiGetDescriptorFunc getDescriptorFunc;
+};
 
-typedef nuiPluginFrameworkErrorCode (*nuiRegisterPluginFunc)(const char *nodeType, const nuiRegisterPluginParameters *params);
-typedef nuiPluginFrameworkErrorCode (*nuiInvokeServiceFunc)(const char *serviceName, void *serviceParams);
-typedef int (*nuiEnumerateServiceFunc)(const char **serviceNames);
-typedef nuiPluginFrameworkErrorCode (*nuiDynamicLibraryFreeFunc)();
-
-typedef struct nuiPluginFrameworkService
+//! services exposed by framework to plugin
+struct nuiPluginFrameworkService
 {
   nuiPluginFrameworkVersion version;
-  nuiRegisterPluginFunc registerPluginType; 
-  nuiInvokeServiceFunc invokeService;
-  nuiEnumerateServiceFunc enumerateServices;
- 
-} nuiPluginFrameworkService;
+  nuiRegisterModuleFunc registerModule; 
+};
 
-typedef nuiDynamicLibraryFreeFunc (*nuiDynamicLibraryLoadFunc)(const nuiPluginFrameworkService *);
+extern "C" DLLEXPORT 
+nuiPluginFrameworkErrorCode::err nuiLibraryLoad(const nuiPluginFrameworkService *params);
 
-#ifdef WIN32
-	#define DLLEXPORT __declspec(dllexport)
-#else
-    #define DLLEXPORT
-#endif
+#define IMPLEMENT_ALLOCATOR(type)						        \
+static void* allocate##type##(nuiObjectParameters* params)	  \
+{														                        \
+  return (void*)(new type());						          \
+}														                        \
 
-extern "C" DLLEXPORT nuiDynamicLibraryFreeFunc nuiDynamicLibraryLoad(const nuiPluginFrameworkService *params);
+#define IMPLEMENT_DEALLOCATOR(type)											                       \
+static nuiPluginFrameworkErrorCode::err deallocate##type##(void *object)				             \
+{																			                                         \
+  type* module = (type*)(object);											                         \
+  if (module == NULL)														                               \
+    return nuiPluginFrameworkErrorCode::Success;										                           \
+  delete module;															                                 \
+  return nuiPluginFrameworkErrorCode::Success;											                           \
+}																			                                         \
 
-#define IMPLEMENT_ALLOCATOR(type)						\
-void *allocate##type(nuiObjectParameters* params)		\
-{														\
-	return (void*) (new type());						\
-}														\
+#define START_IMPLEMENT_DESCRIPTOR(type,author,description)					           \
+nuiModuleDescriptor* descriptor##type = NULL;							                     \
+nuiModuleDescriptor* get##type##Descriptor()							                     \
+{																			                                         \
+  if (descriptor##type == NULL)												                           \
+  {																			                                       \
+    descriptor##type = new nuiModuleDescriptor();							                 \
+    nuiModuleDescriptor* descriptor = descriptor##type;						             \
+    descriptor->setName( #type );											                         \
+    descriptor->setAuthor(author);											                       \
+    descriptor->setDescription(description);								                   \
+    descriptor->getProperties()["use_thread"] =  new nuiProperty(false);	     \
+    descriptor->getProperties()["oscillator_mode"] = new nuiProperty(false);   \
+    descriptor->getProperties()["oscillator_wait"] = new nuiProperty(15);	     \
+    descriptor->getProperties()["synced_input"] = new nuiProperty(true);	     \
 
-#define IMPLEMENT_DEALLOCATOR(type)											\
-nuiPluginFrameworkErrorCode deallocate##type(void *object)					\
-{																			\
-	type* module = (type*)(object);											\
-	if (module == NULL)														\
-		return nuiPluginReleaseError;										\
-	delete module;															\
-	return nuiPluginFrameworkOK;											\
-}																			\
+#define END_IMPLEMENT_DESCRIPTOR(type)										                     \
+  }																		                                         \
+  return descriptor##type;												                             \
+}																			                                         \
 
-#define START_IMPLEMENT_DESCRIPTOR(type,author,description)						\
-nuiModuleDescriptor* descriptor##type = NULL;									\
-nuiModuleDescriptor* get##type##Descriptor()									\
-{																				\
-	if (descriptor##type==NULL)													\
-	{																			\
-		descriptor##type = new nuiModuleDescriptor();							\
-		nuiModuleDescriptor* descriptor = descriptor##type;						\
-		descriptor->setName( #type );											\
-		descriptor->setAuthor(author);											\
-		descriptor->setDescription(description);								\
-		descriptor->getProperties()["use_thread"] =  new nuiProperty(false);	\
-		descriptor->getProperties()["oscillator_mode"] = new nuiProperty(false);\
-		descriptor->getProperties()["oscillator_wait"] = new nuiProperty(15);	\
-		descriptor->getProperties()["synced_input"] = new nuiProperty(true);	\
-			
-#define END_IMPLEMENT_DESCRIPTOR(type)										\
-	}																		\
-	return descriptor##type;												\
-}																			\
+//! \todo add plugin name registration - through descriptor or registerParams
+/** \def START_EXPORT_MODULES()
+*  Starts plugin registration
+*/
+#define START_EXPORT_MODULES()									                               \
+extern "C" DLLEXPORT                                                           \
+nuiPluginFrameworkErrorCode::err nuiLibraryLoad(const nuiPluginFrameworkService *params)\
+{																													                     \
+  nuiRegisterModuleParameters *registerParams = new nuiRegisterModuleParameters();\
+  nuiPluginFrameworkErrorCode::err error =                                     \
+    nuiPluginFrameworkErrorCode::Success;                                      \
 
-#define REGISTER_PLUGIN(type,description,majorValue,minorValue)							\
-registerParams->version.major = majorValue;												\
-registerParams->version.minor = minorValue;												\
-registerParams->queryInterfaceFunc = allocate##type;									\
-registerParams->releaseInterfaceFunc = deallocate##type;								\
-registerParams->queryModuleDescriptorFunc = get##type##Descriptor;						\
-if (params->registerPluginType(description, registerParams) != nuiPluginFrameworkOK)	\
-	return NULL;																		\
-registerParams = new nuiRegisterPluginParameters();										\
+//! \todo rewrite plugin to handle multiple modules and register each of them
+/** \def REGISTER_MODULE()
+*  Fills module registration parameters
+*  I.e. structure with module controlling functions
+*/
+#define REGISTER_MODULE(type,description,majorValue,minorValue) \
+  registerParams->version.major = majorValue; \
+  registerParams->version.minor = minorValue;	\
+  registerParams->allocateFunc = allocate##type##; \
+  registerParams->deallocateFunc = deallocate##type##; \
+  registerParams->getDescriptorFunc = get##type##Descriptor; \
+  registerParams->name = #type; \
+  error = params->registerModule(registerParams); \
+  if (error != nuiPluginFrameworkErrorCode::Success) \
+    return error; \
 
-#define START_MODULE_REGISTRATION()																					\
-extern "C" DLLEXPORT nuiDynamicLibraryFreeFunc nuiDynamicLibraryLoad(const nuiPluginFrameworkService *params)		\
-{																													\
-	nuiRegisterPluginParameters *registerParams = new nuiRegisterPluginParameters();								\
+/** \def END_EXPORT_MODULES()
+*  Finalizes module registration function
+*/
+#define END_EXPORT_MODULES()																					     \
+  delete registerParams;																							         \
+  return error;																	 \
+}																													                     \
 
-#define END_MODULE_REGISTRATION()																					\
-	delete registerParams;																							\
-	return (nuiDynamicLibraryFreeFunc)ExitFunc;																								\
-}																													\
-
-#define START_MODULE_EXIT()																							\
-extern "C" DLLEXPORT nuiPluginFrameworkErrorCode ExitFunc()															\
-{																													\
-
-#define END_MODULE_EXIT()																							\
-	return nuiPluginFrameworkOK;																					\
-}																													\
+/** \todo we can add some functions like onLoading, onLoaded, onUnloading, 
+ ** onUnloaded to get some control over plugin loading process.
+ */
 
 #endif//NUI_PLUGIN_H
 

@@ -1,10 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        modules/nuiBackgroundSubtractModule.h
-// Purpose:     Filter to detect edges
-// Author:      Scott Halstvedt
-// Copyright:   (c) 2012 NUI Group
-/////////////////////////////////////////////////////////////////////////////
-
+/** 
+ * \file      nuiPluginManager.h
+ *            Filter to detect edges
+ * \author    Scott Halstvedt
+ * \date      2012-2013
+ * \copyright Copyright 2012 NUI Group. All rights reserved.
+ */
 
 #ifndef NUI_BACKGROUND_SUBTRACT_MODULE_H
 #define NUI_BACKGROUND_SUBTRACT_MODULE_H
@@ -56,12 +56,9 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor,0);
 descriptor->property("use_thread").set(false);
 END_IMPLEMENT_DESCRIPTOR(nuiBackgroundSubtractModule)	
 
-START_MODULE_EXIT()
-END_MODULE_EXIT()
-
-START_MODULE_REGISTRATION()	  
-REGISTER_PLUGIN(nuiBackgroundSubtractModule,"nuiBackgroundSubtractModule",1,0)
-END_MODULE_REGISTRATION()
+START_EXPORT_MODULES()	  
+REGISTER_MODULE(nuiBackgroundSubtractModule,"nuiBackgroundSubtractModule",1,0)
+END_EXPORT_MODULES()
 
 #endif
 

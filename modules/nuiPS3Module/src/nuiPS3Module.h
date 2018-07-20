@@ -1,13 +1,14 @@
-//////////////////////////////////////////////////////////////////////////
-// Name:		modules/nuiPS3Module
-// Purpose:		Capture video from PS3 camera using PS3Eye SDK from Code Laboratories
-// Author:		Anatoly Lushnikov
-// Copyright:	(c) 2012 NUI Group
-//////////////////////////////////////////////////////////////////////////
+/** 
+ * \file      nuiPS3Module.h
+ *            Capture video from PS3 camera using PS3Eye SDK from Code Laboratories
+ * \author    Anatoly Lushnikov
+ * \date      2012-2013
+ * \copyright Copyright 2012 NUI Group. All rights reserved.
+ */
 
-//! TODO : Singleton
-//! TODO : Params to module instance ???
-//! TODO : Initialize Module instance with camera number ???
+//! \todo : Singleton?
+//! \todo : Params to module instance ???
+//! \todo: Initialize Module instance with camera number ???
 
 #ifndef NUI_PS3MODULE
 #define NUI_PS3MODULE
@@ -61,11 +62,8 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 //descriptor->property("oscillator_wait").set(50);
 END_IMPLEMENT_DESCRIPTOR(nuiPSModule)
 
-START_MODULE_EXIT()
-END_MODULE_EXIT()
-
-START_MODULE_REGISTRATION()	  
-REGISTER_PLUGIN(nuiPSModule,"nuiPSModule", 1, 0)
-END_MODULE_REGISTRATION()
+START_EXPORT_MODULES()	  
+REGISTER_MODULE(nuiPSModule,"nuiPSModule", 1, 0)
+END_EXPORT_MODULES()
 
 #endif

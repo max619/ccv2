@@ -1,5 +1,14 @@
-#ifndef _NUI_FRAMEWORK_MANAGER_
-#define _NUI_FRAMEWORK_MANAGER_
+/** 
+* \file      nuiFrameworkManager.h
+* \author    Anatoly Lushnikov
+* \author    Scott Halstvedt
+* \author    Anatoly Churikov
+* \date      2012-2013
+* \copyright Copyright 2012 NUI Group. All rights reserved.
+*/
+
+#ifndef NUI_FRAMEWORK_MANAGER_H
+#define NUI_FRAMEWORK_MANAGER_H
 #define _WINSOCKAPI_
 
 #include <string>
@@ -18,127 +27,176 @@
 #include "nuiDebugLogger.h"
 #include "nuiJsonRpcApi.h"
 #include "json\json.h"
-
-typedef enum nuiFrameworkManagerErrorCode
-{
-	NUI_FRAMEWORK_MANAGER_OK,
-	//NUI_FRAMEWORK_WRONG_FILE,
-	NUI_FRAMEWORK_PIPELINE_STRUCTURE_LOOP,
-    NUI_FRAMEWORK_ERROR_SAVING_FILE,
-	NUI_FRAMEWORK_ROOT_ACCESS_DENIED,
-	NUI_FRAMEWORK_OBJECT_NOT_EXIST,
-	NUI_FRAMEWORK_ROOT_INITIALIZATION_FAILED,
-} nuiFrameworkManagerErrorCode;
-
-//typedef 
-
-struct nuiModuleRuntimeDescriptor
-{
-public:
-	double averageFPS;
-	double averageWaitTime;
-	double averageProcessTime;
-	bool isRunning;
-};
-
-struct nuiDataStreamRuntimeDescriptor
-{
-public:
-	bool isRunning;
-};
+#include "nuiPlugin.h"
 
 class nuiModule;
 class nuiModuleDescriptor;
 class nuiPipelineModule;
 
+//! namespaced enum
+struct nuiFrameworkManagerErrorCode
+{
+  enum err
+  {
+    Success,
+    NonexistentModule,
+    InitFailed,
+    RootDeletionDeprecated,
+  };
+};
+
+struct nuiModuleRuntimeDescriptor
+{
+public:
+  double averageFPS;
+  double averageWaitTime;
+  double averageProcessTime;
+  bool isRunning;
+};
+
+struct nuiDataStreamRuntimeDescriptor
+{
+public:
+  bool isRunning;
+};
+
+//! Provides API for engine manipulations
 class nuiFrameworkManager
 {
 public:
-	~nuiFrameworkManager();
-	static nuiFrameworkManager *getInstance();
-private:
-	nuiFrameworkManager();
-public:
-	nuiFrameworkManagerErrorCode init();
-	nuiFrameworkManagerErrorCode initializeFrameworkManager();
-	nuiFrameworkManagerErrorCode loadAddonsAtPath(const char *addonsPath);
-	std::vector<std::string> *listDynamicModules();
-	std::vector<std::string> *listPipelines(std::string &hostedPipelineName);
-    
-    //! starts the current pipeline workflow
-	nuiFrameworkManagerErrorCode workflowStart();
+  static nuiFrameworkManager& getInstance();
 
-    //! starts module index workflow at the current pipeline
-    nuiFrameworkManagerErrorCode workflowStart(int moduleIndex);
-    
-    //! stops the current pipeline workflow
-	nuiFrameworkManagerErrorCode workflowStop();
+  //! \todo what does init should mean for framework manager?
+  nuiFrameworkManagerErrorCode::err init();
 
-    //! starts module index workflow at the current pipeline
-    nuiFrameworkManagerErrorCode workflowStop(int moduleIndex);
-	nuiFrameworkManagerErrorCode workflowQuit();
+  //LIST METHODS ===============================================================
 
-public:
-	nuiModuleDescriptor *createPipeline(std::string &pipelineName);
-	nuiModuleDescriptor *createModule(std::string &pipelineName,std::string &moduleName);
-	nuiDataStreamDescriptor *createConnection(std::string &pipelineName, int sourceModuleID, int destinationModuleID,int sourcePort, int destinationPort);
-	int setInputEndpointCount(std::string &pipelineName,int count);
-	int setOutputEndpointCount(std::string &pipelineName,int count);
-public:
-    nuiModuleDescriptor *getCurrentPipeline();
-	nuiModuleDescriptor *getWorkflowRoot();
-	nuiModuleDescriptor *getPipeline(std::string &pipelineName);
-	nuiModuleDescriptor *getModule(std::string &pipelineName, int index);
-	nuiModuleDescriptor *getModule(std::string &moduleName);
-	nuiEndpointDescriptor *getInputEndpoint(std::string &pipelineName,int index);
-	nuiEndpointDescriptor *getOutputEndpoint(std::string &pipelineName,int index);
-	nuiDataStreamDescriptor *getConnection(std::string &pipelineName, int sourceModuleID, int destinationModuleID,int sourcePort, int destinationPort);
-public:
-	nuiFrameworkManagerErrorCode deletePipeline(std::string &pipelineName);
-	nuiModuleDescriptor *deleteModule(std::string &pipelineName,int moduleIndex);
-	nuiModuleDescriptor *deleteInputEndpoint(std::string &pipelineName,int index);
-	nuiModuleDescriptor *deleteOutputEndpoint(std::string &pipelineName,int index);
-	nuiModuleDescriptor *deleteConnection(std::string &pipelineName, int sourceModuleID, int destinationModuleID, int sourcePort, int destinationPort);
-public:
-	nuiModuleDescriptor *updatePipeline(std::string &pipelineName, nuiModuleDescriptor* moduleDescriptor);
-	nuiModuleDescriptor *updateModule(std::string &pipelineName, int index, nuiModuleDescriptor* moduleDescriptor);
-	nuiEndpointDescriptor *updateInputEndpoint(std::string &pipelineName,int index, nuiEndpointDescriptor* endpointDescriptor);
-	nuiEndpointDescriptor *updateOutputEndpoint(std::string &pipelineName,int index, nuiEndpointDescriptor* endpointDescriptor);
-	nuiDataStreamDescriptor *updateConnection(std::string &pipelineName, int sourceModuleID, int destinationModuleID,int sourcePort, int destinationPort, nuiDataStreamDescriptor *connectionDescriptor);
-//	nuiTreeNode<nuiModuleDescriptor,nuiModuleRuntimeDescriptor>* getRuntimeRootDescriptor();
-public:
-    //! dives into moduleIndex pipeline of the currect pipeline
-    //! \returns new current pipeline descriptor, NULL if action failed
-    nuiModuleDescriptor *navigatePush(int moduleIndex);
-    //! returns back to upper pipeline
-    //! \returns new current pipeline descriptor, NULL if action failed
-    nuiModuleDescriptor *navigatePop( );
-public:
-	void setStartupPath(std::string path);
+  // ++ reviewed
+  //! lists modules obtained from Plugins
+  std::vector<std::string>* listModules();
+
+  // ++ reviewed
+  //! \todo require method to obtain pipelines allowed to be created on current level
+  //! lists all the pipelines
+  std::vector<std::string>* listPipelines();
+
+  //WORKFLOW CONTROL METHODS ===================================================
+  // ++ reviewed
+  //! starts the current pipeline (instance chosen by navigate) workflow
+  nuiFrameworkManagerErrorCode::err workflowStart();
+
+  // ++ reviewed
+  //! starts module index workflow at the current pipeline
+  nuiFrameworkManagerErrorCode::err workflowStart(int moduleIndex);
+
+  // ++ reviewed
+  //! stops the current pipeline (instance chosen by navigate) workflow
+  nuiFrameworkManagerErrorCode::err workflowStop();
+
+  // ++ reviewed
+  //! starts module index workflow at the current pipeline
+  nuiFrameworkManagerErrorCode::err workflowStop(int moduleIndex);
+
+  //CREATE METHODS =============================================================
+  // ++ reviewed
+  //! creates pipeline instance at the specified level
+  nuiModuleDescriptor* create(const std::string &pipelineName);
+  //! ++ reviewed
+  //! creates new pipeline template
+  nuiModuleDescriptor* createNewPipelineTemplate(const std::string &pipelineName);
+
+  // ++ reviewed
+  //! adds module to pipeline template and forces all pipelines already created to get instance of newly created module
+  nuiModuleDescriptor* createModule(std::string &pipelineName,std::string &moduleName);
+
+  //! \todo needs better revision
+  //! creates connection between modules in specified pipeline and forces all pipelines already created to add instance of that connection
+  nuiDataStreamDescriptor* createConnection(std::string &pipelineName, 
+    int sourceModuleID, int destinationModuleID, int sourcePort, int destinationPort);
+
+  //! \todo needs better revision
+  //! sets new input endpoint count on specified pipeline
+  int setInputEndpointCount(std::string &pipelineName, int count);
+
+  //! \todo needs better revision
+  //! sets new output endpoint count on specified pipeline
+  int setOutputEndpointCount(std::string &pipelineName, int count);
+
+  //GET METHODS ================================================================
+
+  // ++ reviewed
+  nuiModuleDescriptor *getCurrentPipeline();
+  // ++ reviewed
+  nuiModuleDescriptor *getWorkflowRoot();
+  // ++ reviewed
+  nuiModuleDescriptor *getPipeline(std::string &pipelineName);
+  // ++ reviewed
+  nuiModuleDescriptor *getModule(std::string &pipelineName, int index);
+  // ++ reviewed
+  nuiModuleDescriptor *getModule(std::string &moduleName);
+  // ++ reviewed
+  nuiEndpointDescriptor *getInputEndpoint(std::string &pipelineName, int index);
+  // ++ reviewed
+  nuiEndpointDescriptor *getOutputEndpoint(std::string &pipelineName, int index);
+  // ++ reviewed
+  nuiDataStreamDescriptor *getConnection(std::string &pipelineName, 
+    int sourceModuleID, int destinationModuleID,int sourcePort, int destinationPort);
+
+  //DELETE METHODS =============================================================
+
+  //! \todo needs better revision; instance level not implemented?
+  nuiFrameworkManagerErrorCode::err deletePipeline(std::string &pipelineName);
+  //! \todo needs better revision; instance level not implemented?
+  nuiModuleDescriptor *deleteModule(std::string &pipelineName,int moduleIndex);
+  //! \todo needs better revision; instance level not implemented?
+  nuiModuleDescriptor *deleteInputEndpoint(std::string &pipelineName,int index);
+  //! \todo needs better revision; instance level not implemented?
+  nuiModuleDescriptor *deleteOutputEndpoint(std::string &pipelineName,int index);
+  //! \todo needs better revision; instance level not implemented?
+  nuiModuleDescriptor *deleteConnection(std::string &pipelineName, int sourceModuleID, int destinationModuleID, int sourcePort, int destinationPort);
+
+  //UPDATE METHODS =============================================================
+  
+  //! \todo needs better revision
+  nuiModuleDescriptor *updatePipeline(std::string &pipelineName, nuiModuleDescriptor* moduleDescriptor);
+  //! \todo needs better revision
+  nuiModuleDescriptor *updateModule(std::string &pipelineName, int index, nuiModuleDescriptor* moduleDescriptor);
+  //! \todo needs better revision
+  nuiEndpointDescriptor *updateInputEndpoint(std::string &pipelineName,int index, nuiEndpointDescriptor* endpointDescriptor);
+  //! \todo needs better revision
+  nuiEndpointDescriptor *updateOutputEndpoint(std::string &pipelineName,int index, nuiEndpointDescriptor* endpointDescriptor);
+  //! \todo needs better revision
+  nuiDataStreamDescriptor *updateConnection(std::string &pipelineName, int sourceModuleID, int destinationModuleID,int sourcePort, int destinationPort, nuiDataStreamDescriptor *connectionDescriptor);
+
+  //NAVIGATE METHODS ===========================================================
+
+  /** dives into moduleIndex pipeline of the currect pipeline
+  *  \returns new current pipeline descriptor, NULL if action failed
+  */
+  nuiModuleDescriptor *navigatePush(int moduleIndex);
+
+  /** returns back to upper pipeline
+  *  \return new current pipeline descriptor, NULL if action failed
+  */
+  nuiModuleDescriptor *navigatePop( );
+
+  //OTHER ======================================================================
+  //! force nuiPluginManager load default settings and plugins
+  nuiPluginFrameworkErrorCode::err loadDefaultSettings();
+
 private:
-    //gets currently selected pipeline
-    nuiPipelineModule *getCurrent();
-    //list of child indexes to the current pipeline
-    std::list<int> pathToCurrent;
-public: 
-	//nuiFrameworkManagerErrorCode loadJSONConfigData(const char *fileName);
-	nuiFrameworkManagerErrorCode loadSettingsFromJson(const char *fileName);
-	nuiFrameworkManagerErrorCode loadSettingsFromJson(Json::Value *root);
-private:
-	nuiFrameworkManagerErrorCode saveSettingsToJson(const char *fileName, std::string &pipelineName);
-	nuiFrameworkManagerErrorCode saveSettingsToJson(const char *fileName, std::list<nuiModuleDescriptor*>* descriptors);
-	nuiFrameworkManagerErrorCode saveSettingsToJson(Json::Value *root, std::list<nuiModuleDescriptor*>* descriptors);
-	nuiFrameworkManagerErrorCode saveSettingsToJson(Json::Value *root, std::string &pipelineName);
-	// MOVED JSON LOADING TO PUBLIC
-	nuiModuleDescriptor *parseModuleDescriptor(Json::Value *root);
-	void parseModuleDescriptorParameters(nuiModuleDescriptor &moduleDescriptor, Json::Value *root);
-private:
-    nuiModule* currentModule;
-	nuiPipelineModule *rootPipeline;
-	nuiTree<int,nuiModule*> *dataObjectTree; 
-private:
-	std::string startupPath;
-	std::string getRootPath(std::string path);
+  nuiFrameworkManager();
+  nuiFrameworkManager(const nuiFrameworkManager&);   
+  ~nuiFrameworkManager();
+
+  //! gets currently selected pipeline
+  nuiPipelineModule *getCurrent();
+  //! list of child indexes to the current pipeline
+  std::list<int> pathToCurrent;
+
+  nuiModule* currentModule;
+  nuiPipelineModule *rootPipeline;
+  nuiTree<int,nuiModule*> *dataObjectTree;
 };
 
-#endif//_NUI_FRAMEWORK_MANAGER_
+#endif//NUI_FRAMEWORK_MANAGER_H

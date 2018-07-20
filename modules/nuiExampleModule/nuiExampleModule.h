@@ -1,10 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        modules/nuiExampleModule.h
-// Purpose:     Example Module to be used for developments.
-// Author:      Christian Moore
-// Copyright:   (c) 2012 NUI Group
-/////////////////////////////////////////////////////////////////////////////
-
+/** 
+ * \file      nuiExampleModule.h
+ *            Example Module to be used for developments.
+ * \author    Christian Moore
+ * \date      2012-2013
+ * \copyright Copyright 2012 NUI Group. All rights reserved.
+ */
 
 #ifndef NUI_EXAMPLE_MODULE_H
 #define NUI_EXAMPLE_MODULE_H
@@ -51,12 +51,9 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor,0);
 descriptor->property("use_thread").set(false);
 END_IMPLEMENT_DESCRIPTOR(nuiExampleModule)	
 
-START_MODULE_EXIT()
-END_MODULE_EXIT()
-
-START_MODULE_REGISTRATION()	  
-REGISTER_PLUGIN(nuiExampleModule,"nuiExampleModule",1,0)
-END_MODULE_REGISTRATION()
+START_EXPORT_MODULES()	  
+REGISTER_MODULE(nuiExampleModule,"nuiExampleModule",1,0)
+END_EXPORT_MODULES()
 
 #endif
 

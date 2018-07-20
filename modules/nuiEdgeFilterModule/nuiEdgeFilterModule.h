@@ -1,10 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        modules/nuiEdgeFilterModule.h
-// Purpose:     Filter to detect edges
-// Author:      Scott Halstvedt
-// Copyright:   (c) 2012 NUI Group
-/////////////////////////////////////////////////////////////////////////////
-
+/** 
+ * \file      nuiEdgeFilterModule.h
+ *            Filter to detect edges
+ * \author    Scott Halstvedt
+ * \date      2012-2013
+ * \copyright Copyright 2012 NUI Group. All rights reserved.
+ */
 
 #ifndef NUI_EDGE_FILTER_MODULE_H
 #define NUI_EDGE_FILTER_MODULE_H
@@ -51,12 +51,9 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor,0);
 descriptor->property("use_thread").set(false);
 END_IMPLEMENT_DESCRIPTOR(nuiEdgeFilterModule)	
 
-START_MODULE_EXIT()
-END_MODULE_EXIT()
-
-START_MODULE_REGISTRATION()	  
-REGISTER_PLUGIN(nuiEdgeFilterModule,"nuiEdgeFilterModule",1,0)
-END_MODULE_REGISTRATION()
+START_EXPORT_MODULES()	  
+REGISTER_MODULE(nuiEdgeFilterModule,"nuiEdgeFilterModule",1,0)
+END_EXPORT_MODULES()
 
 #endif
 

@@ -1,10 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        modules/nuiHighpassFilter.h
-// Purpose:     Highpass filter
-// Author:      Scott Halstvedt
-// Copyright:   (c) 2012 NUI Group
-/////////////////////////////////////////////////////////////////////////////
-
+/** 
+ * \file      nuiHighpassFilter.h
+ *            Highpass filter
+ * \author    Scott Halstvedt
+ * \date      2012-2013
+ * \copyright Copyright 2012 NUI Group. All rights reserved.
+ */
 
 #ifndef NUI_HIGHPASS_FILTER_H
 #define NUI_HIGHPASS_FILTER_H
@@ -51,12 +51,9 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor,0);
 descriptor->property("use_thread").set(false);
 END_IMPLEMENT_DESCRIPTOR(nuiHighpassFilter)	
 
-START_MODULE_EXIT()
-END_MODULE_EXIT()
-
-START_MODULE_REGISTRATION()	  
-REGISTER_PLUGIN(nuiHighpassFilter,"nuiHighpassFilter",1,0)
-END_MODULE_REGISTRATION()
+START_EXPORT_MODULES()	  
+REGISTER_MODULE(nuiHighpassFilter,"nuiHighpassFilter",1,0)
+END_EXPORT_MODULES()
 
 #endif
 
