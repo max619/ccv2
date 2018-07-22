@@ -41,7 +41,8 @@
                         "use_thread": "false",
                         "oscillator_mode": "true",
                         "path": "D:\\LLDevelopment\\Work\\ccv2\\data\\out.avi",
-                        "oscillator_wait": 40
+                        "oscillator_wait": 40,
+                        "synced_input": "true"
                     }
                 },
                 {
@@ -52,7 +53,8 @@
                         "oscillator_mode": "false",
                         "history": 1500,
                         "detectshadows": "false",
-                        "threshold": 15
+                        "threshold": 15,
+                        "synced_input": "true"
                     }
                 },
                 {
@@ -63,7 +65,7 @@
                         "oscillator_mode": "false",
                         "amount": 9,
                         "disablegauss": "true",
-                        "synced_input": "false"
+                        "synced_input": "true"
                     }
                 },
                 {
@@ -72,7 +74,7 @@
                     "properties": {
                         "use_thread": "true",
                         "oscillator_mode": "false",
-                        "synced_input": "false"
+                        "synced_input": "true"
                     }
                 }
             ],
