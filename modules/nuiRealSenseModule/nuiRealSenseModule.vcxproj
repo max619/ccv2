@@ -12,9 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nuiRealSenseModule.h" />
+    <ClInclude Include="ocvRealsenseWrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="nuiRealSenseModule.cpp" />
+    <ClCompile Include="ocvRealsenseWrapper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals" />
   <PropertyGroup Label="Globals">
