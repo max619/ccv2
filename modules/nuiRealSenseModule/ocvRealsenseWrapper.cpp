@@ -51,6 +51,7 @@ bool ocvRealsenseWrapper::queryColorFrame(IplImage ** img)
 		IplImage * image = *img;
 
 		colorImage.release();
+		colorImageBgr.release();
 
 		colorImage = cv::Mat(cv::Size(colorFrame.get_width(), colorFrame.get_height()), CV_8UC3, data_ptr, cv::Mat::AUTO_STEP);
 
