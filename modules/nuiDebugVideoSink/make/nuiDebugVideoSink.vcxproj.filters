@@ -18,6 +18,15 @@
     <ClInclude Include="..\src\nuiDebugVideoSink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\WinApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\D3DBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\D3D11.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\nuiDebugVideoSink.cpp">

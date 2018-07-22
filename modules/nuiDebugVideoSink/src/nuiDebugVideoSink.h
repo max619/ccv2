@@ -16,8 +16,9 @@
 #include "nuiDebugLogger.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
+#include "D3D11.h"
 
-class nuiDebugVideoSink : public nuiModule {
+class nuiDebugVideoSink : public nuiModule, D3D11WinApp {
 public:
 	nuiDebugVideoSink(); 
 	virtual ~nuiDebugVideoSink();

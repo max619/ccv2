@@ -42,7 +42,7 @@
   </ImportGroup>
   <ImportGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-    <Import Project="..\..\libs\3rdParty\_props\ptypes.props" />
+    <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\ptypes.props" />
     <Import Project="..\nuiModule.props" />
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\OpenCV.props" />
