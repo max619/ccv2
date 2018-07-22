@@ -25,6 +25,9 @@
             "path": "modules\\nuiWebcamModule.dll"
         },
         {
+            "path": "modules\\nuiRealSenseModule.dll"
+        },
+        {
             "path": "modules\\nuiExampleModule.dll"
         }
     ],
@@ -36,7 +39,7 @@
             "modules": [
                 {
                     "id": 0,
-                    "type": "nuiWebcamModule",
+                    "type": "nuiRealSenseModule",
                     "properties": {
                         "use_thread": "false",
                         "oscillator_mode": "true",
@@ -73,8 +76,7 @@
                     "type": "nuiDebugVideoSink",
                     "properties": {
                         "use_thread": "true",
-                        "oscillator_mode": "false",
-                        "synced_input": "true"
+                        "oscillator_mode": "false"
                     }
                 }
             ],
@@ -102,36 +104,6 @@
                         "port": 0
                     },
                     "destination": {
-                        "id": 1,
-                        "port": 0
-                    },
-                    "properties": {
-                        "async": 1,
-                        "deepcopy": 1,
-                        "lastpacket": 0
-                    }
-                },
-                {
-                    "source": {
-                        "id": 1,
-                        "port": 0
-                    },
-                    "destination": {
-                        "id": 2,
-                        "port": 0
-                    },
-                    "properties": {
-                        "async": 1,
-                        "deepcopy": 1,
-                        "lastpacket": 0
-                    }
-                },
-                {
-                    "source": {
-                        "id": 2,
-                        "port": 0
-                    },
-                    "destination": {
                         "id": 3,
                         "port": 0
                     },
@@ -140,7 +112,7 @@
                         "deepcopy": 1,
                         "lastpacket": 0
                     }
-                }      
+                }
             ]
         }
     ]

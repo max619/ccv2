@@ -13,10 +13,12 @@
   <ItemGroup>
     <ClInclude Include="nuiRealSenseModule.h" />
     <ClInclude Include="ocvRealsenseWrapper.h" />
+    <ClInclude Include="rs2DeviceContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="nuiRealSenseModule.cpp" />
     <ClCompile Include="ocvRealsenseWrapper.cpp" />
+    <ClCompile Include="rs2DeviceContainer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals" />
   <PropertyGroup Label="Globals">

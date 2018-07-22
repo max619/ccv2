@@ -4,8 +4,12 @@
 
 ocvRealsenseWrapper::ocvRealsenseWrapper()
 {
-	depthImage = NULL;
-	colorImage = NULL;
+	_img = NULL;
+
+	ctx.set_devices_changed_callback([&](rs2::event_information& info)
+	{
+		container.updateDevices(info);
+	});
 }
 
 
@@ -18,10 +22,12 @@ bool ocvRealsenseWrapper::open(int index)
 {
 	try
 	{
-		pipe.start();
+		rs2::context ctx;
+		container.initDevices(ctx);
+		pipe = container.getPipeline(index);
 		opened = true;
 	}
-	catch (_exception ex)
+	catch (_exception& ex)
 	{
 
 	}
@@ -48,8 +54,6 @@ bool ocvRealsenseWrapper::queryColorFrame(IplImage ** img)
 		frameset = pipe.wait_for_frames();
 		auto colorFrame = frameset.get_color_frame().as<rs2::video_frame>();
 		void* data_ptr = (void*)colorFrame.get_data();
-		IplImage * image = *img;
-
 		colorImage.release();
 		colorImageBgr.release();
 
@@ -57,8 +61,8 @@ bool ocvRealsenseWrapper::queryColorFrame(IplImage ** img)
 
 		cv::cvtColor(colorImage, colorImageBgr, cv::COLOR_BGR2RGB);
 
-		image = new IplImage(colorImageBgr);
-		img[0] = image;
+		_img = new IplImage(colorImageBgr);
+		img[0] = _img;
 	}
 	catch (const std::exception&)
 	{
