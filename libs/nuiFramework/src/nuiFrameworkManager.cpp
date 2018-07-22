@@ -1271,16 +1271,3 @@ nuiModuleDescriptor* nuiFrameworkManager::create( const std::string &pipelineNam
   //! \todo implementation
   return NULL;
 }
-
-void nuiFrameworkManager::setStartupPath(std::string path)
-{
-	if (path.at(path.size() - 1) != '\\')
-		path += '\\';
-	startupPath = path;
-}
-
-std::string nuiFrameworkManager::getRelativeToStartupPath(std::string path)
-{
-	return startupPath + path;
-}
-

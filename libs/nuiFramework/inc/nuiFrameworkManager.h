@@ -197,13 +197,6 @@ private:
   nuiModule* currentModule;
   nuiPipelineModule *rootPipeline;
   nuiTree<int,nuiModule*> *dataObjectTree;
-
-public:
-	void setStartupPath(std::string path);
-	std::string getRelativeToStartupPath(std::string path);
-
-private:
-	std::string startupPath;
 };
 
 #endif//NUI_FRAMEWORK_MANAGER_H

@@ -86,10 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\D3D11.h" />
-    <ClInclude Include="..\src\D3DBase.h" />
     <ClInclude Include="..\src\nuiDebugVideoSink.h" />
-    <ClInclude Include="..\src\WinApp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\nuiDebugVideoSink.cpp" />

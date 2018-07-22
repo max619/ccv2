@@ -19,7 +19,6 @@
 #include "nuiDebugLogger.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
-#include "ocvRealsenseWrapper.h"
 
 NUI_DATAPACKET_DEFAULT_DECLARATION(RealSenseModule, IplImage*)
 
@@ -32,14 +31,11 @@ public:
 	void start();
 
 private:
-	
 	nuiEndpoint* output;
 	nuiDataPacket* outputDataPacket;
 
-	//cv::Mat frame;
+	cv::Mat frame;
 	IplImage* img;
-
-	ocvRealsenseWrapper realsenseW;
 
 	MODULE_INTERNALS();
 };

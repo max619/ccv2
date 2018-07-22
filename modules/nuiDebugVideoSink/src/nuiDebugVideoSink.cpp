@@ -3,45 +3,52 @@
 
 MODULE_DECLARE(DebugVideoSink, "native", "Sink to display video");
 
-nuiDebugVideoSink::nuiDebugVideoSink() : nuiModule(), D3D11WinApp(640,480, std::string("wnd")) {
-	MODULE_INIT();
+nuiDebugVideoSink::nuiDebugVideoSink() : nuiModule() {
+  MODULE_INIT();
 
-	this->input = new nuiEndpoint(this);
-	this->input->setTypeDescriptor(std::string("IplImage"));
-	this->setInputEndpointCount(1);
-	this->setInputEndpoint(0, this->input);
+  this->input = new nuiEndpoint(this);
+  this->input->setTypeDescriptor(std::string("IplImage"));
+  this->setInputEndpointCount(1);
+  this->setInputEndpoint(0,this->input);
 
-	dispFrame = NULL;
+  dispFrame = NULL;
 }
 
-nuiDebugVideoSink::~nuiDebugVideoSink()
+nuiDebugVideoSink::~nuiDebugVideoSink() 
 {
 
 }
 
-void nuiDebugVideoSink::update()
+void nuiDebugVideoSink::update() 
 {
-	lockMutex();
-	this->input->lock();
-	void* data;
-	nuiDataPacket* packet = this->input->getData();
-	if (packet == NULL)
-		return;
-	packet->unpackData(data);
-	IplImage* frame = (IplImage*)data;
-	dispFrame = NULL;
-	dispFrame = cvCloneImage(frame);
-	m_frame_bgr = cvarrToMat(dispFrame);
-	delete packet;
-	this->input->unlock();
-	unlockMutex();
-	render();
+  this->input->lock();
+  void* data;
+  nuiDataPacket* packet = this->input->getData();
+  if(packet == NULL) 
+    return;
+  packet->unpackData(data);
+  IplImage* frame = (IplImage*)data;
+  dispFrame = NULL;
+  dispFrame = cvCloneImage(frame);
+  CvFont font;
+  double hScale = 0.5;
+  double vScale = 0.5;
+  int lineWidth = 1;
+  cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX | CV_FONT_ITALIC, hScale, vScale, 0, lineWidth);
+  std::ostringstream oss;
+  oss << "~ " << this->timer->getAverageFPS() << " FPS";
+  cvRectangle(dispFrame, cvPoint(0,0), cvPoint(150,20), cvScalar(0,0,0), CV_FILLED, CV_AA);
+  cvRectangle(dispFrame, cvPoint(0,0), cvPoint(150,20), cvScalar(255,255,255), 2, CV_AA);
+  cvPutText (dispFrame, oss.str().c_str(), cvPoint(5,15), &font, cvScalar(255,255,255));
+  cvShowImage((this->property("id")).asString().c_str(), dispFrame);
+  cv::waitKey(1);
+  cvReleaseImage(&dispFrame);
+  delete packet;
+  this->input->unlock();
 }
 
-void nuiDebugVideoSink::start()
+void nuiDebugVideoSink::start() 
 {
-	m_mode = MODE::MODE_GPU_RGBA;
-	create();
-	nuiModule::start();
-	LOG(NUI_DEBUG, "starting video sink");
+  nuiModule::start();
+  LOG(NUI_DEBUG,"starting video sink");
 }
