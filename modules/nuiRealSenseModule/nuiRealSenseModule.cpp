@@ -13,7 +13,7 @@ MODULE_DECLARE(RealSenseModule, "native", "Input module to grab video from webca
 
 nuiRealSenseModule::nuiRealSenseModule() : nuiModule() {
 	MODULE_INIT();
-
+	img = NULL;
 	this->output = new nuiEndpoint(this);
 	this->output->setTypeDescriptor(std::string("IplImage"));
 	this->setOutputEndpointCount(1);
@@ -23,22 +23,27 @@ nuiRealSenseModule::nuiRealSenseModule() : nuiModule() {
 }
 
 nuiRealSenseModule::~nuiRealSenseModule() {
-	
+	realsenseW.close();
+	cvReleaseImage(&img);
 }
 
 void nuiRealSenseModule::update() {
 	this->output->lock();
 	this->output->clear();
-
-	this->outputDataPacket->packData(img);
-	this->output->setData(this->outputDataPacket);
-	this->output->transmitData();
+	
+	if (realsenseW.queryColorFrame(&img))
+	{
+		this->outputDataPacket->packData(img);
+		this->output->setData(this->outputDataPacket);
+		this->output->transmitData();
+	}
 	this->output->unlock();
 }
 
 void nuiRealSenseModule::start() {
-
-	LOG(NUI_DEBUG, "Starting nuiWebcamModule");
-	nuiModule::start();
+	LOG(NUI_DEBUG, "Starting nuiRealSenseModule");
+	int camid = this->hasProperty("camid") ? this->property("camid").asInteger() : 0;
+	if(realsenseW.open(camid))
+		nuiModule::start();
 }
 

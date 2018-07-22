@@ -38,6 +38,12 @@ int main(int argc, char **argv)
   nuiDebugLogger::init(config_syslog);
 
   nuiFrameworkManager& manager = nuiFrameworkManager::getInstance();
+  
+  char* path = argv[0];
+  std::string str_path = std::string(path);
+  size_t pos = str_path.find_last_of('\\');
+  std::string dir = str_path.substr(0, pos) + '\\';
+  manager.setStartupPath(dir);
 
   /// Load defaults
   nuiPluginFrameworkErrorCode::err loadCode = manager.loadDefaultSettings();

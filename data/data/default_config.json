@@ -25,6 +25,9 @@
             "path": "modules\\nuiWebcamModule.dll"
         },
         {
+            "path": "modules\\nuiRealSenseModule.dll"
+        },
+        {
             "path": "modules\\nuiExampleModule.dll"
         }
     ],
@@ -36,27 +39,16 @@
             "modules": [
                 {
                     "id": 0,
-                    "type": "nuiWebcamModule",
+                    "type": "nuiRealSenseModule",
                     "properties": {
                         "use_thread": "false",
                         "oscillator_mode": "true",
                         "path": "D:\\LLDevelopment\\Work\\ccv2\\data\\out.avi",
-                        "oscillator_wait": 40
+                        "oscillator_wait": 30
                     }
-                },
+                },               
                 {
                     "id": 1,
-                    "type": "nuiBackgroundSubtractModule",
-                    "properties": {
-                        "use_thread": "true",
-                        "oscillator_mode": "false",
-                        "history": 1500,
-                        "detectshadows": "false",
-                        "threshold": 15
-                    }
-                },
-                {
-                    "id": 2,
                     "type": "nuiGaussianBlurFilter",
                     "properties": {
                         "use_thread": "true",
@@ -67,7 +59,7 @@
                     }
                 },
                 {
-                    "id": 3,
+                    "id": 2,
                     "type": "nuiDebugVideoSink",
                     "properties": {
                         "use_thread": "true",
@@ -108,7 +100,7 @@
                         "deepcopy": 1,
                         "lastpacket": 0
                     }
-                },
+                },                
                 {
                     "source": {
                         "id": 1,
@@ -116,21 +108,6 @@
                     },
                     "destination": {
                         "id": 2,
-                        "port": 0
-                    },
-                    "properties": {
-                        "async": 1,
-                        "deepcopy": 1,
-                        "lastpacket": 0
-                    }
-                },
-                {
-                    "source": {
-                        "id": 2,
-                        "port": 0
-                    },
-                    "destination": {
-                        "id": 3,
                         "port": 0
                     },
                     "properties": {
