@@ -12,6 +12,7 @@
 #include "nuiPlugin.h"
 #include "nuiDynamicLibrary.h"
 #include "nuiModule.h"
+#include "nuiFrameworkManager.h"
 
 #include "json\json.h"
 
