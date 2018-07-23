@@ -3,6 +3,7 @@
 #include <opencv2/imgproc.hpp>
 #include <librealsense2\rs.hpp>
 #include "rs2DeviceContainer.h"
+#include <Windows.h>
 
 class ocvRealsenseWrapper
 {
@@ -15,6 +16,8 @@ public:
 
 	bool queryColorFrame(IplImage ** img);
 	bool queryDepthFrame(IplImage ** img);
+
+	IplImage * thresholdDepthImage(float min, float max);
 
 private:
 	/*rs2::video_frame colorFrame;

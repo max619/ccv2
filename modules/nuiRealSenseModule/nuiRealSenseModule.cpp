@@ -24,14 +24,13 @@ void nuiRealSenseModule::update() {
 	this->output->lock();
 	this->output->clear();
 
-	if (realsenseW.queryColorFrame(&img))
-	{
-		this->outputDataPacket->packData(img);
-		this->output->setData(this->outputDataPacket);
-		this->output->transmitData();
-	}
+	IplImage* timg = realsenseW.thresholdDepthImage(.5, 1.);
+	this->outputDataPacket->packData(timg);
+	this->output->setData(this->outputDataPacket);
+	this->output->transmitData();
+
 	this->output->unlock();
-	//cvReleaseImage(&img);
+	cvReleaseImage(&timg);
 }
 
 void nuiRealSenseModule::start() {
