@@ -18,7 +18,7 @@ Components
 
 Compiling 
 ------------
-We currently recommend using VS2010 to compile. The following solutions are provided:
+We currently recommend using VS2017 to compile. The following solutions are provided:
 
   - **nuiServerApplication** (Compiles main server engine executable)
   - **nuiCVModuleLibrary** (Compiles associated CV modules)
