@@ -16,17 +16,19 @@
 class nuiOpenClFactory
 {
 public:
+	static nuiOpenClFactory& getInstance();
+
 	nuiOpenClFactory();
 	~nuiOpenClFactory();
 	
-	bool CheckPreferredPlatformMatch(cl_platform_id platform, const char * preferredPlatform);
-
+	bool isOpenClSupported();
 	int initProgram(nuiOpenClProgram* program);
 	
 private:
 	cl_int err;
 	cl_device_type deviceType = CL_DEVICE_TYPE_GPU;
 
+	bool CheckPreferredPlatformMatch(cl_platform_id platform, const char * preferredPlatform);
 	cl_platform_id FindOpenCLPlatform(const char * preferredPlatform, cl_device_type deviceType);
 	int GetPlatformAndDeviceVersion(cl_platform_id platformId, ocl_container * ocl);
 	int SetupOpenCL(ocl_container * ocl, cl_device_type deviceType);

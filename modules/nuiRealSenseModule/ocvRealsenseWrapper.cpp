@@ -10,12 +10,24 @@ ocvRealsenseWrapper::ocvRealsenseWrapper()
 	{
 		container.updateDevices(info);
 	});
+
+	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
+	threshold = NULL;
+	if (factory.isOpenClSupported())
+		threshold = new oclThreshold();
 }
 
 
 ocvRealsenseWrapper::~ocvRealsenseWrapper()
 {
 	close();
+	if (threshold != NULL)
+	{
+		delete threshold;
+		threshold = NULL;
+	}
+
+	cvReleaseImage(&_img);
 }
 
 bool ocvRealsenseWrapper::open(int index)
@@ -26,6 +38,11 @@ bool ocvRealsenseWrapper::open(int index)
 		container.initDevices(ctx);
 		pipe = container.getPipeline(index);
 		opened = true;
+
+		nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
+
+		if (factory.isOpenClSupported())
+			factory.initProgram(threshold);
 	}
 	catch (_exception& ex)
 	{

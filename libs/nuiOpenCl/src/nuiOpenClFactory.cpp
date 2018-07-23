@@ -1,5 +1,11 @@
 #include "nuiOpenClFactory.h"
 
+nuiOpenClFactory & nuiOpenClFactory::getInstance()
+{
+	static nuiOpenClFactory instance;
+	return instance;
+}
+
 nuiOpenClFactory::nuiOpenClFactory()
 {
 }
@@ -48,6 +54,12 @@ bool nuiOpenClFactory::CheckPreferredPlatformMatch(cl_platform_id platform, cons
 	}
 
 	return match;
+}
+
+bool nuiOpenClFactory::isOpenClSupported()
+{
+	//TODO: Implement support check
+	return true;
 }
 
 int nuiOpenClFactory::initProgram(nuiOpenClProgram * program)

@@ -52,6 +52,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\OpenCl.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
@@ -159,6 +160,7 @@
     <ClCompile Include="..\src\nuiOpenClStructures.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\nuiOpenCl.h" />
     <ClInclude Include="..\include\nuiOpenClFactory.h" />
     <ClInclude Include="..\include\nuiOpenClProgram.h" />
     <ClInclude Include="..\include\nuiOpenClStructures.h" />

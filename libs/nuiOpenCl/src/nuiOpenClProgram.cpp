@@ -1,12 +1,10 @@
 #include "..\include\nuiOpenClProgram.h"
 
-nuiOpenClProgram::nuiOpenClProgram()
+nuiOpenClProgram::nuiOpenClProgram(int functions)
 {
-	int funcs = getFunctionsCount();
+	ocl = new ocl_container*[functions];
 
-	ocl = new ocl_container*[funcs];
-
-	for (int i = 0; i < funcs; i++)
+	for (int i = 0; i < functions; i++)
 		ocl[i] = new ocl_container();
 
 }
@@ -16,9 +14,12 @@ nuiOpenClProgram::~nuiOpenClProgram()
 	int funcs = getFunctionsCount();
 
 	for (int i = 0; i < funcs; i++)
+	{
 		delete ocl[i];
-
+		delete functionsNames[i];
+	}
 	delete ocl;
+	delete functionsNames;
 }
 
 char * nuiOpenClProgram::getSourceCode(int id)

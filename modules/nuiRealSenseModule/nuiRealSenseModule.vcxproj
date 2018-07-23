@@ -12,11 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nuiRealSenseModule.h" />
+    <ClInclude Include="oclThreshold.h" />
     <ClInclude Include="ocvRealsenseWrapper.h" />
     <ClInclude Include="rs2DeviceContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="nuiRealSenseModule.cpp" />
+    <ClCompile Include="oclThreshold.cpp" />
     <ClCompile Include="ocvRealsenseWrapper.cpp" />
     <ClCompile Include="rs2DeviceContainer.cpp" />
   </ItemGroup>
@@ -43,6 +45,7 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup>
+    <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\OpenCl.props" />
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
     <Import Project="..\..\libs\3rdParty\_props\ptypes.props" />
     <Import Project="..\nuiModule.props" />
@@ -55,25 +58,25 @@
     <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)</IntDir>
     <OutDir>$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\modules\</OutDir>
     <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiOpemCl\include;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)</IntDir>
     <OutDir>$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\modules\</OutDir>
     <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiOpemCl\include;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(SolutionDir)..\..\libs\nuiOpenCl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>nuiSystem.lib;nuiModule.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nuiSystem.lib;nuiModule.lib;nuiOpenCl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);%(AdditionalLibraryDirectories);$(LibraryPath);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -83,7 +86,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(SolutionDir)..\..\libs\nuiOpenCl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
@@ -91,7 +94,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>nuiSystem.lib;nuiModule.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nuiSystem.lib;nuiModule.lib;nuiOpenCl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -4,6 +4,8 @@
 #include <librealsense2\rs.hpp>
 #include "rs2DeviceContainer.h"
 #include <Windows.h>
+#include "oclThreshold.h"
+#include "nuiOpenCl.h"
 
 class ocvRealsenseWrapper
 {
@@ -32,6 +34,7 @@ private:
 	cv::Mat colorImage;
 	cv::Mat colorImageBgr;
 	IplImage* _img;
+	oclThreshold* threshold;
 
 	bool opened;
 };
