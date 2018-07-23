@@ -109,9 +109,14 @@ IplImage* ocvRealsenseWrapper::thresholdDepthImage(float min, float max)
 
 	IplImage* res = cvCreateImage(CvSize(depthFrame.get_width(), depthFrame.get_height()), IPL_DEPTH_8U, 1);
 
-	unsigned char* res_ptr = reinterpret_cast<unsigned char*>(res->imageData);
+
+
+#ifdef _OPENMP
+#pragma omp parallel for
 
 	for (int y = 0; y < depthFrame.get_height(); y++)
+	{
+		unsigned char* res_ptr = reinterpret_cast<unsigned char*>(res->imageData + (y * depthFrame.get_width() * sizeof(unsigned char)));
 		for (int x = 0; x < depthFrame.get_width(); x++, res_ptr++)
 		{
 			float f_px = depthFrame.get_distance(x, y);
@@ -124,6 +129,28 @@ IplImage* ocvRealsenseWrapper::thresholdDepthImage(float min, float max)
 				(*res_ptr) = 0;
 			}
 		}
+	}
+
+#else
+	unsigned char* res_ptr = reinterpret_cast<unsigned char*>(res->imageData);
+
+	for (int y = 0; y < depthFrame.get_height(); y++)
+	{
+		for (int x = 0; x < depthFrame.get_width(); x++, res_ptr++)
+		{
+			float f_px = depthFrame.get_distance(x, y);
+			if (f_px > min && f_px < max)
+			{
+				(*res_ptr) = 255;
+			}
+			else
+			{
+				(*res_ptr) = 0;
+			}
+		}
+}
+#endif
+
 
 	return res;
 }
