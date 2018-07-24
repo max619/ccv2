@@ -104,6 +104,32 @@
                         "port": 0
                     },
                     "destination": {
+                        "id": 1,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 1,
+                        "lastpacket": 0
+                    },
+                    "source": {
+                        "id": 1,
+                        "port": 0
+                    },
+                    "destination": {
+                        "id": 2,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 1,
+                        "lastpacket": 0
+                    },
+                    "source": {
+                        "id": 2,
+                        "port": 0
+                    },
+                    "destination": {
                         "id": 3,
                         "port": 0
                     },

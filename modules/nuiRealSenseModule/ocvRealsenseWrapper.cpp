@@ -123,51 +123,42 @@ IplImage* ocvRealsenseWrapper::thresholdDepthImage(float min, float max)
 	auto depthFrame = frameset.get_depth_frame().as<rs2::depth_frame>();
 	void* data_ptr = (void*)depthFrame.get_data();
 
+	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance(); 
+	rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
+	float depth_scale = depth_sensor.get_depth_scale();
+	if (factory.isOpenClSupported())
+	{		
+		return threshold->calcThreshold((uint16_t*)data_ptr, depthFrame.get_width(), depthFrame.get_height(), min / depth_scale, max / depth_scale);
+	}
+	else
+	{
+		IplImage* res = cvCreateImage(CvSize(depthFrame.get_width(), depthFrame.get_height()), IPL_DEPTH_8U, 1);
 
-	IplImage* res = cvCreateImage(CvSize(depthFrame.get_width(), depthFrame.get_height()), IPL_DEPTH_8U, 1);
-
-
-
+		uint16_t umin = min / depth_scale;
+		uint16_t umax = max / depth_scale;
 #ifdef _OPENMP
 #pragma omp parallel for
-
-	for (int y = 0; y < depthFrame.get_height(); y++)
-	{
-		unsigned char* res_ptr = reinterpret_cast<unsigned char*>(res->imageData + (y * depthFrame.get_width() * sizeof(unsigned char)));
-		for (int x = 0; x < depthFrame.get_width(); x++, res_ptr++)
+#endif		
+		for (int y = 0; y < depthFrame.get_height(); y++)
 		{
-			float f_px = depthFrame.get_distance(x, y);
-			if (f_px > min && f_px < max)
+			unsigned char* res_ptr = reinterpret_cast<unsigned char*>(res->imageData + (y * depthFrame.get_width() * sizeof(unsigned char)));
+			uint16_t* src_ptr = reinterpret_cast<uint16_t*>((uint16_t*)data_ptr + (y * depthFrame.get_width() * sizeof(unsigned char)));
+			for (int x = 0; x < depthFrame.get_width(); x++, res_ptr++, src_ptr++)
 			{
-				(*res_ptr) = 255;
-			}
-			else
-			{
-				(*res_ptr) = 0;
+				uint16_t f_px = *src_ptr;
+				if (f_px > umin && f_px < umax)
+				{
+					(*res_ptr) = 255;
+				}
+				else
+				{
+					(*res_ptr) = 0;
+				}
 			}
 		}
+
+
+		return res;
 	}
 
-#else
-	unsigned char* res_ptr = reinterpret_cast<unsigned char*>(res->imageData);
-
-	for (int y = 0; y < depthFrame.get_height(); y++)
-	{
-		for (int x = 0; x < depthFrame.get_width(); x++, res_ptr++)
-		{
-			float f_px = depthFrame.get_distance(x, y);
-			if (f_px > min && f_px < max)
-			{
-				(*res_ptr) = 255;
-			}
-			else
-			{
-				(*res_ptr) = 0;
-			}
-		}
-}
-#endif
-
-
-	return res;
 }

@@ -24,10 +24,13 @@ void nuiRealSenseModule::update() {
 	this->output->lock();
 	this->output->clear();
 
-	IplImage* timg = realsenseW.thresholdDepthImage(.5, 1.);
-	this->outputDataPacket->packData(timg);
-	this->output->setData(this->outputDataPacket);
-	this->output->transmitData();
+	IplImage* timg = realsenseW.thresholdDepthImage(.65, .68);
+	if (timg != NULL)
+	{
+		this->outputDataPacket->packData(timg);
+		this->output->setData(this->outputDataPacket);
+		this->output->transmitData();
+	}
 
 	this->output->unlock();
 	cvReleaseImage(&timg);

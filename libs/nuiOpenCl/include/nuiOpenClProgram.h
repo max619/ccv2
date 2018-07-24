@@ -22,4 +22,7 @@ public:
 protected:
 	ocl_container** ocl;
 	const char** functionsNames;
+	cl_uint getAllignedBufferSize(cl_uint width, cl_uint height, cl_uint elementsize);
+	void* allocAlligned(cl_uint alignedsize);
+	int ExecKernel(ocl_container * container, cl_uint width, cl_uint height);
 };
