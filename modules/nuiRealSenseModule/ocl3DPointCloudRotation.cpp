@@ -1,17 +1,16 @@
-#include "oclDepthToWorld.h"
+#include "ocl3DPointCloudRotation.h"
 
 
 
-oclDepthToWorld::oclDepthToWorld() : nuiOpenClAlgorithm(2)
+ocl3DPointCloudRotation::ocl3DPointCloudRotation() : nuiOpenClAlgorithm(1)
 {
-	functionsNames = new const char*[2];
-	functionsNames[0] = "calcWorldCoordinatesNormal";
-	functionsNames[1] = "calcWorldCoordinatesInverseBrownConrady";
+	functionsNames = new const char*[1];
+	functionsNames[0] = "rotateWorld";
 	clmeminit = false;
 }
 
 
-oclDepthToWorld::~oclDepthToWorld()
+ocl3DPointCloudRotation::~ocl3DPointCloudRotation()
 {
 	nuiOpenClAlgorithm::~nuiOpenClAlgorithm();
 
@@ -21,7 +20,7 @@ oclDepthToWorld::~oclDepthToWorld()
 	clReleaseMemObject(outputMem);
 }
 
-IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float scale, uint width, uint height, rs2_intrinsics intrisnic)
+IplImage * ocl3DPointCloudRotation::rotate(IplImage * src, Eigen::Quaternion<float> quaterninon)
 {
 	if (!mutex.try_lock())
 		return NULL;
@@ -30,6 +29,9 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 	if (queueProfilingEnable)
 		QueryPerformanceCounter(&performanceCountNDRangeStart);
 #endif
+
+	int width = src->width;
+	int height = src->height;
 
 
 	cl_int err = CL_SUCCESS;
@@ -50,7 +52,7 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 		return nullptr;
 	}
 
-	memcpy_s(input, inputSize, data, width * height * sizeof(uint16_t));
+	memcpy_s(input, inputSize, src->imageData, width * height * sizeof(float) * 4);
 
 	err = clEnqueueUnmapMemObject(container->commandQueue, inputMem, inptPtr, 0, NULL, NULL);
 	if (CL_SUCCESS != err)
@@ -60,14 +62,12 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 		return nullptr;
 	}
 
+	cl_float4 quat = castQuaternionToFloat4(quaterninon);
 
-	err = clSetKernelArg(container->kernel, 0, sizeof(cl_float), &(intrisnic.ppx));
-	err = clSetKernelArg(container->kernel, 1, sizeof(cl_float), &(intrisnic.ppy));
-	err = clSetKernelArg(container->kernel, 2, sizeof(cl_float), &(intrisnic.fx));
-	err = clSetKernelArg(container->kernel, 3, sizeof(cl_float), &(intrisnic.fy));
-	err = clSetKernelArg(container->kernel, 4, sizeof(cl_float), &scale);
-	err = clSetKernelArg(container->kernel, 5, sizeof(cl_mem), &inputMem);
-	err = clSetKernelArg(container->kernel, 6, sizeof(cl_mem), &outputMem);
+
+	err = clSetKernelArg(container->kernel, 0, sizeof(cl_float4), &(quat));
+	err = clSetKernelArg(container->kernel, 1, sizeof(cl_mem), &inputMem);
+	err = clSetKernelArg(container->kernel, 2, sizeof(cl_mem), &outputMem);
 
 
 #ifdef _DEBUG	
@@ -75,7 +75,7 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 	{
 		QueryPerformanceCounter(&performanceCountNDRangeStop);
 		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("Kerenel initialization took time %f ms.\n",
+		LogInfo("Kerenel initialization on rotation took time %f ms.\n",
 			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
 	}
 #endif
@@ -97,7 +97,7 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 	{
 		QueryPerformanceCounter(&performanceCountNDRangeStop);
 		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("NDRange performance counter time %f ms.\n",
+		LogInfo("Kernel exec on rotation performance counter time %f ms.\n",
 			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
 	}
 #endif
@@ -122,22 +122,19 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 	IplImage* res = cvCreateImage(CvSize(width, height), IPL_DEPTH_32F, 4);
 	memcpy_s(res->imageDataOrigin, width * height, output, width * height);
 
+
+
 	mutex.unlock();
 	return res;
 }
 
 
-IplImage * oclDepthToWorld::calcWorldCoordinatesInverseBrownConrady(uint16_t * data, float scale, uint width, uint height, rs2_intrinsics intrisnic)
-{
-	return nullptr;
-}
-
-int oclDepthToWorld::initMem(ocl_container * container, int width, int height)
+int ocl3DPointCloudRotation::initMem(ocl_container * container, int width, int height)
 {
 	cl_int err = CL_SUCCESS;
 
-	inputSize = getAllignedBufferSize(width, height, sizeof(cl_uint16));
-	input = (cl_uint16*)allocAlligned(inputSize);
+	inputSize = getAllignedBufferSize(width, height, sizeof(cl_float4));
+	input = (cl_float4*)allocAlligned(inputSize);
 
 	outputSize = getAllignedBufferSize(width, height, sizeof(cl_float4));
 	output = (cl_float4*)allocAlligned(outputSize);
@@ -148,7 +145,7 @@ int oclDepthToWorld::initMem(ocl_container * container, int width, int height)
 
 	// Define the image data-type and order -
 	// one channel (R) with unit values
-	format.image_channel_data_type = CL_UNSIGNED_INT16;
+	format.image_channel_data_type = CL_FLOAT;
 	format.image_channel_order = CL_R;
 
 	// Define the image properties (descriptor)
@@ -174,8 +171,6 @@ int oclDepthToWorld::initMem(ocl_container * container, int width, int height)
 		return err;
 	}
 
-	format.image_channel_data_type = CL_FLOAT;
-
 	outputMem = clCreateImage(container->context, CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR, &format, &desc, output, &err);
 	if (CL_SUCCESS != err)
 	{
@@ -189,27 +184,22 @@ int oclDepthToWorld::initMem(ocl_container * container, int width, int height)
 
 }
 
-char * oclDepthToWorld::getSourceCode(int id)
+char * ocl3DPointCloudRotation::getSourceCode(int id)
 {
 	nuiFrameworkManager* ptr = static_cast<nuiFrameworkManager*>(getFrameworkPtr());
 	char* source;
 	size_t size;
 	if (id == 0)
 	{
-		std::string str = ptr->getRelativeToStartupPath("modules\\ocl\\calcWorldCoordinatesNormal.cl");
+		std::string str = ptr->getRelativeToStartupPath("modules\\ocl\\rotate.cl");
 		ReadSourceFromFile(str.c_str(), &source, &size);
-		/*char* sourcecropped = new char[size];
-		memcpy(sourcecropped, source, size);
-		delete source;
-		source = sourcecropped;*/
 		return source;
 	}
 	else
 		return "constant sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP | CLK_FILTER_NEAREST;__kernel void calcWorldCoordinatesInverseBrownConrady(float ppx, float ppy, float fx, float fy, float depthmul, read_only image2d_t imageA, write_only image2d_t imageC, float c0, float c1, float c2, float c3, float c4 ){const int x = get_global_id(0);const int y = get_global_id(1);float u = (x - ppx) / fx;float v = (y - ppy) / fy;float r2 = u * u + v * v;float f = 1 + c0 * r2 + c1 * r2*r2 + c4 * r2*r2*r2;float ux = x * f + 2 * c2*u*v + c3 * (r2 + 2 * x*x);float uy = y * f + 2 * c3*u*v + c2 * (r2 + 2 * x*x);u = ux;v = uy;float ddepth = (read_imageui(imageA, sampler, (int2)(x, y)).x) * depthmul;write_imagef(imageC, (int2)(x, y), float3(ddepth * u, ddepth * v, ddepth));}";
 }
 
-int oclDepthToWorld::getFunctionsCount()
+int ocl3DPointCloudRotation::getFunctionsCount()
 {
 	return 1;
 }
-

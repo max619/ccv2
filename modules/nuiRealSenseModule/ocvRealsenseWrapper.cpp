@@ -17,6 +17,7 @@ ocvRealsenseWrapper::ocvRealsenseWrapper()
 	{
 		threshold = new oclThreshold();
 		depthToWorld = new oclDepthToWorld();
+		rotation = new ocl3DPointCloudRotation();
 	}
 }
 
@@ -48,6 +49,7 @@ bool ocvRealsenseWrapper::open(int index)
 		{
 			factory.initProgram(threshold);
 			factory.initProgram(depthToWorld);
+			factory.initProgram(rotation);
 		}
 	}
 	catch (_exception& ex)
@@ -179,5 +181,18 @@ IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 	rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
 	float depth_scale = depth_sensor.get_depth_scale();
 
-	return depthToWorld->calcWorldCoordinatesNormal((uint16_t*)data_ptr, depth_scale, depthFrame.get_width(), depthFrame.get_height(), intrisnic);
+
+	Eigen::Vector3f a(1, 0, 0);
+	Eigen::Vector3f b(0.5, 0.5, 0);
+
+
+
+	Eigen::Quaternionf q = Eigen::Quaternionf::FromTwoVectors(a, b);
+
+
+	IplImage* worldcoords = depthToWorld->calcWorldCoordinatesNormal((uint16_t*)data_ptr, depth_scale, depthFrame.get_width(), depthFrame.get_height(), intrisnic);
+	IplImage* rotatedcoords = rotation->rotate(worldcoords, q);
+	cvReleaseImage(&worldcoords);
+	return rotatedcoords;
+
 }

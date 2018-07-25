@@ -15,7 +15,9 @@
 #include <Windows.h>
 #include "oclThreshold.h"
 #include "oclDepthToWorld.h"
+#include "ocl3DPointCloudRotation.h"
 #include "nuiOpenCl.h"
+#include "Eigen/Geometry"
 
 class ocvRealsenseWrapper
 {
@@ -48,6 +50,7 @@ private:
 	IplImage* _img;
 	oclThreshold* threshold;
 	oclDepthToWorld* depthToWorld;
+	ocl3DPointCloudRotation* rotation;
 
 	bool opened;
 };

@@ -10,7 +10,7 @@ __kernel void calcWorldCoordinatesNormal(float ppx, float ppy, float fx, float f
 
 	float ddepth = (read_imageui(imageA, smplr, (int2)(x, y)).x) * depthmul;
 
-	float4 pix = (float4)(ddepth * x, ddepth * y, ddepth, 0.0f);	
+	float4 pix = (float4)(ddepth * u, ddepth * v, ddepth, 0.0f);	
 
 	write_imagef(imageC, (int2)(x, y), pix);
 }

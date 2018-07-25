@@ -11,7 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="helpers.h" />
     <ClInclude Include="nuiRealSenseModule.h" />
+    <ClInclude Include="ocl3DPointCloudRotation.h" />
     <ClInclude Include="oclDepthToWorld.h" />
     <ClInclude Include="oclThreshold.h" />
     <ClInclude Include="ocvRealsenseWrapper.h" />
@@ -19,7 +21,9 @@
     <ClInclude Include="static.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="helpers.cpp" />
     <ClCompile Include="nuiRealSenseModule.cpp" />
+    <ClCompile Include="ocl3DPointCloudRotation.cpp" />
     <ClCompile Include="oclDepthToWorld.cpp" />
     <ClCompile Include="oclThreshold.cpp" />
     <ClCompile Include="ocvRealsenseWrapper.cpp" />
@@ -28,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ocl\calcWorldCoordinatesNormal.cl" />
+    <None Include="ocl\rotate.cl" />
   </ItemGroup>
   <PropertyGroup Label="Globals" />
   <PropertyGroup Label="Globals">

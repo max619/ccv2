@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="nuiRealSenseModule.cpp" />
+    <ClCompile Include="oclDepthToWorld.cpp" />
+    <ClCompile Include="oclThreshold.cpp" />
+    <ClCompile Include="ocvRealsenseWrapper.cpp" />
+    <ClCompile Include="rs2DeviceContainer.cpp" />
+    <ClCompile Include="static.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nuiRealSenseModule.h" />
+    <ClInclude Include="oclDepthToWorld.h" />
+    <ClInclude Include="oclThreshold.h" />
+    <ClInclude Include="ocvRealsenseWrapper.h" />
+    <ClInclude Include="rs2DeviceContainer.h" />
+    <ClInclude Include="static.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ocl">
+      <UniqueIdentifier>{4965d8c7-ba8d-4dcc-af3c-090c9aebae0b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ocl\calcWorldCoordinatesNormal.cl">
+      <Filter>ocl</Filter>
+    </None>
+    <None Include="ocl\rotate.cl">
+      <Filter>ocl</Filter>
+    </None>
+  </ItemGroup>
+</Project>
