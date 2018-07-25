@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiPS3Module.h
  *            Capture video from PS3 camera using PS3Eye SDK from Code Laboratories
  * \author    Anatoly Lushnikov
@@ -6,9 +6,9 @@
  * \copyright Copyright 2012 NUI Group. All rights reserved.
  */
 
-//! \todo : Singleton?
-//! \todo : Params to module instance ???
-//! \todo: Initialize Module instance with camera number ???
+ //! \todo : Singleton?
+ //! \todo : Params to module instance ???
+ //! \todo: Initialize Module instance with camera number ???
 
 #ifndef NUI_PS3MODULE
 #define NUI_PS3MODULE
@@ -40,7 +40,7 @@ public:
 
 protected:
 private:
-	nuiEndpoint* _pOutput;
+	nuiEndpoint * _pOutput;
 
 	nuiDataPacket* _pOutputDataPacket;
 
@@ -53,7 +53,7 @@ private:
 IMPLEMENT_ALLOCATOR(nuiPSModule)
 IMPLEMENT_DEALLOCATOR(nuiPSModule)
 
-START_IMPLEMENT_DESCRIPTOR(nuiPSModule,"native","Capture video from PS3 camera")
+START_IMPLEMENT_DESCRIPTOR(nuiPSModule, "native", "Capture video from PS3 camera")
 descriptor->setOutputEndpointsCount(1);
 nuiEndpointDescriptor* outputDescriptor = new nuiEndpointDescriptor("IplImage");
 descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
@@ -63,7 +63,7 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 END_IMPLEMENT_DESCRIPTOR(nuiPSModule)
 
 START_EXPORT_MODULES(RealSenseModule)
-REGISTER_MODULE(nuiPSModule,"nuiPSModule", 1, 0)
+REGISTER_MODULE(nuiPSModule, "nuiPSModule", 1, 0)
 END_EXPORT_MODULES()
 
 #endif

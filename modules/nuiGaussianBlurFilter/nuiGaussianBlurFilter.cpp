@@ -2,7 +2,7 @@
 
 nuiGaussianBlurFilterDataPacket::~nuiGaussianBlurFilterDataPacket()
 {
-		cvReleaseImage(&data);
+	cvReleaseImage(&data);
 };
 
 nuiDataPacketError::err nuiGaussianBlurFilterDataPacket::packData(const void *_data)
@@ -40,16 +40,16 @@ char* nuiGaussianBlurFilterDataPacket::getDataPacketType()
 MODULE_DECLARE(GaussianBlurFilter, "native", "Filter gaussian");
 
 nuiGaussianBlurFilter::nuiGaussianBlurFilter() : nuiModule() {
-    MODULE_INIT();
+	MODULE_INIT();
 
 	this->input = new nuiEndpoint(this);
-    this->input->setTypeDescriptor(std::string("IplImage"));
-    this->setInputEndpointCount(1);
-    this->setInputEndpoint(0,this->input);
+	this->input->setTypeDescriptor(std::string("IplImage"));
+	this->setInputEndpointCount(1);
+	this->setInputEndpoint(0, this->input);
 	this->output = new nuiEndpoint(this);
 	this->output->setTypeDescriptor(std::string("IplImage"));
 	this->setOutputEndpointCount(1);
-	this->setOutputEndpoint(0,this->output);
+	this->setOutputEndpoint(0, this->output);
 
 	this->outputDataPacket = new nuiGaussianBlurFilterDataPacket();
 }
@@ -85,5 +85,5 @@ void nuiGaussianBlurFilter::update() {
 void nuiGaussianBlurFilter::start() {
 	nuiModule::start();
 	dev = false;
-	LOG(NUI_DEBUG,"starting gaussian filter");
+	LOG(NUI_DEBUG, "starting gaussian filter");
 }

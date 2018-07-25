@@ -1,5 +1,5 @@
-/** 
- * \file      nuiVideoFileSource.h 
+/**
+ * \file      nuiVideoFileSource.h
  *            Provide sample video input
  * \author    Scott Halstvedt
  * \date      2012-2013
@@ -34,12 +34,12 @@ public:
 
 protected:
 private:
-	nuiEndpoint* output;
+	nuiEndpoint * output;
 
 	nuiDataPacket* outputDataPacket;
 
 	CvCapture* cap;
-	IplImage* frame; 
+	IplImage* frame;
 	CvFont font;
 
 	MODULE_INTERNALS();
@@ -48,7 +48,7 @@ private:
 IMPLEMENT_ALLOCATOR(nuiVideoFileSource)
 IMPLEMENT_DEALLOCATOR(nuiVideoFileSource)
 
-START_IMPLEMENT_DESCRIPTOR(nuiVideoFileSource,"native","Get video data from file")
+START_IMPLEMENT_DESCRIPTOR(nuiVideoFileSource, "native", "Get video data from file")
 descriptor->setOutputEndpointsCount(1);
 nuiEndpointDescriptor* outputDescriptor = new nuiEndpointDescriptor("IplImage");
 descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
@@ -58,7 +58,7 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 END_IMPLEMENT_DESCRIPTOR(nuiVideoFileSource)
 
 START_EXPORT_MODULES(VideoFileSource)
-REGISTER_MODULE(nuiVideoFileSource,"nuiVideoFileSource", 1, 0)
+REGISTER_MODULE(nuiVideoFileSource, "nuiVideoFileSource", 1, 0)
 END_EXPORT_MODULES()
 
 #endif

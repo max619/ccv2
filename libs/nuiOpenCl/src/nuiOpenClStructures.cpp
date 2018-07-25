@@ -164,7 +164,7 @@ ocl_container::~ocl_container()
 		{
 			LogError("Error: clReleaseProgram returned '%s'.\n", TranslateOpenCLError(err));
 		}
-	}	
+	}
 	if (commandQueue)
 	{
 		err = clReleaseCommandQueue(commandQueue);

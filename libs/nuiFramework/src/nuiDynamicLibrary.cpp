@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiDynamicLibrary.cpp
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -7,66 +7,66 @@
  */
 
 #ifdef WIN32
-  #include <Windows.h>
+#include <Windows.h>
 #else
-  #include <dlfcn.h>
+#include <dlfcn.h>
 #endif
 
 #include "nuiDynamicLibrary.h"
 #include <sstream>
-#include <iostream>
+
 
 nuiDynamicLibrary::nuiDynamicLibrary(void* handle, std::string path) : handle_(handle), pathToLibrary(path)
 {
 }
 
-nuiDynamicLibrary::~nuiDynamicLibrary ()
+nuiDynamicLibrary::~nuiDynamicLibrary()
 {
 	if (handle_)
 	{
 #ifndef WIN32
-	dlclose(handle_);
+		dlclose(handle_);
 #else
-	FreeLibrary((HMODULE)handle_);
+		FreeLibrary((HMODULE)handle_);
 #endif
-	handle_ = NULL;
+		handle_ = NULL;
 	}
 }
 
 nuiDynamicLibrary *nuiDynamicLibrary::load(const std::string name, std::string &errorString)
 {
-  errorString.empty();
+	errorString.empty();
 
-  if (name.empty()) 
-  {
-    errorString = "Empty path.";
-    return NULL;
-  }
+	if (name.empty())
+	{
+		errorString = "Empty path.";
+		return NULL;
+	}
 
-  void *handle = NULL;
+	void *handle = NULL;
 
 #ifdef WIN32
-  handle = LoadLibrary(name.c_str());
-  if (handle == NULL)
-  {
-    DWORD errorCode = GetLastError();
-    std::stringstream ss;
-    ss << std::string("LoadLibrary(") << name 
-      << std::string(") Failed. errorCode: ") 
-      << errorCode; 
-    errorString = ss.str();
-  }
+	handle = LoadLibrary(name.c_str());
+	if (handle == NULL)
+	{
+		DWORD errorCode = GetLastError();
+		std::stringstream ss;
+		ss << std::string("LoadLibrary(") << name
+			<< std::string(") Failed. errorCode: ")
+			<< errorCode;
+		errorString = ss.str();
+	}
 #else
 	handle = dlopen(name.c_str(), RTLD_NOW);
-	if (!handle) 
+	if (!handle)
 	{
 		std::string dlErrorString;
 		const char *zErrorString = ::dlerror();
 		if (zErrorString)
-		dlErrorString = zErrorString;
+			dlErrorString = zErrorString;
 		errorString += "Failed to load \"" + name + '"';
-		if(dlErrorString.size())
-		errorString += ": " + dlErrorString;
+		if (dlErrorString.size())
+			errorString += ": " + dlErrorString;
 		return NULL;
 	}
 #endif
@@ -76,7 +76,7 @@ nuiDynamicLibrary *nuiDynamicLibrary::load(const std::string name, std::string &
 void *nuiDynamicLibrary::getSymbol(const std::string &symbol)
 {
 	if (handle_ == NULL)
-	    return NULL;
+		return NULL;
 #ifdef WIN32
 	return GetProcAddress((HMODULE)handle_, symbol.c_str());
 #else
@@ -84,23 +84,23 @@ void *nuiDynamicLibrary::getSymbol(const std::string &symbol)
 #endif
 }
 
-bool nuiDynamicLibrary::unload( void* handle )
+bool nuiDynamicLibrary::unload(void* handle)
 {
-  if(handle == NULL)
-    return NULL;
+	if (handle == NULL)
+		return NULL;
 #ifdef WIN32
-  return FreeLibrary((HMODULE)handle);
+	return FreeLibrary((HMODULE)handle);
 #else
-  return dlclose(handle)
+	return dlclose(handle)
 #endif
 }
 
 void* nuiDynamicLibrary::getHandle()
 {
-  return handle_;
+	return handle_;
 }
 
 std::string nuiDynamicLibrary::getPath()
 {
-  return pathToLibrary;
+	return pathToLibrary;
 }

@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiPipeline.h
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -45,10 +45,10 @@ public:
 	nuiModule *getChildModuleAtIndex(int index);
 	MODULE_INTERNALS();
 protected:
-	nuiEndpoint **inputInternalEndpoints;
+	nuiEndpoint * *inputInternalEndpoints;
 	nuiEndpoint **outputInternalEndpoints;
-	std::map<int,nuiModule*> modules;
-	std::string name,description,author;
+	std::map<int, nuiModule*> modules;
+	std::string name, description, author;
 	friend class nuiFactory;
 	friend class nuiFrameworkManager;
 };

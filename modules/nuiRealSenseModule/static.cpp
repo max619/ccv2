@@ -15,6 +15,6 @@ void * getFrameworkPtr()
 void ** getStaticPointer()
 {
 	static void* ptr;
-	
+
 	return &ptr;
 }

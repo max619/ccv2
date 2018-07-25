@@ -1,5 +1,5 @@
-/** 
- * \file      nuiGaussianBlurFilter.h 
+/**
+ * \file      nuiGaussianBlurFilter.h
  *            Filter to gaussian blur
  * \author    Scott Halstvedt
  * \date      2012-2013
@@ -22,17 +22,17 @@ NUI_DATAPACKET_DEFAULT_DECLARATION(GaussianBlurFilter, IplImage*)
 
 class nuiGaussianBlurFilter : public nuiModule {
 public:
-	nuiGaussianBlurFilter(); 
+	nuiGaussianBlurFilter();
 	virtual ~nuiGaussianBlurFilter();
 
 	void update();
 	void start();
 
 private:
-    nuiEndpoint* input;
+	nuiEndpoint * input;
 	nuiEndpoint* output;
 	nuiDataPacket* outputDataPacket;
-    
+
 	IplImage* filterFrame;
 
 	bool dev;
@@ -43,18 +43,18 @@ private:
 IMPLEMENT_ALLOCATOR(nuiGaussianBlurFilter)
 IMPLEMENT_DEALLOCATOR(nuiGaussianBlurFilter)
 
-START_IMPLEMENT_DESCRIPTOR(nuiGaussianBlurFilter,"native","Gaussian blurs a video stream")
+START_IMPLEMENT_DESCRIPTOR(nuiGaussianBlurFilter, "native", "Gaussian blurs a video stream")
 descriptor->setInputEndpointsCount(1);
 descriptor->setOutputEndpointsCount(1);
 nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor("IplImage");
-descriptor->addInputEndpointDescriptor(inputDescriptor,0);
+descriptor->addInputEndpointDescriptor(inputDescriptor, 0);
 nuiEndpointDescriptor* outputDescriptor = new nuiEndpointDescriptor("IplImage");
-descriptor->addOutputEndpointDescriptor(outputDescriptor,0);
+descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 descriptor->property("use_thread").set(false);
-END_IMPLEMENT_DESCRIPTOR(nuiGaussianBlurFilter)	
+END_IMPLEMENT_DESCRIPTOR(nuiGaussianBlurFilter)
 
 START_EXPORT_MODULES(RealSenseModule)
-REGISTER_MODULE(nuiGaussianBlurFilter,"nuiGaussianBlurFilter", 1, 0)
+REGISTER_MODULE(nuiGaussianBlurFilter, "nuiGaussianBlurFilter", 1, 0)
 END_EXPORT_MODULES()
 
 #endif

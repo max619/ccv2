@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiDynamicLibrary.h
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -10,13 +10,13 @@
 #define NUI_DYNAMIC_LIBRARY_H
 
 #include <string>
- 
+
 #if defined(OSX)
-  static std::string dynamicLibraryExtension("dylib");
+static std::string dynamicLibraryExtension("dylib");
 #elif defined(UNIX)
-  static std::string dynamicLibraryExtension("so");
+static std::string dynamicLibraryExtension("so");
 #elif defined(WIN32)
-  static std::string dynamicLibraryExtension("dll");
+static std::string dynamicLibraryExtension("dll");
 #endif
 
 //! cross platform dynamic library wrapper
@@ -24,18 +24,18 @@ class nuiDynamicLibrary
 {
 public:
 	static nuiDynamicLibrary* load(const std::string path, std::string &errorString);
-  static bool unload(void* handle);
+	static bool unload(void* handle);
 
 	~nuiDynamicLibrary();
 	void* getSymbol(const std::string &name);
-  void* getHandle();
-  std::string getPath();
+	void* getHandle();
+	std::string getPath();
 private:
 	nuiDynamicLibrary();
 	nuiDynamicLibrary(void* handle, std::string path);
 
 	void* handle_;
-  std::string pathToLibrary;
+	std::string pathToLibrary;
 };
 
 #endif//NUI_DYNAMIC_LIBRARY_H

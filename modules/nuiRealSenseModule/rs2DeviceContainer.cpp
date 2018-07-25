@@ -50,7 +50,7 @@ void rs2DeviceContainer::updateDevices(rs2::event_information & info)
 			devices.emplace(std::pair<std::string, rs2::device>(serial_number, dev));
 		}
 
-		
+
 	}
 	_mutex.unlock();
 }
@@ -105,5 +105,5 @@ rs2::pipeline_profile rs2DeviceContainer::getPipelineProfile(rs2::device& device
 
 bool rs2DeviceContainer::isRealsenseDevice(rs2::device device)
 {
-	return platform_camera_name != device.get_info(RS2_CAMERA_INFO_NAME);	
+	return platform_camera_name != device.get_info(RS2_CAMERA_INFO_NAME);
 }

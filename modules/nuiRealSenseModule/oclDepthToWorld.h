@@ -1,3 +1,10 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name:        modules/nuiRealSenseModule.h
+// Purpose:     Example Module to be used for developments.
+// Author:      Maxim Bagryantsev
+// Copyright:   (c) 2018 NUI Group
+/////////////////////////////////////////////////////////////////////////////
+
 #ifndef OCL_DEPTH_TO_WORLD
 #define OCL_DEPTH_TO_WORLD
 
@@ -23,7 +30,7 @@ public:
 	DEFAULT_OPENCL_PROGRAM_INTERFACE_DECLARATION()
 private:
 #ifdef _DEBUG
-		LARGE_INTEGER perfFrequency;
+	LARGE_INTEGER perfFrequency;
 	LARGE_INTEGER performanceCountNDRangeStart;
 	LARGE_INTEGER performanceCountNDRangeStop;
 #endif

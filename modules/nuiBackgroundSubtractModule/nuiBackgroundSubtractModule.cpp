@@ -2,13 +2,13 @@
 
 nuiBackgroundSubtractModuleDataPacket::~nuiBackgroundSubtractModuleDataPacket()
 {
-	if(data != NULL && isLocalCopy())
+	if (data != NULL && isLocalCopy())
 		cvReleaseImage(&data);
 };
 
 nuiDataPacketError::err nuiBackgroundSubtractModuleDataPacket::packData(const void *_data)
 {
-	this->setLocalCopy(false);	
+	this->setLocalCopy(false);
 	this->data = (IplImage*)_data;
 	return nuiDataPacketError::NoError;
 };
@@ -24,7 +24,7 @@ nuiDataPacket* nuiBackgroundSubtractModuleDataPacket::copyPacketData(nuiDataPack
 	nuiBackgroundSubtractModuleDataPacket* newDataPacket = new nuiBackgroundSubtractModuleDataPacket();
 
 	//! TODO : Test if this implies deep copy
-	
+
 	IplImage* newData = cvCloneImage((this->data));
 
 	newDataPacket->packData(newData);
@@ -42,19 +42,19 @@ char* nuiBackgroundSubtractModuleDataPacket::getDataPacketType()
 MODULE_DECLARE(BackgroundSubtractModule, "native", "Filter out background");
 
 nuiBackgroundSubtractModule::nuiBackgroundSubtractModule() : nuiModule() {
-    MODULE_INIT();
+	MODULE_INIT();
 	this->input = new nuiEndpoint(this);
-    this->input->setTypeDescriptor(std::string("IplImage"));
-    this->setInputEndpointCount(1);
-    this->setInputEndpoint(0,this->input);
+	this->input->setTypeDescriptor(std::string("IplImage"));
+	this->setInputEndpointCount(1);
+	this->setInputEndpoint(0, this->input);
 	this->frameOutput = new nuiEndpoint(this);
 	this->frameOutput->setTypeDescriptor(std::string("IplImage"));
 	this->bgOutput = new nuiEndpoint(this);
 	this->bgOutput->setTypeDescriptor(std::string("IplImage"));
 	this->setOutputEndpointCount(2);
-	this->setOutputEndpoint(0,this->frameOutput);
-	this->setOutputEndpoint(1,this->bgOutput);
-	
+	this->setOutputEndpoint(0, this->frameOutput);
+	this->setOutputEndpoint(1, this->bgOutput);
+
 	this->outputDataPacket = new nuiBackgroundSubtractModuleDataPacket();
 
 }
@@ -63,7 +63,7 @@ nuiBackgroundSubtractModule::~nuiBackgroundSubtractModule() {
 	bg.release();
 }
 
-void nuiBackgroundSubtractModule::update() {  
+void nuiBackgroundSubtractModule::update() {
 	this->frameOutput->lock();
 	this->frameOutput->clear();
 	this->bgOutput->lock();
@@ -71,7 +71,7 @@ void nuiBackgroundSubtractModule::update() {
 	this->input->lock();
 	void* data;
 	nuiDataPacket* packet = this->input->getData();
-	if(packet == NULL) return;
+	if (packet == NULL) return;
 	packet->unpackData(data);
 	if (data == NULL) return;
 	IplImage* frame = (IplImage*)data;
@@ -102,5 +102,5 @@ void nuiBackgroundSubtractModule::start() {
 	this->bg = cv::createBackgroundSubtractorMOG2(history, threshold, detectshadows);
 
 	nuiModule::start();
-	LOG(NUI_DEBUG,"starting gaussian filter");
+	LOG(NUI_DEBUG, "starting gaussian filter");
 }

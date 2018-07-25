@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiDataStream.h
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -23,44 +23,44 @@ class nuiEndpoint;
 //! namespaced enum of datastream errors
 struct nuiDatastreamError
 {
-  enum err
-  {
-    Success,
-    EndpointError,
-    NonexistentEndpoint,
-  };
+	enum err
+	{
+		Success,
+		EndpointError,
+		NonexistentEndpoint,
+	};
 };
 
 //! namespaced enum of datastream running modes
 struct nuiDatastreamMode
 {
-  enum m
-  {
-    None                = 0x00000000,
-    Async               = 0x00000001,
-    Buffered            = 0x00000002,
-    DeepCopy            = 0x00000004,
-    LastPacketPriority  = 0x00000008,
-    Overflow            = 0x00000010,
-  };
+	enum m
+	{
+		None = 0x00000000,
+		Async = 0x00000001,
+		Buffered = 0x00000002,
+		DeepCopy = 0x00000004,
+		LastPacketPriority = 0x00000008,
+		Overflow = 0x00000010,
+	};
 };
 
-typedef void (*nuiDataSendCallback)(nuiDatastreamError::err returnCode, void *attachedData);
+typedef void(*nuiDataSendCallback)(nuiDatastreamError::err returnCode, void *attachedData);
 
 //! datastream descriptor
 struct nuiDataStreamDescriptor
 {
 public:
 	int sourceModuleID;
-  int destinationModuleID;
-  int sourcePort;
-  int destinationPort;
+	int destinationModuleID;
+	int sourcePort;
+	int destinationPort;
 
 	bool deepCopy;
-  bool asyncMode;
-  bool buffered;
-  bool lastPacket;
-  bool overflow;
+	bool asyncMode;
+	bool buffered;
+	bool lastPacket;
+	bool overflow;
 
 	int bufferSize;
 };
@@ -69,14 +69,14 @@ public:
 class nuiDataStream
 {
 public:
-	nuiDataStream(bool asyncMode = false, bool deepCopy = true, bool bufferedMode = false, 
-    int bufferSize = MIN_NUI_STREAM_BUFFER_SIZE, bool lastPacketProprity = true);
+	nuiDataStream(bool asyncMode = false, bool deepCopy = true, bool bufferedMode = false,
+		int bufferSize = MIN_NUI_STREAM_BUFFER_SIZE, bool lastPacketProprity = true);
 
 	~nuiDataStream();
-  
-  inline bool isRunning();
 
-  // getters
+	inline bool isRunning();
+
+	// getters
 	inline bool isDeepCopy();
 	inline bool isLastPacketPriority();
 	inline bool isAsyncMode();
@@ -85,22 +85,22 @@ public:
 	inline int getBufferSize();
 	inline nuiEndpoint* getReceiver();
 
-  // setters
-  void setDeepCopy(bool deepCopy);
-  void setLastPacketPriority(bool lastPacketPriority);
-  void setAsyncMode(bool async);
-  void setBufferedMode(bool buffered);
+	// setters
+	void setDeepCopy(bool deepCopy);
+	void setLastPacketPriority(bool lastPacketPriority);
+	void setAsyncMode(bool async);
+	void setBufferedMode(bool buffered);
 	void setIsOverflow(bool overflow);
-  void setBufferSize(int bufferSize);
-  void setReceiver(nuiEndpoint &receiver);
-	
-  // stream control
+	void setBufferSize(int bufferSize);
+	void setReceiver(nuiEndpoint &receiver);
+
+	// stream control
 	void startStream();
 	void stopStream();
 	void sendData(nuiDataPacket *dataPacket);
 
 private:
-  static void thread_process(nuiThread *thread);
+	static void thread_process(nuiThread *thread);
 
 	void initStream();
 	void cleanStream();
@@ -108,11 +108,11 @@ private:
 	void processData();
 
 	nuiThread* asyncThread;
-  pt::mutex *mtx;
-  pt::semaphore *semaphore;
+	pt::mutex *mtx;
+	pt::semaphore *semaphore;
 
 	std::queue<nuiDataPacket*> packetData;
-	
+
 	nuiDatastreamMode::m streamMetadata;
 	int bufferSize;
 	bool running;

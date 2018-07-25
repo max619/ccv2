@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiFactory.h
  * \author    Scott Halstvedt
  * \author    Anatoly Lushnikov
@@ -19,39 +19,39 @@
 #include "nuiModule.h"
 #include "nuiPluginManager.h"
 
-/** \class nuiFactory
- *  \brief Provides methods for plugin creation and removal
- *  Singleton class. Provides methods for plugin creation and removal
- *  Also allows to get descriptors for already created plugins
- */
-class nuiFactory 
+ /** \class nuiFactory
+  *  \brief Provides methods for plugin creation and removal
+  *  Singleton class. Provides methods for plugin creation and removal
+  *  Also allows to get descriptors for already created plugins
+  */
+class nuiFactory
 {
 public:
-    //! Singleton wrapper
-    static nuiFactory& getInstance();
-    
-    //! Set module instance properties just like in descriptor
-    static void applyDescriptorProps(nuiModule* module, nuiModuleDescriptor* descriptor);
+	//! Singleton wrapper
+	static nuiFactory& getInstance();
 
-    //! lists available pipeline names
-    std::vector<std::string>* listPipelines();
-    //! lists available module names
-    std::vector<std::string>* listModules();
+	//! Set module instance properties just like in descriptor
+	static void applyDescriptorProps(nuiModule* module, nuiModuleDescriptor* descriptor);
 
-    //! Creates pipeline or module with specified name
-    nuiModule* create(const std::string& moduleName);
-    
-    //! registers pipeline descriptor
-    nuiPluginFrameworkErrorCode::err registerPipelineDescriptor(nuiModuleDescriptor* descriptor);
+	//! lists available pipeline names
+	std::vector<std::string>* listPipelines();
+	//! lists available module names
+	std::vector<std::string>* listModules();
+
+	//! Creates pipeline or module with specified name
+	nuiModule* create(const std::string& moduleName);
+
+	//! registers pipeline descriptor
+	nuiPluginFrameworkErrorCode::err registerPipelineDescriptor(nuiModuleDescriptor* descriptor);
 
 private:
-    nuiFactory();
-    nuiFactory(const nuiFactory&);
+	nuiFactory();
+	nuiFactory(const nuiFactory&);
 
-    //! Creates pipeline given pipeline descriptor
-    nuiModule* createPipeline(nuiModuleDescriptor* descriptor);
-    //! Creates module given module descriptor
-    nuiModule* createModule(nuiModuleLoaded* module);
+	//! Creates pipeline given pipeline descriptor
+	nuiModule* createPipeline(nuiModuleDescriptor* descriptor);
+	//! Creates module given module descriptor
+	nuiModule* createModule(nuiModuleLoaded* module);
 };
 
 #endif //NUI_FACTORY_H

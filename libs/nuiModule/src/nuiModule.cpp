@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiModule.cpp
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -27,21 +27,21 @@ LOG_DECLARE("Module");
 // nuiModule methods
 //==============================================================================
 
-nuiModule::nuiModule() 
+nuiModule::nuiModule()
 {
-	this->is_started                = false;
-	this->thread                    = NULL;
-	this->use_thread                = false;
-	this->need_update	              = false;
-	this->timer                     = new nuiTimer();
-	this->properties["use_thread"]  = new nuiProperty(false);
-	this->inputEndpoints            = NULL;
-	this->outputEndpoints           = NULL;
-	this->inputDataReceived         = NULL;
-	this->inputEndpointCount        = 0;
-	this->outputEndpointCount       = 0;
-	this->ocsillatorWait            = 15;
-	this->mtx	                      = new pt::mutex();
+	this->is_started = false;
+	this->thread = NULL;
+	this->use_thread = false;
+	this->need_update = false;
+	this->timer = new nuiTimer();
+	this->properties["use_thread"] = new nuiProperty(false);
+	this->inputEndpoints = NULL;
+	this->outputEndpoints = NULL;
+	this->inputDataReceived = NULL;
+	this->inputEndpointCount = 0;
+	this->outputEndpointCount = 0;
+	this->ocsillatorWait = 15;
+	this->mtx = new pt::mutex();
 }
 
 nuiModule::~nuiModule()
@@ -49,7 +49,7 @@ nuiModule::~nuiModule()
 	this->stop();
 
 	mtx->lock();
-	for (int i = 0; i<inputEndpointCount; i++)
+	for (int i = 0; i < inputEndpointCount; i++)
 	{
 		delete inputEndpoints[i];
 	}
@@ -64,7 +64,7 @@ nuiModule::~nuiModule()
 		inputDataReceived = NULL;
 	}
 
-	for (int i = 0; i<outputEndpointCount; i++)
+	for (int i = 0; i < outputEndpointCount; i++)
 	{
 		delete outputEndpoints[i];
 	}
@@ -74,10 +74,10 @@ nuiModule::~nuiModule()
 		outputEndpoints = NULL;
 	}
 
-	if ( this->properties.size() > 0 ) 
+	if (this->properties.size() > 0)
 	{
 		std::map<std::string, nuiProperty*>::iterator it;
-		for ( it = this->properties.begin(); it != this->properties.end(); it++ ) 
+		for (it = this->properties.begin(); it != this->properties.end(); it++)
 		{
 			delete (*it).second;
 			(*it).second = NULL;
@@ -92,9 +92,9 @@ bool nuiModule::needUpdate(/*bool isAsyncMode*/)
 {
 	if (this->isOscillatorMode()) // if constant periodic updates
 	{
-// 		if (isAsyncMode)
-// 			this->thread->post(); // anyway allow update
-    this->need_update = false;
+		// 		if (isAsyncMode)
+		// 			this->thread->post(); // anyway allow update
+		this->need_update = false;
 		return true; // okay, we need update
 	}
 	else if (this->need_update) // in any other case if we have flag need_update set to true
@@ -102,19 +102,19 @@ bool nuiModule::needUpdate(/*bool isAsyncMode*/)
 		this->need_update = false; // uncheck it
 		return true; // okay, we need update
 	}
-// 	else if ( !isAsyncMode) // otherwise no need to update in non-async mode
-//   {
-// 		return false;
-//   }
-// 	else if ( isAsyncMode) // if in async mode then wait until something will unlock thread
-//   {
-		this->thread->wait();
-    if ( this->need_update ) // if after wait will have need_update flag set
-    {
-      this->need_update = false;
-      return true;
-    }
-//  }
+	// 	else if ( !isAsyncMode) // otherwise no need to update in non-async mode
+	//   {
+	// 		return false;
+	//   }
+	// 	else if ( isAsyncMode) // if in async mode then wait until something will unlock thread
+	//   {
+	this->thread->wait();
+	if (this->need_update) // if after wait will have need_update flag set
+	{
+		this->need_update = false;
+		return true;
+	}
+	//  }
 
 	return false;
 }
@@ -125,10 +125,10 @@ bool nuiModule::needUpdate(/*bool isAsyncMode*/)
 void nuiModule::thread_process(nuiThread *thread)
 {
 	nuiModule *module = (nuiModule *)thread->getUserData();
-  // extract module from thread data
+	// extract module from thread data
 
 	module->timer->Start();
-	while ( !thread->wantQuit()) 
+	while (!thread->wantQuit())
 	{
 		if (!module->needUpdate(/*true*/))
 			continue;
@@ -141,30 +141,30 @@ void nuiModule::thread_process(nuiThread *thread)
 void nuiModule::internal_oscillator(nuiThread *thread)
 {
 	nuiModule *module = (nuiModule*)thread->getUserData();
-	while ( !thread->wantQuit())
+	while (!thread->wantQuit())
 	{
 		module->trigger();
 		pt::psleep(module->ocsillatorWait);
 	}
 }
 
-void nuiModule::start() 
+void nuiModule::start()
 {
 	this->use_thread = this->property("use_thread").asBool();
 	this->oscillator_mode = this->property("oscillator_mode").asBool();
 	this->ocsillatorWait = this->property("oscillator_wait").asInteger();
 	this->is_synced_input = this->property("synced_input").asBool();
 	timer->Start();
-	if (( this->use_thread ) || ( this->oscillator_mode))
-  // if uses oscillator or should be run in a separate thread
+	if ((this->use_thread) || (this->oscillator_mode))
+		// if uses oscillator or should be run in a separate thread
 	{
 		LOGM(NUI_TRACE, "start thread");
 		this->thread = new nuiThread(this->oscillator_mode ? internal_oscillator : thread_process, this);
-    // create thread based on property selected
+		// create thread based on property selected
 
-		if ( this->thread == NULL )
+		if (this->thread == NULL)
 		{
-      //! \todo then how the update will be called?
+			//! \todo then how the update will be called?
 			this->oscillator_mode = false;
 			this->use_thread = false;
 		}
@@ -177,9 +177,9 @@ void nuiModule::start()
 	LOGM(NUI_DEBUG, "start");
 }
 
-void nuiModule::stop() 
+void nuiModule::stop()
 {
-	if ((this->use_thread || this->oscillator_mode) && (this->thread != NULL)) 
+	if ((this->use_thread || this->oscillator_mode) && (this->thread != NULL))
 	{
 		this->thread->stop();
 		this->thread->post();
@@ -193,14 +193,14 @@ void nuiModule::stop()
 	this->is_started = false;
 	timer->Reset();
 	mtx->unlock();
-  //! \todo shouldn't we stop input datastreams?
-	for(int i = 0; i < this->getOutputEndpointCount(); i++) 
-  {
+	//! \todo shouldn't we stop input datastreams?
+	for (int i = 0; i < this->getOutputEndpointCount(); i++)
+	{
 		nuiEndpoint* endpoint = this->getOutputEndpoint(i);
-		for(int j = 0; j < endpoint->getConnectionCount(); j++) 
-    {
-			nuiDataStream* stream = 
-        endpoint->getDataStreamForEndpoint(endpoint->getConnectedEndpointAtIndex(j));
+		for (int j = 0; j < endpoint->getConnectionCount(); j++)
+		{
+			nuiDataStream* stream =
+				endpoint->getDataStreamForEndpoint(endpoint->getConnectedEndpointAtIndex(j));
 			stream->stopStream();
 		}
 	}
@@ -211,14 +211,14 @@ void nuiModule::trigger()
 {
 	if (!this->isStarted())
 		return;
-  
+
 	this->need_update = true;
 
-	if ( this->use_thread) // if use thread - allow thread do all the work
+	if (this->use_thread) // if use thread - allow thread do all the work
 	{
 		this->thread->post();
 		return;
-  }
+	}
 
 	if (this->needUpdate(/*true*/))
 	{
@@ -252,7 +252,7 @@ nuiProperty &nuiModule::property(std::string str)
 {
 	std::map<std::string, nuiProperty*>::iterator it;
 	it = this->properties.find(str);
-	if ( it == this->properties.end() ) {
+	if (it == this->properties.end()) {
 		this->properties[str] = new nuiProperty("", "?? auto created ??");
 		return *(this->properties[str]);
 	}
@@ -285,13 +285,13 @@ void nuiModule::setInputEndpointCount(int n)
 	memset((void*)newInputDataReceived, 0x00, n * sizeof(char));
 	if (n > inputEndpointCount)
 	{
-		memcpy(newInputEndpoints,inputEndpoints, inputEndpointCount * sizeof(nuiEndpoint*));
+		memcpy(newInputEndpoints, inputEndpoints, inputEndpointCount * sizeof(nuiEndpoint*));
 		memcpy(newInputDataReceived, inputDataReceived, inputEndpointCount * sizeof(char));
 	}
 	else
 	{
-		memcpy(newInputEndpoints,inputEndpoints, n * sizeof(nuiEndpoint*));
-		for (int i = n; i<inputEndpointCount; i++)
+		memcpy(newInputEndpoints, inputEndpoints, n * sizeof(nuiEndpoint*));
+		for (int i = n; i < inputEndpointCount; i++)
 		{
 			delete inputEndpoints[i];
 		}
@@ -312,11 +312,11 @@ void nuiModule::setOutputEndpointCount(int n)
 	nuiEndpoint **newOutputEndpoints = (nuiEndpoint **)malloc(n * sizeof(nuiEndpoint*));
 	memset((void*)newOutputEndpoints, 0x00, n * sizeof(nuiEndpoint*));
 	if (n > outputEndpointCount)
-		memcpy(newOutputEndpoints,outputEndpoints, outputEndpointCount * sizeof(nuiEndpoint*));
+		memcpy(newOutputEndpoints, outputEndpoints, outputEndpointCount * sizeof(nuiEndpoint*));
 	else
 	{
-		memcpy(newOutputEndpoints,outputEndpoints, n * sizeof(nuiEndpoint*));
-		for (int i = n; i<outputEndpointCount; i++)
+		memcpy(newOutputEndpoints, outputEndpoints, n * sizeof(nuiEndpoint*));
+		for (int i = n; i < outputEndpointCount; i++)
 		{
 			delete outputEndpoints[i];
 		}
@@ -329,7 +329,7 @@ void nuiModule::setOutputEndpointCount(int n)
 
 void nuiModule::setInputEndpoint(int n, nuiEndpoint *endpoint)
 {
-	if ((n >= inputEndpointCount) || (n<0))
+	if ((n >= inputEndpointCount) || (n < 0))
 		return;
 	mtx->lock();
 	if (inputEndpoints[n] != NULL)
@@ -337,10 +337,10 @@ void nuiModule::setInputEndpoint(int n, nuiEndpoint *endpoint)
 	inputEndpoints[n] = endpoint;
 	mtx->unlock();
 }
-	
+
 void nuiModule::setOutputEndpoint(int n, nuiEndpoint *endpoint)
 {
-	if ((n >= outputEndpointCount)  || (n<0))
+	if ((n >= outputEndpointCount) || (n < 0))
 		return;
 	mtx->lock();
 	if (outputEndpoints[n] != NULL)
@@ -376,7 +376,7 @@ nuiEndpoint *nuiModule::getOutputEndpoint(int n)
 int nuiModule::getInputEndpointIndex(nuiEndpoint *stream)
 {
 	int result = -1;
-	for (int i=0;i<inputEndpointCount;i++)
+	for (int i = 0; i < inputEndpointCount; i++)
 	{
 		if (inputEndpoints[i] == stream)
 		{
@@ -386,11 +386,11 @@ int nuiModule::getInputEndpointIndex(nuiEndpoint *stream)
 	}
 	return result;
 }
-	
+
 int nuiModule::getOutputEndpointIndex(nuiEndpoint *stream)
 {
 	int result = -1;
-	for (int i=0;i<outputEndpointCount;i++)
+	for (int i = 0; i < outputEndpointCount; i++)
 	{
 		if (outputEndpoints[i] == stream)
 		{
@@ -429,9 +429,9 @@ void nuiModuleDescriptor::removeChildModuleDescriptor(nuiModuleDescriptor* modul
 {
 	if (moduleDescriptor != NULL)
 	{
-        std::vector<nuiModuleDescriptor*>::iterator iter;
-		for ( iter = childrenModuleDescriptions.begin(); 
-            iter != childrenModuleDescriptions.end(); iter++)
+		std::vector<nuiModuleDescriptor*>::iterator iter;
+		for (iter = childrenModuleDescriptions.begin();
+			iter != childrenModuleDescriptions.end(); iter++)
 		{
 			if (moduleDescriptor == *iter)
 			{
@@ -478,7 +478,7 @@ void nuiModuleDescriptor::addOutputEndpointDescriptor(nuiEndpointDescriptor* des
 void nuiModuleDescriptor::removeInputEndpointDescriptor(nuiEndpointDescriptor* descriptor)
 {
 	int currentIndex = descriptor->getIndex();
-    std::vector<nuiEndpointDescriptor*>::iterator iter;
+	std::vector<nuiEndpointDescriptor*>::iterator iter;
 	for (iter = inputDescriptions.begin(); iter != inputDescriptions.end(); iter++)
 	{
 		if ((*iter == descriptor))
@@ -496,9 +496,9 @@ void nuiModuleDescriptor::removeInputEndpointDescriptor(nuiEndpointDescriptor* d
 }
 
 void nuiModuleDescriptor::removeOutputEndpointDescriptor(nuiEndpointDescriptor* descriptor)
-{	
+{
 	int currentIndex = descriptor->getIndex();
-    std::vector<nuiEndpointDescriptor*>::iterator iter;
+	std::vector<nuiEndpointDescriptor*>::iterator iter;
 	for (iter = outputDescriptions.begin(); iter != outputDescriptions.end(); iter++)
 	{
 		if ((*iter == descriptor))
@@ -517,7 +517,7 @@ void nuiModuleDescriptor::removeOutputEndpointDescriptor(nuiEndpointDescriptor* 
 
 nuiEndpointDescriptor *nuiModuleDescriptor::getInputEndpointDescriptor(int index)
 {
-    std::vector<nuiEndpointDescriptor*>::iterator iter;
+	std::vector<nuiEndpointDescriptor*>::iterator iter;
 	for (iter = inputDescriptions.begin(); iter != inputDescriptions.end(); iter++)
 	{
 		if ((*iter)->getIndex() == index)
@@ -528,7 +528,7 @@ nuiEndpointDescriptor *nuiModuleDescriptor::getInputEndpointDescriptor(int index
 
 nuiEndpointDescriptor *nuiModuleDescriptor::getOutputEndpointDescriptor(int index)
 {
-    std::vector<nuiEndpointDescriptor*>::iterator iter;
+	std::vector<nuiEndpointDescriptor*>::iterator iter;
 	for (iter = outputDescriptions.begin(); iter != outputDescriptions.end(); iter++)
 	{
 		if ((*iter)->getIndex() == index)
@@ -561,7 +561,7 @@ nuiProperty &nuiModuleDescriptor::property(std::string str)
 {
 	std::map<std::string, nuiProperty*>::iterator it;
 	it = this->properties.find(str);
-	if ( it == this->properties.end() ) 
+	if (it == this->properties.end())
 	{
 		this->properties[str] = new nuiProperty("", "?? auto created ??");
 		return *(this->properties[str]);
@@ -581,9 +581,9 @@ void nuiModuleDescriptor::addDataStreamDescriptor(nuiDataStreamDescriptor* conne
 
 void nuiModuleDescriptor::removeDataStreamDescriptor(nuiDataStreamDescriptor* connection)
 {
-    std::vector<nuiDataStreamDescriptor*>::iterator iter;
+	std::vector<nuiDataStreamDescriptor*>::iterator iter;
 	for (iter = connectionDescriptors.begin();
-        iter != connectionDescriptors.end(); iter++)
+		iter != connectionDescriptors.end(); iter++)
 	{
 		if (connection == *iter)
 		{
@@ -609,8 +609,8 @@ void nuiModuleDescriptor::setInputEndpointsCount(int count)
 		return;
 	if (count < getInputEndpointsCount())
 	{
-        std::vector<nuiEndpointDescriptor*>::iterator iter;
-		for ( iter = inputDescriptions.end() - 1; iter != inputDescriptions.begin();)
+		std::vector<nuiEndpointDescriptor*>::iterator iter;
+		for (iter = inputDescriptions.end() - 1; iter != inputDescriptions.begin();)
 		{
 			if ((*iter)->getIndex() >= count)
 				inputDescriptions.erase(iter);
@@ -620,10 +620,10 @@ void nuiModuleDescriptor::setInputEndpointsCount(int count)
 	}
 	else
 	{
-		for (int i = inputDescriptions.size(); i<count; i++)
+		for (int i = inputDescriptions.size(); i < count; i++)
 		{
-			nuiEndpointDescriptor* endpointDescription 
-                = new nuiEndpointDescriptor("*");
+			nuiEndpointDescriptor* endpointDescription
+				= new nuiEndpointDescriptor("*");
 			endpointDescription->setIndex(i);
 
 			inputDescriptions.push_back(endpointDescription);
@@ -637,8 +637,8 @@ void nuiModuleDescriptor::setOutputEndpointsCount(int count)
 		return;
 	if (count < getOutputEndpointsCount())
 	{
-        std::vector<nuiEndpointDescriptor*>::iterator iter;
-		for ( iter = outputDescriptions.end()-1; iter != outputDescriptions.begin();)
+		std::vector<nuiEndpointDescriptor*>::iterator iter;
+		for (iter = outputDescriptions.end() - 1; iter != outputDescriptions.begin();)
 		{
 			if ((*iter)->getIndex() >= count)
 				outputDescriptions.erase(iter);
@@ -648,7 +648,7 @@ void nuiModuleDescriptor::setOutputEndpointsCount(int count)
 	}
 	else
 	{
-		for (int i = outputDescriptions.size();i<count;i++)
+		for (int i = outputDescriptions.size(); i < count; i++)
 		{
 			nuiEndpointDescriptor* endpointDescription = new nuiEndpointDescriptor("*");
 			endpointDescription->setIndex(i);
@@ -659,10 +659,10 @@ void nuiModuleDescriptor::setOutputEndpointsCount(int count)
 
 std::string nuiModuleDescriptor::getDescription()
 {
-    return description;
+	return description;
 }
 
 std::string nuiModuleDescriptor::getAuthor()
 {
-    return author;
+	return author;
 }

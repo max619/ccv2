@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiExampleModule.h
  *            Example Module to be used for developments.
  * \author    Christian Moore
@@ -22,17 +22,17 @@ NUI_DATAPACKET_DEFAULT_DECLARATION(ExampleModule, IplImage*)
 
 class nuiExampleModule : public nuiModule {
 public:
-	nuiExampleModule(); 
+	nuiExampleModule();
 	virtual ~nuiExampleModule();
 
 	void update();
 	void start();
 
 private:
-    nuiEndpoint* input;
+	nuiEndpoint * input;
 	nuiEndpoint* output;
 	nuiDataPacket* outputDataPacket;
-    
+
 	IplImage* filterFrame;
 
 	MODULE_INTERNALS();
@@ -41,18 +41,18 @@ private:
 IMPLEMENT_ALLOCATOR(nuiExampleModule)
 IMPLEMENT_DEALLOCATOR(nuiExampleModule)
 
-START_IMPLEMENT_DESCRIPTOR(nuiExampleModule,"native","Example Module to be used for developments.")
+START_IMPLEMENT_DESCRIPTOR(nuiExampleModule, "native", "Example Module to be used for developments.")
 descriptor->setInputEndpointsCount(1);
 descriptor->setOutputEndpointsCount(1);
 nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor("IplImage");
-descriptor->addInputEndpointDescriptor(inputDescriptor,0);
+descriptor->addInputEndpointDescriptor(inputDescriptor, 0);
 nuiEndpointDescriptor* outputDescriptor = new nuiEndpointDescriptor("IplImage");
-descriptor->addOutputEndpointDescriptor(outputDescriptor,0);
+descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 descriptor->property("use_thread").set(false);
-END_IMPLEMENT_DESCRIPTOR(nuiExampleModule)	
+END_IMPLEMENT_DESCRIPTOR(nuiExampleModule)
 
 START_EXPORT_MODULES(RealSenseModule)
-REGISTER_MODULE(nuiExampleModule,"nuiExampleModule",1,0)
+REGISTER_MODULE(nuiExampleModule, "nuiExampleModule", 1, 0)
 END_EXPORT_MODULES()
 
 #endif

@@ -9,7 +9,7 @@ class rs2DeviceContainer
 public:
 	rs2DeviceContainer();
 	~rs2DeviceContainer();
-	
+
 	void initDevices(rs2::context& context);
 	void updateDevices(rs2::event_information& info);
 	rs2::device getDeviceAt(int index);

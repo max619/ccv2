@@ -1,5 +1,3 @@
-#pragma once
-
 /////////////////////////////////////////////////////////////////////////////
 // Name:        modules/nuiWebcamModule.h
 // Purpose:     Example Module to be used for developments.

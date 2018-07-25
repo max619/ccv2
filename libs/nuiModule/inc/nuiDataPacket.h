@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiDataPacket.h
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -12,14 +12,14 @@
 #define NUI_DATAPACKET_OK nuiDataPacketError::NoError
 #define NUI_DATAPACKET_ERROR nuiDataPacketError::Error
 
-//! namespaced enum for errors that Datapacket can produce
+ //! namespaced enum for errors that Datapacket can produce
 struct nuiDataPacketError
 {
-  enum err
-  {
-    NoError,
-    Error,
-  };
+	enum err
+	{
+		NoError,
+		Error,
+	};
 };
 
 //! macro for default datapacket skeleton implementation
@@ -77,20 +77,20 @@ char* nui##moduleName##DataPacket::getDataPacketType()\
 class nuiDataPacket
 {
 public:
-  virtual ~nuiDataPacket() { };
-  virtual nuiDataPacketError::err packData(const void *data) = 0;
-  virtual nuiDataPacketError::err unpackData(void* &data) = 0;
-  virtual nuiDataPacket* copyPacketData(nuiDataPacketError::err &errorCode) = 0;
+	virtual ~nuiDataPacket() { };
+	virtual nuiDataPacketError::err packData(const void *data) = 0;
+	virtual nuiDataPacketError::err unpackData(void* &data) = 0;
+	virtual nuiDataPacket* copyPacketData(nuiDataPacketError::err &errorCode) = 0;
 
-  virtual char* getDataPacketType() = 0;
+	virtual char* getDataPacketType() = 0;
 
-  //! checks whether data from one module should be copied or passed by reference
-  virtual bool isLocalCopy(){ return localCopy; };
+	//! checks whether data from one module should be copied or passed by reference
+	virtual bool isLocalCopy() { return localCopy; };
 
-  virtual void setLocalCopy(bool value){ localCopy = value; };
+	virtual void setLocalCopy(bool value) { localCopy = value; };
 private:
-  bool localCopy;
-}; 
+	bool localCopy;
+};
 
 void nuiReleaseDataPacket(nuiDataPacket** packet);
 

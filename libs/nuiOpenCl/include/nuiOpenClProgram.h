@@ -1,4 +1,6 @@
-#pragma once
+#ifndef OPENCL_PROGRAM
+#define OPENCL_PROGRAM
+
 #include "nuiOpenClStructures.h"
 
 #define DEFAULT_OPENCL_PROGRAM_INTERFACE_DECLARATION()\
@@ -26,3 +28,4 @@ protected:
 	void* allocAlligned(cl_uint alignedsize);
 	int ExecKernel(ocl_container * container, cl_uint width, cl_uint height);
 };
+#endif

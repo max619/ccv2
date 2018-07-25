@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiModule.h
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -53,34 +53,34 @@ class nuiEndpointDescriptor;
 class nuiModuleDescriptor
 {
 public:
-    //! no checks, just add this descriptor
+	//! no checks, just add this descriptor
 	void addChildModuleDescriptor(nuiModuleDescriptor* moduleDescriptor);
-    //! remove from list if exists
+	//! remove from list if exists
 	void removeChildModuleDescriptor(nuiModuleDescriptor* moduleDescriptor);
-    //! gets count of child modules
-    int getChildModulesCount();
-    //! gets child module at specified index
-    nuiModuleDescriptor* getChildModuleDescriptor(int index);
+	//! gets count of child modules
+	int getChildModulesCount();
+	//! gets child module at specified index
+	nuiModuleDescriptor* getChildModuleDescriptor(int index);
 
-    //! no checks, just add this connection
+	//! no checks, just add this connection
 	void addDataStreamDescriptor(nuiDataStreamDescriptor* connection);
-    //! remove from list if exists
+	//! remove from list if exists
 	void removeDataStreamDescriptor(nuiDataStreamDescriptor* connection);
-    //! gets count of attached connetion descriptors
-    int getDataStreamDescriptorCount();
-    //! return speicfied connection descriptor
-    nuiDataStreamDescriptor* getDataStreamDescriptor(int index);
-	
+	//! gets count of attached connetion descriptors
+	int getDataStreamDescriptorCount();
+	//! return speicfied connection descriptor
+	nuiDataStreamDescriptor* getDataStreamDescriptor(int index);
+
 	int getInputEndpointsCount();
 	int getOutputEndpointsCount();
-    
-    //! TODO : can we do this in module??? should be moved to pipeline.
+
+	//! TODO : can we do this in module??? should be moved to pipeline.
 	void setInputEndpointsCount(int count);
 	void setOutputEndpointsCount(int count);
 
-    //! TODO : wtf ?!?! set any provided index to endpoint descriptor, add endpoint to list
+	//! TODO : wtf ?!?! set any provided index to endpoint descriptor, add endpoint to list
 	void addInputEndpointDescriptor(nuiEndpointDescriptor* descriptor, int index);
-    //! TODO : wtf ?!?! set any provided index to endpoint descriptor, add endpoint to list
+	//! TODO : wtf ?!?! set any provided index to endpoint descriptor, add endpoint to list
 	void addOutputEndpointDescriptor(nuiEndpointDescriptor* descriptor, int index);
 
 	void removeInputEndpointDescriptor(nuiEndpointDescriptor* descriptor);
@@ -88,18 +88,18 @@ public:
 	nuiEndpointDescriptor *getInputEndpointDescriptor(int index);
 	nuiEndpointDescriptor *getOutputEndpointDescriptor(int index);
 
-    //! update module name
+	//! update module name
 	void setName(std::string name);
-    //! update module description
+	//! update module description
 	void setDescription(std::string description);
-    //! update module author
+	//! update module author
 	void setAuthor(std::string author);
 
-	std::string getName(); 
-	std::string getDescription(); 
+	std::string getName();
+	std::string getDescription();
 	std::string getAuthor();
 
-  nuiProperty &property(std::string name);
+	nuiProperty &property(std::string name);
 	std::map<std::string, nuiProperty*> &getProperties();
 
 private:
@@ -116,34 +116,34 @@ private:
 class nuiModule
 {
 public:
-  //! basic constructor, creates module with basic properties
+	//! basic constructor, creates module with basic properties
 	nuiModule();
 
-  //! destructor
+	//! destructor
 	virtual ~nuiModule();
 
-  //! create thread based on properties and start it
+	//! create thread based on properties and start it
 	virtual void start();
-  //! stop and delete worker thread, stop all associated datastreams
+	//! stop and delete worker thread, stop all associated datastreams
 	virtual void stop();
 
-  //! module update function (data processing)
+	//! module update function (data processing)
 	virtual void update() = 0;
 
-  //! forced update triggered by internal_oscillator thread or notifyDataReceived
-  //! sets need_update flag
+	//! forced update triggered by internal_oscillator thread or notifyDataReceived
+	//! sets need_update flag
 	void trigger();
 
-  //! notify that endpoint received some data. Force trigger.
+	//! notify that endpoint received some data. Force trigger.
 	virtual void notifyDataReceived(nuiEndpoint *endpoint);
 
-  //! check whether module requires update. If requires - uncheck need_update
+	//! check whether module requires update. If requires - uncheck need_update
 	bool needUpdate(/*bool isAsyncMode = false*/);
 
 	virtual void setInputEndpointCount(int n);
 	virtual void setOutputEndpointCount(int n);
-  virtual void setInputEndpoint(int n, nuiEndpoint *endpoint);
-  virtual void setOutputEndpoint(int n, nuiEndpoint *endpoint);
+	virtual void setInputEndpoint(int n, nuiEndpoint *endpoint);
+	virtual void setOutputEndpoint(int n, nuiEndpoint *endpoint);
 
 	int getInputEndpointCount();
 	int getOutputEndpointCount();
@@ -168,40 +168,40 @@ private:
 	static void internal_oscillator(nuiThread *thread);
 
 protected:
-  //! module properties
-  std::map<std::string, nuiProperty*> properties;
+	//! module properties
+	std::map<std::string, nuiProperty*> properties;
 
-  //! started
+	//! started
 	bool is_started;
-  //! update should be called
-  bool need_update;
-  
-  //! update type : should run in separate thread and update only on input received
-  bool use_thread;
-  //! update type : should provide constant periodical updates
-  bool oscillator_mode;
-  //! update type : update should happen only when all endpoints are filled with data
-  bool is_synced_input;
+	//! update should be called
+	bool need_update;
 
-  //! to calculate module processing time fps
+	//! update type : should run in separate thread and update only on input received
+	bool use_thread;
+	//! update type : should provide constant periodical updates
+	bool oscillator_mode;
+	//! update type : update should happen only when all endpoints are filled with data
+	bool is_synced_input;
+
+	//! to calculate module processing time fps
 	nuiTimer *timer;
 
-  //! worker thread
+	//! worker thread
 	nuiThread *thread;
 
 	pt::mutex *mtx;
 
 	int inputEndpointCount;
-  nuiEndpoint **inputEndpoints;
-  
-  int outputEndpointCount;
-  nuiEndpoint **outputEndpoints;
+	nuiEndpoint **inputEndpoints;
 
-  //! update period for oscillator_mode
+	int outputEndpointCount;
+	nuiEndpoint **outputEndpoints;
+
+	//! update period for oscillator_mode
 	int ocsillatorWait;
-	
-  //! array, used to check whether all endpoints received data (when using is_synced_input).
-  //! endpoint will have non-zero value when is filled with data.
+
+	//! array, used to check whether all endpoints received data (when using is_synced_input).
+	//! endpoint will have non-zero value when is filled with data.
 	char* inputDataReceived;
 };
 

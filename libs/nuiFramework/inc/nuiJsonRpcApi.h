@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiJsonRpcApi.h
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -28,39 +28,39 @@
 #include "nuiEndpoint.h"
 #include "nuiDebugLogger.h"
 
-//! \class nuiJsonRpcApi
-//! Class to handle commands from client to pipeline
+ //! \class nuiJsonRpcApi
+ //! Class to handle commands from client to pipeline
 class nuiJsonRpcApi : public pt::thread
 {
 public:
-    //! Singleton
+	//! Singleton
 	static nuiJsonRpcApi *getInstance();
-    
-    //! creates json rpc server on specified address and port
+
+	//! creates json rpc server on specified address and port
 	bool init(std::string address, int port);
 
-    //! starts thread that will listen to json rpc calls
+	//! starts thread that will listen to json rpc calls
 	void startApi();
 
-    //! sets flag ordering thread to stop
+	//! sets flag ordering thread to stop
 	void stopApi(bool killServer = false);
 
-    //! checks whether rpc commands were created (init called on JsonRpcApi)
+	//! checks whether rpc commands were created (init called on JsonRpcApi)
 	bool isInitialized();
 
-    //! checks whether the thread was stopped and cleanup called
+	//! checks whether the thread was stopped and cleanup called
 	bool isFinished();
 
-    static Json::Value serialize_workflow(nuiModuleDescriptor* descriptor);
-    static Json::Value serialize_pipeline(nuiModuleDescriptor* descriptor);
-    static Json::Value serialize_module(nuiModuleDescriptor* descriptor);
-    static Json::Value serialize_endpoint(nuiEndpointDescriptor *descriptor);
-    static Json::Value serialize_connection(nuiDataStreamDescriptor *descriptor);
+	static Json::Value serialize_workflow(nuiModuleDescriptor* descriptor);
+	static Json::Value serialize_pipeline(nuiModuleDescriptor* descriptor);
+	static Json::Value serialize_module(nuiModuleDescriptor* descriptor);
+	static Json::Value serialize_endpoint(nuiEndpointDescriptor *descriptor);
+	static Json::Value serialize_connection(nuiDataStreamDescriptor *descriptor);
 protected:
 private:
-    nuiJsonRpcApi();
+	nuiJsonRpcApi();
 
-    Json::Rpc::TcpServer *server;
+	Json::Rpc::TcpServer *server;
 	bool finished;
 	bool want_quit;
 

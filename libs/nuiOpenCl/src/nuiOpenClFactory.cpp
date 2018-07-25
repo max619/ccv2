@@ -338,7 +338,7 @@ int nuiOpenClFactory::CreateAndBuildProgram(ocl_container * ocl, const char * so
 
 	// Upload the OpenCL C source code from the input file to source
 	// The size of the C program is returned in sourceSize
-	
+
 	// And now after you obtained a regular C string call clCreateProgramWithSource to create OpenCL program object.
 
 	size_t src_size = strlen(source);
@@ -395,7 +395,7 @@ int nuiOpenClFactory::CreateAndBuildProgramFromFile(ocl_container * ocl, const c
 		LogError("Error: ReadSourceFromFile returned %s.\n", TranslateOpenCLError(err));
 		goto Finally;
 	}
-	
+
 	err = CreateAndBuildProgram(ocl, source);
 
 Finally:

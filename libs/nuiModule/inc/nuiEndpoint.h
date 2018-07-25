@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiEndpoint.h
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -47,33 +47,33 @@ public:
 	nuiEndpoint(nuiModule *hostModule);
 	virtual ~nuiEndpoint();
 
-  //! lock data and send it to all outgoing streams
+	//! lock data and send it to all outgoing streams
 	void transmitData();
 
 	nuiDataStream* addConnection(nuiEndpoint *endpoint);
 	nuiDatastreamError::err removeConnection(nuiEndpoint *endpoint);
 
-  //! erase all connections at once
+	//! erase all connections at once
 	void removeConnections();
 
 	nuiDataStream* getDataStreamForEndpoint(nuiEndpoint *endpoint);
 	unsigned int getConnectionCount();
-  
-  //! \todo setTypeDescriptor marked as public?
+
+	//! \todo setTypeDescriptor marked as public?
 	void setTypeDescriptor(std::string typeDescriptor);
 
-  //! set endpoint to hold provided data
+	//! set endpoint to hold provided data
 	void setData(nuiDataPacket *dataPacket);
-  //! obtain stored data
+	//! obtain stored data
 	nuiDataPacket* getData();
 
-  //! assign parent module
+	//! assign parent module
 	void setModuleHoster(nuiModule *moduleHoster);
-  //! get parent module
+	//! get parent module
 	nuiModule* getModuleHoster();
 
-  //! set endpoint to hold dataPacket and notify hoster module
-  void writeData(nuiDataPacket *dataPacket);
+	//! set endpoint to hold dataPacket and notify hoster module
+	void writeData(nuiDataPacket *dataPacket);
 
 	nuiEndpoint* getConnectedEndpointAtIndex(int index);
 	inline std::string getTypeDescriptor();
@@ -85,8 +85,8 @@ private:
 	bool canBePairedWithEndpoint(nuiEndpoint *endpoint);
 	bool canBeSettedData(nuiDataPacket *dataPacket);
 
-  //! add endpoint and datastream, that connects this and that endpoints
-	std::map<nuiEndpoint*,nuiDataStream*> dataStreams;
+	//! add endpoint and datastream, that connects this and that endpoints
+	std::map<nuiEndpoint*, nuiDataStream*> dataStreams;
 	pt::mutex *mtx;
 	std::string typeDescriptor;
 	nuiDataPacket *dataPacket;

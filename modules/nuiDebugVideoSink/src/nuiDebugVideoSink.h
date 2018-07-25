@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiPluginManager.h
  *            Sink to display video
  * \author    Scott Halstvedt
@@ -19,35 +19,35 @@
 
 class nuiDebugVideoSink : public nuiModule {
 public:
-	nuiDebugVideoSink(); 
+	nuiDebugVideoSink();
 	virtual ~nuiDebugVideoSink();
 
 	void update();
 	void start();
 
 private:
-  nuiEndpoint* input;
+	nuiEndpoint * input;
 
 	CvFont font;
 
 	IplImage *dispFrame;
-    
+
 	MODULE_INTERNALS();
 };
 
 IMPLEMENT_ALLOCATOR(nuiDebugVideoSink)
 IMPLEMENT_DEALLOCATOR(nuiDebugVideoSink)
 
-START_IMPLEMENT_DESCRIPTOR(nuiDebugVideoSink,"native","Print streams/structures to the debug console in text format")
+START_IMPLEMENT_DESCRIPTOR(nuiDebugVideoSink, "native", "Print streams/structures to the debug console in text format")
 descriptor->setInputEndpointsCount(1);
 descriptor->setOutputEndpointsCount(0);
 nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor("IplImage");
-descriptor->addInputEndpointDescriptor(inputDescriptor,0);
+descriptor->addInputEndpointDescriptor(inputDescriptor, 0);
 descriptor->property("use_thread").set(true);
-END_IMPLEMENT_DESCRIPTOR(nuiDebugVideoSink)	
+END_IMPLEMENT_DESCRIPTOR(nuiDebugVideoSink)
 
 START_EXPORT_MODULES(RealSenseModule)
-REGISTER_MODULE(nuiDebugVideoSink,"nuiDebugVideoSink",1,0)
+REGISTER_MODULE(nuiDebugVideoSink, "nuiDebugVideoSink", 1, 0)
 END_EXPORT_MODULES()
 
 #endif

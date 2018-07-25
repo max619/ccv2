@@ -1,4 +1,6 @@
-#pragma once
+#ifndef OPENCL_STRUCTURES
+#define OPENCL_STRUCTURES
+
 #include <CL/opencl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,3 +49,4 @@ int ReadSourceFromFile(const char* fileName, char** source, size_t* sourceSize);
 * (E.g. "CL_DEVICE_NOT_FOUND" instead of just -1.)
 */
 const char* TranslateOpenCLError(cl_int errorCode);
+#endif

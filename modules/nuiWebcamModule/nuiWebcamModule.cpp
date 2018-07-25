@@ -1,10 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        modules/nuiExampleModule.cpp
-// Purpose:     Example Module to be used for developments.
-// Author:      Christian Moore
-// Copyright:   (c) 2012 NUI Group
-/////////////////////////////////////////////////////////////////////////////
-
 #include "nuiWebcamModule.h"
 #include "DeviceEnumerator.h"
 

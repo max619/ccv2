@@ -1,3 +1,10 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name:        modules/nuiRealSenseModule.h
+// Purpose:     Example Module to be used for developments.
+// Author:      Maxim Bagryantsev
+// Copyright:   (c) 2018 NUI Group
+/////////////////////////////////////////////////////////////////////////////
+
 #include "oclDepthToWorld.h"
 
 
@@ -60,7 +67,7 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 		return nullptr;
 	}
 
-	
+
 	err = clSetKernelArg(container->kernel, 0, sizeof(cl_float), &(intrisnic.ppx));
 	err = clSetKernelArg(container->kernel, 1, sizeof(cl_float), &(intrisnic.ppy));
 	err = clSetKernelArg(container->kernel, 2, sizeof(cl_float), &(intrisnic.fx));

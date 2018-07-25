@@ -23,14 +23,14 @@ public:
 	~CLEyeCamera()
 	{
 		CLEyeCameraStop(_camera);
-		CLEyeDestroyCamera( _camera );
+		CLEyeDestroyCamera(_camera);
 	}
 
 	void getFrame(IplImage* pFrame)
 	{
 		PBYTE pCapBuffer = NULL;
-		cvGetRawData( pFrame, &pCapBuffer );
-		CLEyeCameraGetFrame( _camera, pCapBuffer );
+		cvGetRawData(pFrame, &pCapBuffer);
+		CLEyeCameraGetFrame(_camera, pCapBuffer);
 	}
 
 	int width()

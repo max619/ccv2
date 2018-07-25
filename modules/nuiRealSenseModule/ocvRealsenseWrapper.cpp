@@ -129,11 +129,11 @@ IplImage* ocvRealsenseWrapper::thresholdDepthImage(float min, float max)
 	auto depthFrame = frameset.get_depth_frame().as<rs2::depth_frame>();
 	void* data_ptr = (void*)depthFrame.get_data();
 
-	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance(); 
+	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
 	rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
 	float depth_scale = depth_sensor.get_depth_scale();
 	if (factory.isOpenClSupported())
-	{		
+	{
 		return threshold->calcThreshold((uint16_t*)data_ptr, depthFrame.get_width(), depthFrame.get_height(), min / depth_scale, max / depth_scale);
 	}
 	else

@@ -1,4 +1,4 @@
-/** 
+/**
  * \file      nuiServerApplication.h
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
@@ -7,27 +7,27 @@
  * \copyright Copyright 2012 NUI Group. All rights reserved.
  */
 
-/**
- * \mainpage NUI Group: Community Core Fusion (Community Core Vision 2)
- * ![Header Image](http://nuigroup.com/create/960-180-111111-ccv2)
- * \section intro Introduction
- * 
- * Introduction goes here
- * 
- * \section description Description
- * 
- * Description of the project here
- *
- * \section installation Installation
- * 
- * \subsection step1 Step 1
- * 
- * Step 1 goes here
- * 
- * \subsection step2 Step 2
- * 
- * Step 2 goes here
- */
+ /**
+  * \mainpage NUI Group: Community Core Fusion (Community Core Vision 2)
+  * ![Header Image](http://nuigroup.com/create/960-180-111111-ccv2)
+  * \section intro Introduction
+  *
+  * Introduction goes here
+  *
+  * \section description Description
+  *
+  * Description of the project here
+  *
+  * \section installation Installation
+  *
+  * \subsection step1 Step 1
+  *
+  * Step 1 goes here
+  *
+  * \subsection step2 Step 2
+  *
+  * Step 2 goes here
+  */
 #ifndef CCV_H
 #define CCV_H
 
@@ -58,7 +58,7 @@
 #include <map>
 #include <algorithm>
 
-// JSON
+  // JSON
 #include "cJSON.h"
 #include "json/json.h"
 

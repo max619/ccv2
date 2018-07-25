@@ -120,7 +120,7 @@ IplImage * oclThreshold::calcThreshold(uint16_t * src, uint width, uint height, 
 	IplImage* res = cvCreateImage(CvSize(width, height), IPL_DEPTH_8U, 1);
 	memcpy_s(res->imageDataOrigin, width * height, output, width * height);
 
-	
+
 
 	mutex.unlock();
 	return res;

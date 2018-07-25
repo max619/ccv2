@@ -1,3 +1,10 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name:        modules/oclDepthToWorld.h
+// Purpose:     Example Module to be used for developments.
+// Author:      Maxim Bagryantsev
+// Copyright:   (c) 2018 NUI Group
+/////////////////////////////////////////////////////////////////////////////
+
 #ifndef OCL_THRESHOLD
 #define OCL_THRESHOLD
 #include "nuiOpenClProgram.h"
