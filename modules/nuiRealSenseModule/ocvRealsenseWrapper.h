@@ -1,10 +1,13 @@
-#pragma once
+#ifndef OCV_REALSENSE_WRAPPER
+#define OCV_REALSENSE_WRAPPER
+
 #include <opencv2\core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <librealsense2\rs.hpp>
 #include "rs2DeviceContainer.h"
 #include <Windows.h>
 #include "oclThreshold.h"
+#include "oclDepthToWorld.h"
 #include "nuiOpenCl.h"
 
 class ocvRealsenseWrapper
@@ -21,6 +24,8 @@ public:
 
 	IplImage * thresholdDepthImage(float min, float max);
 
+	IplImage * queryWorldCoordinates();
+
 private:
 	/*rs2::video_frame colorFrame;
 	rs2::frame depthFrame;*/
@@ -35,6 +40,8 @@ private:
 	cv::Mat colorImageBgr;
 	IplImage* _img;
 	oclThreshold* threshold;
+	oclDepthToWorld* depthToWorld;
 
 	bool opened;
 };
+#endif

@@ -1,3 +1,4 @@
+
 /**
 * \file      nuiFrameworkManager.h
 * \author    Anatoly Lushnikov
@@ -6,6 +7,7 @@
 * \date      2012-2013
 * \copyright Copyright 2012 NUI Group. All rights reserved.
 */
+#pragma once
 
 #ifndef NUI_FRAMEWORK_MANAGER_H
 #define NUI_FRAMEWORK_MANAGER_H
@@ -25,8 +27,6 @@
 #include "nuiEndpoint.h"
 #include "nuiTree.h"
 #include "nuiDebugLogger.h"
-#include "nuiJsonRpcApi.h"
-#include "json\json.h"
 #include "nuiPlugin.h"
 
 class nuiModule;
@@ -60,11 +60,13 @@ public:
 	bool isRunning;
 };
 
+
 //! Provides API for engine manipulations
 class nuiFrameworkManager
 {
 public:
 	static nuiFrameworkManager& getInstance();
+	static void createInstance();
 
 	//! \todo what does init should mean for framework manager?
 	nuiFrameworkManagerErrorCode::err init();
@@ -202,9 +204,12 @@ public:
 	void setStartupPath(std::string path);
 	std::string getRelativeToStartupPath(std::string path);
 	std::string getRelativeToStartupPath(char* path);
+	static void* getInstancePoiner();
 
 private:
 	std::string startupPath;
 };
 
-#endif//NUI_FRAMEWORK_MANAGER_H
+
+
+#endif //NUI_FRAMEWORK_MANAGER_H

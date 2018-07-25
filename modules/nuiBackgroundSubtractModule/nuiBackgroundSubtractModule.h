@@ -56,7 +56,7 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor,0);
 descriptor->property("use_thread").set(false);
 END_IMPLEMENT_DESCRIPTOR(nuiBackgroundSubtractModule)	
 
-START_EXPORT_MODULES()	  
+START_EXPORT_MODULES(RealSenseModule)
 REGISTER_MODULE(nuiBackgroundSubtractModule,"nuiBackgroundSubtractModule",1,0)
 END_EXPORT_MODULES()
 

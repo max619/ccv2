@@ -1,7 +1,7 @@
-/** 
+/**
  * \file      nuiPlugin.h
  * \author    Anatoly Lushnikov
- * \author    Anatoly Churikov 
+ * \author    Anatoly Churikov
  * \date      2012-2013
  * \copyright Copyright 2012 NUI Group. All rights reserved.
  */
@@ -23,17 +23,17 @@ struct nuiPluginFrameworkService;
 //! namespaced enum
 struct nuiPluginFrameworkErrorCode
 {
-  enum err
-  {
-    Success,
-    UnexpectedError,
-    ModuleRegistrationFailed,
-    PluginLoadingFailed,
-    EntryPointNotFound,
-    IncompatibleVersion,
-    RepeatingModule,
-    DefaultSettingsCorrupted
-  };
+	enum err
+	{
+		Success,
+		UnexpectedError,
+		ModuleRegistrationFailed,
+		PluginLoadingFailed,
+		EntryPointNotFound,
+		IncompatibleVersion,
+		RepeatingModule,
+		DefaultSettingsCorrupted
+	};
 };
 
 struct nuiObjectParameters;
@@ -42,47 +42,48 @@ struct nuiRegisterModuleParameters;
 struct nuiPluginFrameworkService;
 
 typedef nuiModuleDescriptor *(*nuiGetDescriptorFunc)();
-typedef void *(*nuiAllocateFunc)(nuiObjectParameters *); 
-typedef nuiPluginFrameworkErrorCode::err (*nuiDeallocateFunc)(void *);
-typedef nuiPluginFrameworkErrorCode::err (*nuiRegisterModuleFunc)(const nuiRegisterModuleParameters *params);
-typedef nuiPluginFrameworkErrorCode::err (*nuiLibraryFreeFunc)();
-typedef nuiPluginFrameworkErrorCode::err (*nuiLibraryLoadFunc)(const nuiPluginFrameworkService *);
+typedef void *(*nuiAllocateFunc)(nuiObjectParameters *);
+typedef nuiPluginFrameworkErrorCode::err(*nuiDeallocateFunc)(void *);
+typedef nuiPluginFrameworkErrorCode::err(*nuiRegisterModuleFunc)(const nuiRegisterModuleParameters *params);
+typedef nuiPluginFrameworkErrorCode::err(*nuiLibraryFreeFunc)();
+typedef nuiPluginFrameworkErrorCode::err(*nuiLibraryLoadFunc)(const nuiPluginFrameworkService *);
 
 //! structure passed to create plugin objects
 struct nuiObjectParameters
 {
-  const char *objectType;
-  const struct nuiPluginFrameworkService *frameworkServices;
+	const char *objectType;
+	const struct nuiPluginFrameworkService *frameworkServices;
 };
 
 //! structure holding version information
 struct nuiPluginFrameworkVersion
 {
-  //! major changes affect plugin compatibility. Older plugins must be rebuilt with newer version of nuiModule
-  int major;
-  //! minor changes should not affect plugin compatibility
-  int minor;
+	//! major changes affect plugin compatibility. Older plugins must be rebuilt with newer version of nuiModule
+	int major;
+	//! minor changes should not affect plugin compatibility
+	int minor;
 };
 
 //! structure holding all information required to give framework control over module
 struct nuiRegisterModuleParameters
 {
-  nuiPluginFrameworkVersion version;
-  std::string name;
-  nuiAllocateFunc allocateFunc;
-  nuiDeallocateFunc deallocateFunc;
-  nuiGetDescriptorFunc getDescriptorFunc;
+	nuiPluginFrameworkVersion version;
+	std::string name;
+	nuiAllocateFunc allocateFunc;
+	nuiDeallocateFunc deallocateFunc;
+	nuiGetDescriptorFunc getDescriptorFunc;
 };
 
 //! services exposed by framework to plugin
 struct nuiPluginFrameworkService
 {
-  nuiPluginFrameworkVersion version;
-  nuiRegisterModuleFunc registerModule; 
+	void* frameworkPointer;
+	nuiPluginFrameworkVersion version;
+	nuiRegisterModuleFunc registerModule;
 };
 
-extern "C" DLLEXPORT 
-nuiPluginFrameworkErrorCode::err nuiLibraryLoad(const nuiPluginFrameworkService *params);
+//extern "C" DLLEXPORT
+//nuiPluginFrameworkErrorCode::err nuiLibraryLoad(const nuiPluginFrameworkService *params);
 
 #define IMPLEMENT_ALLOCATOR(type)						        \
 static void* allocate##type##(nuiObjectParameters* params)	  \
@@ -125,12 +126,12 @@ nuiModuleDescriptor* get##type##Descriptor()							                     \
 /** \def START_EXPORT_MODULES()
 *  Starts plugin registration
 */
-#define START_EXPORT_MODULES()									                               \
+#define START_EXPORT_MODULES(name)									                               \
 extern "C" DLLEXPORT                                                           \
 nuiPluginFrameworkErrorCode::err nuiLibraryLoad(const nuiPluginFrameworkService *params)\
 {																													                     \
-  nuiRegisterModuleParameters *registerParams = new nuiRegisterModuleParameters();\
-  nuiPluginFrameworkErrorCode::err error =                                     \
+	nuiRegisterModuleParameters *registerParams = new nuiRegisterModuleParameters();\
+	nuiPluginFrameworkErrorCode::err error =                                     \
     nuiPluginFrameworkErrorCode::Success;                                      \
 
 //! \todo rewrite plugin to handle multiple modules and register each of them
@@ -157,9 +158,9 @@ nuiPluginFrameworkErrorCode::err nuiLibraryLoad(const nuiPluginFrameworkService 
   return error;																	 \
 }																													                     \
 
-/** \todo we can add some functions like onLoading, onLoaded, onUnloading, 
- ** onUnloaded to get some control over plugin loading process.
- */
+///** \todo we can add some functions like onLoading, onLoaded, onUnloading,
+// ** onUnloaded to get some control over plugin loading process.
+// */
 
 #endif//NUI_PLUGIN_H
 

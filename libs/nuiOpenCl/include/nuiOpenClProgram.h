@@ -8,11 +8,11 @@ public:\
 
 
 
-class nuiOpenClProgram
+class nuiOpenClAlgorithm
 {
 public:
-	nuiOpenClProgram(int functions);
-	~nuiOpenClProgram();
+	nuiOpenClAlgorithm(int functions);
+	~nuiOpenClAlgorithm();
 
 	virtual char* getSourceCode(int id);
 	virtual int getFunctionsCount();

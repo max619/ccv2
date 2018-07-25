@@ -4,6 +4,7 @@ NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(RealSenseModule)
 
 MODULE_DECLARE(RealSenseModule, "native", "Input module to grab video from webcameras.");
 
+
 nuiRealSenseModule::nuiRealSenseModule() : nuiModule() {
 	MODULE_INIT();
 	img = NULL;
@@ -24,7 +25,7 @@ void nuiRealSenseModule::update() {
 	this->output->lock();
 	this->output->clear();
 
-	IplImage* timg = realsenseW.thresholdDepthImage(.65, .68);
+	IplImage* timg = realsenseW.queryWorldCoordinates();
 	if (timg != NULL)
 	{
 		this->outputDataPacket->packData(timg);

@@ -62,7 +62,7 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 //descriptor->property("oscillator_wait").set(50);
 END_IMPLEMENT_DESCRIPTOR(nuiPSModule)
 
-START_EXPORT_MODULES()	  
+START_EXPORT_MODULES(RealSenseModule)
 REGISTER_MODULE(nuiPSModule,"nuiPSModule", 1, 0)
 END_EXPORT_MODULES()
 

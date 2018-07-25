@@ -1,11 +1,11 @@
-/** 
+/**
  * \file      nuiFactory.cpp
- * 
+ *
  * Some parts Copyright (C) 2010 Movid Authors.  All rights reserved.
- * 
+ *
  * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
  * WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * \author    Scott Halstvedt
  * \author    Anatoly Lushnikov
  * \author    Anatoly Churikov
@@ -19,7 +19,7 @@
 
 LOG_DECLARE("Factory");
 
-nuiFactory::nuiFactory() 
+nuiFactory::nuiFactory()
 {
 
 };
@@ -29,209 +29,209 @@ nuiFactory::nuiFactory(const nuiFactory&)
 
 };
 
-nuiFactory& nuiFactory::getInstance() 
+nuiFactory& nuiFactory::getInstance()
 {
-  static nuiFactory instance;
-  return instance;
+	static nuiFactory instance;
+	return instance;
 };
 
 std::vector<std::string>* nuiFactory::listPipelines()
 {
-  nuiPluginManager& pm = nuiPluginManager::getInstance();
-  return pm.listLoadedPipelines();
+	nuiPluginManager& pm = nuiPluginManager::getInstance();
+	return pm.listLoadedPipelines();
 };
 
 std::vector<std::string>* nuiFactory::listModules()
 {
-  nuiPluginManager& pm = nuiPluginManager::getInstance();
-  return pm.listLoadedModules();
+	nuiPluginManager& pm = nuiPluginManager::getInstance();
+	return pm.listLoadedModules();
 };
 
 nuiModule* nuiFactory::createModule(nuiModuleLoaded* module)
 {
-  //! \todo pass nuiObjectCreateParams ? 
-  //! Is it really necessary? We can do everything from properties
-  nuiModule* instance = module->allocate(NULL);
-  return instance;
+	//! \todo pass nuiObjectCreateParams ? 
+	//! Is it really necessary? We can do everything from properties
+	nuiModule* instance = module->allocate(NULL);
+	return instance;
 };
 
 //! \todo rewrite method - it's crappy. Think of holding instances of pipelines 
 //! in one place, better with descriptors.
 nuiModule* nuiFactory::createPipeline(nuiModuleDescriptor* descriptor)
 {
-  nuiPipelineModule* pipeline = new nuiPipelineModule();
+	nuiPipelineModule* pipeline = new nuiPipelineModule();
 
-  pipeline->setName(descriptor->getName());
-  pipeline->setDescription(descriptor->getDescription());
-  pipeline->setAuthor(descriptor->getAuthor());
+	pipeline->setName(descriptor->getName());
+	pipeline->setDescription(descriptor->getDescription());
+	pipeline->setAuthor(descriptor->getAuthor());
 
-  //! \todo consider something more uniq for id or wtf are we doing here?
-  nuiProperty* randId = new nuiProperty(nuiUtils::getRandomNumber());
-  pipeline->property("id") = *randId;
-  // we add some random id to pipeline. what for?!
+	//! \todo consider something more uniq for id or wtf are we doing here?
+	nuiProperty* randId = new nuiProperty(nuiUtils::getRandomNumber());
+	pipeline->property("id") = *randId;
+	// we add some random id to pipeline. what for?!
 
-  for (int i=0; i < descriptor->getChildModulesCount(); i++)
-  {
-    nuiModuleDescriptor* childDescriptor = descriptor->getChildModuleDescriptor(i);
-    if (childDescriptor != NULL)
-    {
-      nuiModule* childModule = create(childDescriptor->getName());
-      if (childModule == NULL)
-        continue;
-      applyDescriptorProps(childModule, childDescriptor);
-      pipeline->addChildModule(childDescriptor->property("id").asInteger(), childModule);
-    }
-  }
-  // add modules to pipeline
+	for (int i = 0; i < descriptor->getChildModulesCount(); i++)
+	{
+		nuiModuleDescriptor* childDescriptor = descriptor->getChildModuleDescriptor(i);
+		if (childDescriptor != NULL)
+		{
+			nuiModule* childModule = create(childDescriptor->getName());
+			if (childModule == NULL)
+				continue;
+			applyDescriptorProps(childModule, childDescriptor);
+			pipeline->addChildModule(childDescriptor->property("id").asInteger(), childModule);
+		}
+	}
+	// add modules to pipeline
 
-  pipeline->setInputEndpointCount(descriptor->getInputEndpointsCount());
-  for (int i=0; i < descriptor->getInputEndpointsCount(); i++)
-  {
-    nuiEndpoint* newEndpoint = new nuiEndpoint(pipeline);
-    nuiEndpointDescriptor* endpointDescriptor = descriptor->getInputEndpointDescriptor(i);
-    newEndpoint->setTypeDescriptor(endpointDescriptor->getDescriptor());
-    pipeline->setInputEndpoint(endpointDescriptor->getIndex(), newEndpoint);
-  }
+	pipeline->setInputEndpointCount(descriptor->getInputEndpointsCount());
+	for (int i = 0; i < descriptor->getInputEndpointsCount(); i++)
+	{
+		nuiEndpoint* newEndpoint = new nuiEndpoint(pipeline);
+		nuiEndpointDescriptor* endpointDescriptor = descriptor->getInputEndpointDescriptor(i);
+		newEndpoint->setTypeDescriptor(endpointDescriptor->getDescriptor());
+		pipeline->setInputEndpoint(endpointDescriptor->getIndex(), newEndpoint);
+	}
 
-  pipeline->setOutputEndpointCount(descriptor->getOutputEndpointsCount());
-  for (int i=0;i<descriptor->getOutputEndpointsCount();i++)
-  {
-    nuiEndpoint* newEndpoint = new nuiEndpoint(pipeline);
-    nuiEndpointDescriptor* endpointDescriptor = descriptor->getOutputEndpointDescriptor(i);
-    newEndpoint->setTypeDescriptor(endpointDescriptor->getDescriptor());
-    pipeline->setOutputEndpoint(endpointDescriptor->getIndex(),newEndpoint);
-  }
-  printf("Processing pipeline %s connecitons:\n",descriptor->getName().c_str());
-  // add endpoints
+	pipeline->setOutputEndpointCount(descriptor->getOutputEndpointsCount());
+	for (int i = 0; i < descriptor->getOutputEndpointsCount(); i++)
+	{
+		nuiEndpoint* newEndpoint = new nuiEndpoint(pipeline);
+		nuiEndpointDescriptor* endpointDescriptor = descriptor->getOutputEndpointDescriptor(i);
+		newEndpoint->setTypeDescriptor(endpointDescriptor->getDescriptor());
+		pipeline->setOutputEndpoint(endpointDescriptor->getIndex(), newEndpoint);
+	}
+	printf("Processing pipeline %s connecitons:\n", descriptor->getName().c_str());
+	// add endpoints
 
-  // connections between modules
-  for (int i=descriptor->getDataStreamDescriptorCount() - 1; i >= 0; i--)
-  {
-    nuiDataStreamDescriptor* dataStreamDescriptor = descriptor->getDataStreamDescriptor(i);
-    printf("Source module ID is %i, Destination module ID is %i, Source port is %i, Destination port is %i\n",dataStreamDescriptor->sourceModuleID,dataStreamDescriptor->destinationModuleID, dataStreamDescriptor->sourcePort, dataStreamDescriptor->destinationPort);
-    nuiModuleDescriptor* sourceModuleDescriptor = NULL;
-    nuiModuleDescriptor* destinationModuleDescriptor = NULL;
+	// connections between modules
+	for (int i = descriptor->getDataStreamDescriptorCount() - 1; i >= 0; i--)
+	{
+		nuiDataStreamDescriptor* dataStreamDescriptor = descriptor->getDataStreamDescriptor(i);
+		printf("Source module ID is %i, Destination module ID is %i, Source port is %i, Destination port is %i\n", dataStreamDescriptor->sourceModuleID, dataStreamDescriptor->destinationModuleID, dataStreamDescriptor->sourcePort, dataStreamDescriptor->destinationPort);
+		nuiModuleDescriptor* sourceModuleDescriptor = NULL;
+		nuiModuleDescriptor* destinationModuleDescriptor = NULL;
 
-    if (dataStreamDescriptor->sourceModuleID == PIPELINE_ID)
-      sourceModuleDescriptor = descriptor;
-    if (dataStreamDescriptor->destinationModuleID == PIPELINE_ID)
-      destinationModuleDescriptor = descriptor;
+		if (dataStreamDescriptor->sourceModuleID == PIPELINE_ID)
+			sourceModuleDescriptor = descriptor;
+		if (dataStreamDescriptor->destinationModuleID == PIPELINE_ID)
+			destinationModuleDescriptor = descriptor;
 
-    for (int j=0; j<descriptor->getChildModulesCount(); j++)
-    {
-      if (descriptor->getChildModuleDescriptor(j)->property("id").asInteger() == dataStreamDescriptor->sourceModuleID)
-        sourceModuleDescriptor = descriptor->getChildModuleDescriptor(j);
-      if (descriptor->getChildModuleDescriptor(j)->property("id").asInteger() == dataStreamDescriptor->destinationModuleID)
-        destinationModuleDescriptor = descriptor->getChildModuleDescriptor(j);
-    }
-    // check whether connection uses pipeline input/output endpoints
+		for (int j = 0; j < descriptor->getChildModulesCount(); j++)
+		{
+			if (descriptor->getChildModuleDescriptor(j)->property("id").asInteger() == dataStreamDescriptor->sourceModuleID)
+				sourceModuleDescriptor = descriptor->getChildModuleDescriptor(j);
+			if (descriptor->getChildModuleDescriptor(j)->property("id").asInteger() == dataStreamDescriptor->destinationModuleID)
+				destinationModuleDescriptor = descriptor->getChildModuleDescriptor(j);
+		}
+		// check whether connection uses pipeline input/output endpoints
 
-    if ((destinationModuleDescriptor == NULL) || (sourceModuleDescriptor == NULL))
-    {
-      descriptor->removeDataStreamDescriptor(descriptor->getDataStreamDescriptor(i));
-      continue;
-    }
-    // if endpoint_module descriptors not found
+		if ((destinationModuleDescriptor == NULL) || (sourceModuleDescriptor == NULL))
+		{
+			descriptor->removeDataStreamDescriptor(descriptor->getDataStreamDescriptor(i));
+			continue;
+		}
+		// if endpoint_module descriptors not found
 
-    nuiModule* sourceModule = (sourceModuleDescriptor == descriptor) ? 
-pipeline :  pipeline->getChildModuleAtIndex(dataStreamDescriptor->sourceModuleID);
-    nuiModule* destinationModule = (destinationModuleDescriptor == descriptor) ? 
-pipeline : pipeline->getChildModuleAtIndex(dataStreamDescriptor->destinationModuleID);
+		nuiModule* sourceModule = (sourceModuleDescriptor == descriptor) ?
+			pipeline : pipeline->getChildModuleAtIndex(dataStreamDescriptor->sourceModuleID);
+		nuiModule* destinationModule = (destinationModuleDescriptor == descriptor) ?
+			pipeline : pipeline->getChildModuleAtIndex(dataStreamDescriptor->destinationModuleID);
 
-    nuiEndpoint* sourceEndpoint = NULL;
-    nuiEndpoint* destinationEndpoint = NULL;
+		nuiEndpoint* sourceEndpoint = NULL;
+		nuiEndpoint* destinationEndpoint = NULL;
 
-    if (sourceModule != pipeline) 
-    {
-      sourceEndpoint = sourceModule->getOutputEndpoint(dataStreamDescriptor->sourcePort);
-    }
-    else
-    {
-      sourceEndpoint = pipeline->outputInternalEndpoints[dataStreamDescriptor->sourcePort];
-    }
+		if (sourceModule != pipeline)
+		{
+			sourceEndpoint = sourceModule->getOutputEndpoint(dataStreamDescriptor->sourcePort);
+		}
+		else
+		{
+			sourceEndpoint = pipeline->outputInternalEndpoints[dataStreamDescriptor->sourcePort];
+		}
 
-    if (destinationModule != pipeline)
-    {
-      destinationEndpoint = destinationModule->getInputEndpoint(dataStreamDescriptor->destinationPort);
-    }
-    else
-    {
-      destinationEndpoint = pipeline->inputInternalEndpoints[dataStreamDescriptor->destinationPort];
-    }
+		if (destinationModule != pipeline)
+		{
+			destinationEndpoint = destinationModule->getInputEndpoint(dataStreamDescriptor->destinationPort);
+		}
+		else
+		{
+			destinationEndpoint = pipeline->inputInternalEndpoints[dataStreamDescriptor->destinationPort];
+		}
 
-    printf("Source module %s is%s pipeline\nDestination module %s is%s pipeline\n", 
-      sourceModule->getName().c_str(), (sourceModule != pipeline) ? " not" : "",
-      destinationModule->getName().c_str(), (destinationModule != pipeline) ? " not" : "");
-    if ((sourceEndpoint != NULL) && (destinationEndpoint != NULL))
-    {
-      printf("Source Endpoint has %s type\nDestination Endpoint has %s type\n", 
-        sourceEndpoint->getTypeDescriptor().c_str(), destinationEndpoint->getTypeDescriptor().c_str());
+		printf("Source module %s is%s pipeline\nDestination module %s is%s pipeline\n",
+			sourceModule->getName().c_str(), (sourceModule != pipeline) ? " not" : "",
+			destinationModule->getName().c_str(), (destinationModule != pipeline) ? " not" : "");
+		if ((sourceEndpoint != NULL) && (destinationEndpoint != NULL))
+		{
+			printf("Source Endpoint has %s type\nDestination Endpoint has %s type\n",
+				sourceEndpoint->getTypeDescriptor().c_str(), destinationEndpoint->getTypeDescriptor().c_str());
 
-      //! \todo wtf
-      if (destinationModule == pipeline)
-        pipeline->outputEndpoints[dataStreamDescriptor->destinationPort]->setTypeDescriptor(sourceEndpoint->getTypeDescriptor());
-      if (sourceModule == pipeline)
-        pipeline->inputEndpoints[dataStreamDescriptor->sourcePort]->setTypeDescriptor(destinationEndpoint->getTypeDescriptor());
+			//! \todo wtf
+			if (destinationModule == pipeline)
+				pipeline->outputEndpoints[dataStreamDescriptor->destinationPort]->setTypeDescriptor(sourceEndpoint->getTypeDescriptor());
+			if (sourceModule == pipeline)
+				pipeline->inputEndpoints[dataStreamDescriptor->sourcePort]->setTypeDescriptor(destinationEndpoint->getTypeDescriptor());
 
-      printf("Source Endpoint has %s type\nDestination Endpoint has %s type\n\n",
-        sourceEndpoint->getTypeDescriptor().c_str(),destinationEndpoint->getTypeDescriptor().c_str());
+			printf("Source Endpoint has %s type\nDestination Endpoint has %s type\n\n",
+				sourceEndpoint->getTypeDescriptor().c_str(), destinationEndpoint->getTypeDescriptor().c_str());
 
-      nuiDataStream* dataStream = sourceEndpoint->addConnection(destinationEndpoint);
-      if (dataStream != NULL)
-      {
-        dataStream->setAsyncMode(dataStreamDescriptor->asyncMode);
-        dataStream->setBufferedMode(dataStreamDescriptor->buffered);
-        dataStream->setBufferSize(dataStreamDescriptor->bufferSize);
-        dataStream->setDeepCopy(dataStreamDescriptor->deepCopy);
-        dataStream->setIsOverflow(dataStreamDescriptor->overflow);
-        dataStream->setLastPacketPriority(dataStreamDescriptor->lastPacket);
-      }
-    }
-    else
-    {
-      descriptor->removeDataStreamDescriptor(descriptor->getDataStreamDescriptor(i));
-      continue;
-    }
-  }
-  printf("---------------\n");
+			nuiDataStream* dataStream = sourceEndpoint->addConnection(destinationEndpoint);
+			if (dataStream != NULL)
+			{
+				dataStream->setAsyncMode(dataStreamDescriptor->asyncMode);
+				dataStream->setBufferedMode(dataStreamDescriptor->buffered);
+				dataStream->setBufferSize(dataStreamDescriptor->bufferSize);
+				dataStream->setDeepCopy(dataStreamDescriptor->deepCopy);
+				dataStream->setIsOverflow(dataStreamDescriptor->overflow);
+				dataStream->setLastPacketPriority(dataStreamDescriptor->lastPacket);
+			}
+		}
+		else
+		{
+			descriptor->removeDataStreamDescriptor(descriptor->getDataStreamDescriptor(i));
+			continue;
+		}
+	}
+	printf("---------------\n");
 
-  applyDescriptorProps(pipeline, descriptor);
-  //! \todo wtf?! we are always overwriting descriptor of pipeline when instantiating it?
-  //pipelineDescriptors[descriptor->getName()] = descriptor;
+	applyDescriptorProps(pipeline, descriptor);
+	//! \todo wtf?! we are always overwriting descriptor of pipeline when instantiating it?
+	//pipelineDescriptors[descriptor->getName()] = descriptor;
 
-  return pipeline;
+	return pipeline;
 };
 
 void nuiFactory::applyDescriptorProps(nuiModule* module, nuiModuleDescriptor* descriptor)
 {
-  for (std::map<std::string, nuiProperty*>::iterator iter = descriptor->getProperties().begin();iter!= descriptor->getProperties().end();iter++)
-  {
-    std::string val = iter->second->asString();
-    module->property(iter->first).set(val);
-  }
+	for (std::map<std::string, nuiProperty*>::iterator iter = descriptor->getProperties().begin(); iter != descriptor->getProperties().end(); iter++)
+	{
+		std::string val = iter->second->asString();
+		module->property(iter->first).set(val);
+	}
 };
 
-nuiModule* nuiFactory::create( const std::string& moduleName )
+nuiModule* nuiFactory::create(const std::string& moduleName)
 {
-  nuiPluginManager& pm = nuiPluginManager::getInstance();
-  std::vector<std::string>* modules = pm.listLoadedModules();
-  for (std::vector<std::string>::iterator it = modules->begin() ; it != modules->end(); it++)
-  {
-    if((*it) == moduleName)
-      return createModule(pm.getLoadedModule(moduleName));
-  }
+	nuiPluginManager& pm = nuiPluginManager::getInstance();
+	std::vector<std::string>* modules = pm.listLoadedModules();
+	for (std::vector<std::string>::iterator it = modules->begin(); it != modules->end(); it++)
+	{
+		if ((*it) == moduleName)
+			return createModule(pm.getLoadedModule(moduleName));
+	}
 
-  std::vector<std::string>* pipelines = pm.listLoadedPipelines();
-  for (std::vector<std::string>::iterator it = pipelines->begin() ; it != pipelines->end(); it++)
-  {
-    if((*it) == moduleName)
-      return createPipeline(pm.getDescriptor(moduleName));
-  }
+	std::vector<std::string>* pipelines = pm.listLoadedPipelines();
+	for (std::vector<std::string>::iterator it = pipelines->begin(); it != pipelines->end(); it++)
+	{
+		if ((*it) == moduleName)
+			return createPipeline(pm.getDescriptor(moduleName));
+	}
 
-  return NULL;
+	return NULL;
 };
 
-nuiPluginFrameworkErrorCode::err nuiFactory::registerPipelineDescriptor( nuiModuleDescriptor* descriptor )
+nuiPluginFrameworkErrorCode::err nuiFactory::registerPipelineDescriptor(nuiModuleDescriptor* descriptor)
 {
-  return nuiPluginManager::getInstance().registerPipeline(descriptor);
+	return nuiPluginManager::getInstance().registerPipeline(descriptor);
 }

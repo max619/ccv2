@@ -1,5 +1,3 @@
-#pragma once
-
 /////////////////////////////////////////////////////////////////////////////
 // Name:        modules/nuiRealSenseModule.h
 // Purpose:     Example Module to be used for developments.
@@ -20,6 +18,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
 #include "ocvRealsenseWrapper.h"
+#include "static.h"
 
 NUI_DATAPACKET_DEFAULT_DECLARATION(RealSenseModule, IplImage*)
 
@@ -56,7 +55,8 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 //descriptor->property("oscillator_wait").set(50);
 END_IMPLEMENT_DESCRIPTOR(nuiRealSenseModule)
 
-START_EXPORT_MODULES()
+START_EXPORT_MODULES(RealSenseModule)
+setFrameworkPtr(params->frameworkPointer);
 REGISTER_MODULE(nuiRealSenseModule, "nuiRealSenseModule", 1, 0)
 END_EXPORT_MODULES()
 

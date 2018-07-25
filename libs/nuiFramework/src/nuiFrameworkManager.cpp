@@ -14,6 +14,8 @@
 #include "nuiFactory.h"
 #include "nuiUtils.h"
 #include "nuiPluginManager.h"
+#include "json\json.h"
+#include "nuiJsonRpcApi.h"
 
 LOG_DECLARE("FrameworkManager");
 
@@ -31,9 +33,26 @@ nuiFrameworkManager::~nuiFrameworkManager()
 
 nuiFrameworkManager& nuiFrameworkManager::getInstance()
 {
-	static nuiFrameworkManager instance;
+	nuiFrameworkManager* ptr = (nuiFrameworkManager*)nuiFrameworkManager::getInstancePoiner();
+	return *ptr;
+}
+
+
+void * nuiFrameworkManager::getInstancePoiner()
+{
+	static nuiFrameworkManager* instance;
+	if (instance == NULL)
+	{
+		instance = new	nuiFrameworkManager();
+	}
 	return instance;
-};
+}
+
+void nuiFrameworkManager::createInstance()
+{
+	//_instPtr = new nuiFrameworkManager();
+}
+
 
 nuiFrameworkManagerErrorCode::err nuiFrameworkManager::init()
 {
@@ -1289,3 +1308,4 @@ std::string nuiFrameworkManager::getRelativeToStartupPath(char* path)
 {
 	return getRelativeToStartupPath(std::string(path));
 }
+

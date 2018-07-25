@@ -8,6 +8,8 @@
 #include "CL\cl.h"
 #include "CL\cl_ext.h"
 #include <assert.h>
+#include <iostream>     // std::cin, std::cout
+#include <fstream> 
 
 
 typedef struct ocl_container

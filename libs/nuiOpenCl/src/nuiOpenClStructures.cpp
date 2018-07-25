@@ -34,28 +34,20 @@ int ReadSourceFromFile(const char* fileName, char** source, size_t* sourceSize)
 {
 	int errorCode = CL_SUCCESS;
 
-	FILE* fp = NULL;
-	fopen_s(&fp, fileName, "rb");
-	if (fp == NULL)
-	{
-		LogError("Error: Couldn't find program source file '%s'.\n", fileName);
-		errorCode = CL_INVALID_VALUE;
-	}
-	else {
-		fseek(fp, 0, SEEK_END);
-		*sourceSize = ftell(fp);
-		fseek(fp, 0, SEEK_SET);
+	std::ifstream t(fileName);
+	std::string str;
 
-		*source = new char[*sourceSize];
-		if (*source == NULL)
-		{
-			LogError("Error: Couldn't allocate %d bytes for program source from file '%s'.\n", *sourceSize, fileName);
-			errorCode = CL_OUT_OF_HOST_MEMORY;
-		}
-		else {
-			fread(*source, 1, *sourceSize, fp);
-		}
-	}
+	t.seekg(0, std::ios::end);
+	size_t length = t.tellg();
+	*sourceSize = length;
+	str.reserve();
+	t.seekg(0, std::ios::beg);
+
+	str.assign((std::istreambuf_iterator<char>(t)),
+		std::istreambuf_iterator<char>());
+	const char* chrs = (char*)str.c_str();
+	*source = (char*)malloc(length);
+	memcpy(*source, (char*)chrs, length);
 	return errorCode;
 }
 

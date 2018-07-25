@@ -1,6 +1,6 @@
 #include "..\include\nuiOpenClProgram.h"
 
-nuiOpenClProgram::nuiOpenClProgram(int functions)
+nuiOpenClAlgorithm::nuiOpenClAlgorithm(int functions)
 {
 	ocl = new ocl_container*[functions];
 
@@ -9,7 +9,7 @@ nuiOpenClProgram::nuiOpenClProgram(int functions)
 
 }
 
-nuiOpenClProgram::~nuiOpenClProgram()
+nuiOpenClAlgorithm::~nuiOpenClAlgorithm()
 {
 	int funcs = getFunctionsCount();
 
@@ -22,37 +22,37 @@ nuiOpenClProgram::~nuiOpenClProgram()
 	delete functionsNames;
 }
 
-char * nuiOpenClProgram::getSourceCode(int id)
+char * nuiOpenClAlgorithm::getSourceCode(int id)
 {
 	return NULL;
 }
 
-int nuiOpenClProgram::getFunctionsCount()
+int nuiOpenClAlgorithm::getFunctionsCount()
 {
 	return 0;
 }
 
-const char * nuiOpenClProgram::getFunctionName(int id)
+const char * nuiOpenClAlgorithm::getFunctionName(int id)
 {
 	return functionsNames[id];
 }
 
-ocl_container * nuiOpenClProgram::getOclFunctionPtr(int id)
+ocl_container * nuiOpenClAlgorithm::getOclFunctionPtr(int id)
 {
 	return ocl[id];
 }
 
-cl_uint nuiOpenClProgram::getAllignedBufferSize(cl_uint width, cl_uint height, cl_uint elementsize)
+cl_uint nuiOpenClAlgorithm::getAllignedBufferSize(cl_uint width, cl_uint height, cl_uint elementsize)
 {
 	return ((elementsize * width * height - 1) / 64 + 1) * 64;
 }
 
-void * nuiOpenClProgram::allocAlligned(cl_uint alignedsize)
+void * nuiOpenClAlgorithm::allocAlligned(cl_uint alignedsize)
 {
 	return _aligned_malloc(alignedsize, 4096);
 }
 
-int nuiOpenClProgram::ExecKernel(ocl_container* container, cl_uint width, cl_uint height)
+int nuiOpenClAlgorithm::ExecKernel(ocl_container* container, cl_uint width, cl_uint height)
 {
 	cl_int err = CL_SUCCESS;
 	size_t globalWorkSize[2] = { width, height };

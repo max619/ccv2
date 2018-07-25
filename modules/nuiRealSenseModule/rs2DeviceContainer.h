@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RS2_DEVICE_CONTAINER
+#define RS2_DEVICE_CONTAINER
 #include <librealsense2/rs.hpp>
 #include <mutex>
 #include <map>
@@ -25,4 +26,5 @@ private:
 	bool isRealsenseDevice(rs2::device device);
 
 };
+#endif
 

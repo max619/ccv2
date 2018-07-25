@@ -22,7 +22,7 @@ public:
 	~nuiOpenClFactory();
 	
 	bool isOpenClSupported();
-	int initProgram(nuiOpenClProgram* program);
+	int initProgram(nuiOpenClAlgorithm* program);
 	
 private:
 	cl_int err;

@@ -46,7 +46,7 @@ descriptor->addInputEndpointDescriptor(inputDescriptor,0);
 descriptor->property("use_thread").set(true);
 END_IMPLEMENT_DESCRIPTOR(nuiDebugVideoSink)	
 
-START_EXPORT_MODULES()	  
+START_EXPORT_MODULES(RealSenseModule)
 REGISTER_MODULE(nuiDebugVideoSink,"nuiDebugVideoSink",1,0)
 END_EXPORT_MODULES()
 

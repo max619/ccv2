@@ -54,7 +54,7 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor, 0);
 //descriptor->property("oscillator_wait").set(50);
 END_IMPLEMENT_DESCRIPTOR(nuiWebcamModule)
 
-START_EXPORT_MODULES()
+START_EXPORT_MODULES(RealSenseModule)
 REGISTER_MODULE(nuiWebcamModule, "nuiWebcamModule", 1, 0)
 END_EXPORT_MODULES()
 

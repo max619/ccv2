@@ -62,7 +62,7 @@ bool nuiOpenClFactory::isOpenClSupported()
 	return true;
 }
 
-int nuiOpenClFactory::initProgram(nuiOpenClProgram * program)
+int nuiOpenClFactory::initProgram(nuiOpenClAlgorithm * program)
 {
 	cl_int err;
 	int funcs = program->getFunctionsCount();

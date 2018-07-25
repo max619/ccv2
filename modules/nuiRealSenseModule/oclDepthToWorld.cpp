@@ -1,16 +1,17 @@
-#include "oclThreshold.h"
+#include "oclDepthToWorld.h"
 
 
 
-oclThreshold::oclThreshold() : nuiOpenClAlgorithm(1)
+oclDepthToWorld::oclDepthToWorld() : nuiOpenClAlgorithm(2)
 {
-	functionsNames = new const char*[1];
-	functionsNames[0] = "calcThreshold";
+	functionsNames = new const char*[2];
+	functionsNames[0] = "calcWorldCoordinatesNormal";
+	functionsNames[1] = "calcWorldCoordinatesInverseBrownConrady";
 	clmeminit = false;
 }
 
 
-oclThreshold::~oclThreshold()
+oclDepthToWorld::~oclDepthToWorld()
 {
 	nuiOpenClAlgorithm::~nuiOpenClAlgorithm();
 
@@ -20,7 +21,7 @@ oclThreshold::~oclThreshold()
 	clReleaseMemObject(outputMem);
 }
 
-IplImage * oclThreshold::calcThreshold(uint16_t * src, uint width, uint height, uint16_t min, uint16_t max)
+IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float scale, uint width, uint height, rs2_intrinsics intrisnic)
 {
 	if (!mutex.try_lock())
 		return NULL;
@@ -49,7 +50,7 @@ IplImage * oclThreshold::calcThreshold(uint16_t * src, uint width, uint height, 
 		return nullptr;
 	}
 
-	memcpy_s(input, inputSize, src, width * height * sizeof(uint16_t));
+	memcpy_s(input, inputSize, data, width * height * sizeof(uint16_t));
 
 	err = clEnqueueUnmapMemObject(container->commandQueue, inputMem, inptPtr, 0, NULL, NULL);
 	if (CL_SUCCESS != err)
@@ -59,13 +60,14 @@ IplImage * oclThreshold::calcThreshold(uint16_t * src, uint width, uint height, 
 		return nullptr;
 	}
 
-
-	cl_ushort cl_max = max;
-	cl_ushort cl_min = min;
-	err = clSetKernelArg(container->kernel, 0, sizeof(cl_ushort), &cl_min);
-	err = clSetKernelArg(container->kernel, 1, sizeof(cl_ushort), &cl_max);
-	err = clSetKernelArg(container->kernel, 2, sizeof(cl_mem), &inputMem);
-	err = clSetKernelArg(container->kernel, 3, sizeof(cl_mem), &outputMem);
+	
+	err = clSetKernelArg(container->kernel, 0, sizeof(cl_float), &(intrisnic.ppx));
+	err = clSetKernelArg(container->kernel, 1, sizeof(cl_float), &(intrisnic.ppy));
+	err = clSetKernelArg(container->kernel, 2, sizeof(cl_float), &(intrisnic.fx));
+	err = clSetKernelArg(container->kernel, 3, sizeof(cl_float), &(intrisnic.fy));
+	err = clSetKernelArg(container->kernel, 4, sizeof(cl_float), &scale);
+	err = clSetKernelArg(container->kernel, 5, sizeof(cl_mem), &inputMem);
+	err = clSetKernelArg(container->kernel, 6, sizeof(cl_mem), &outputMem);
 
 
 #ifdef _DEBUG	
@@ -117,25 +119,30 @@ IplImage * oclThreshold::calcThreshold(uint16_t * src, uint width, uint height, 
 		return nullptr;
 	}
 
-	IplImage* res = cvCreateImage(CvSize(width, height), IPL_DEPTH_8U, 1);
+	IplImage* res = cvCreateImage(CvSize(width, height), IPL_DEPTH_32F, 4);
 	memcpy_s(res->imageDataOrigin, width * height, output, width * height);
 
-	
+
 
 	mutex.unlock();
 	return res;
 }
 
-int oclThreshold::initMem(ocl_container* container, int width, int height)
-{
 
+IplImage * oclDepthToWorld::calcWorldCoordinatesInverseBrownConrady(uint16_t * data, float scale, uint width, uint height, rs2_intrinsics intrisnic)
+{
+	return nullptr;
+}
+
+int oclDepthToWorld::initMem(ocl_container * container, int width, int height)
+{
 	cl_int err = CL_SUCCESS;
 
 	inputSize = getAllignedBufferSize(width, height, sizeof(cl_uint16));
 	input = (cl_uint16*)allocAlligned(inputSize);
 
-	outputSize = getAllignedBufferSize(width, height, sizeof(cl_uint8));
-	output = (cl_uint8*)allocAlligned(outputSize);
+	outputSize = getAllignedBufferSize(width, height, sizeof(cl_float4));
+	output = (cl_float4*)allocAlligned(outputSize);
 
 
 	cl_image_format format;
@@ -169,7 +176,7 @@ int oclThreshold::initMem(ocl_container* container, int width, int height)
 		return err;
 	}
 
-	format.image_channel_data_type = CL_UNSIGNED_INT8;
+	format.image_channel_data_type = CL_FLOAT;
 
 	outputMem = clCreateImage(container->context, CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR, &format, &desc, output, &err);
 	if (CL_SUCCESS != err)
@@ -184,12 +191,27 @@ int oclThreshold::initMem(ocl_container* container, int width, int height)
 
 }
 
-char * oclThreshold::getSourceCode(int id)
+char * oclDepthToWorld::getSourceCode(int id)
 {
-	return "constant sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP | CLK_FILTER_NEAREST;__kernel void calcThreshold(unsigned short min, unsigned short max, read_only image2d_t imageA, write_only image2d_t imageC){const int x = get_global_id(0);const int y = get_global_id(1);unsigned short A = read_imageui(imageA, sampler, (int2)(x, y)).x; if(A > min && A < max) {write_imageui(imageC, (int2)(x, y), 255);} else {write_imageui(imageC, (int2)(x, y), 0);}}";
+	nuiFrameworkManager* ptr = static_cast<nuiFrameworkManager*>(getFrameworkPtr());
+	char* source;
+	size_t size;
+	if (id == 0)
+	{
+		std::string str = ptr->getRelativeToStartupPath("modules\\ocl\\calcWorldCoordinatesNormal.cl");
+		ReadSourceFromFile(str.c_str(), &source, &size);
+		/*char* sourcecropped = new char[size];
+		memcpy(sourcecropped, source, size);
+		delete source;
+		source = sourcecropped;*/
+		return source;
+	}
+	else
+		return "constant sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP | CLK_FILTER_NEAREST;__kernel void calcWorldCoordinatesInverseBrownConrady(float ppx, float ppy, float fx, float fy, float depthmul, read_only image2d_t imageA, write_only image2d_t imageC, float c0, float c1, float c2, float c3, float c4 ){const int x = get_global_id(0);const int y = get_global_id(1);float u = (x - ppx) / fx;float v = (y - ppy) / fy;float r2 = u * u + v * v;float f = 1 + c0 * r2 + c1 * r2*r2 + c4 * r2*r2*r2;float ux = x * f + 2 * c2*u*v + c3 * (r2 + 2 * x*x);float uy = y * f + 2 * c3*u*v + c2 * (r2 + 2 * x*x);u = ux;v = uy;float ddepth = (read_imageui(imageA, sampler, (int2)(x, y)).x) * depthmul;write_imagef(imageC, (int2)(x, y), float3(ddepth * u, ddepth * v, ddepth));}";
 }
 
-int oclThreshold::getFunctionsCount()
+int oclDepthToWorld::getFunctionsCount()
 {
 	return 1;
 }
+

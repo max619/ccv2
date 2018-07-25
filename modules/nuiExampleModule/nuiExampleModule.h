@@ -51,7 +51,7 @@ descriptor->addOutputEndpointDescriptor(outputDescriptor,0);
 descriptor->property("use_thread").set(false);
 END_IMPLEMENT_DESCRIPTOR(nuiExampleModule)	
 
-START_EXPORT_MODULES()	  
+START_EXPORT_MODULES(RealSenseModule)
 REGISTER_MODULE(nuiExampleModule,"nuiExampleModule",1,0)
 END_EXPORT_MODULES()
 

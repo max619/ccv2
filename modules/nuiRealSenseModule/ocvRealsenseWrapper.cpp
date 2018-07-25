@@ -14,7 +14,10 @@ ocvRealsenseWrapper::ocvRealsenseWrapper()
 	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
 	threshold = NULL;
 	if (factory.isOpenClSupported())
+	{
 		threshold = new oclThreshold();
+		depthToWorld = new oclDepthToWorld();
+	}
 }
 
 
@@ -42,7 +45,10 @@ bool ocvRealsenseWrapper::open(int index)
 		nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
 
 		if (factory.isOpenClSupported())
+		{
 			factory.initProgram(threshold);
+			factory.initProgram(depthToWorld);
+		}
 	}
 	catch (_exception& ex)
 	{
@@ -161,4 +167,17 @@ IplImage* ocvRealsenseWrapper::thresholdDepthImage(float min, float max)
 		return res;
 	}
 
+}
+
+IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
+{
+	frameset = pipe.wait_for_frames();
+	auto depthFrame = frameset.get_depth_frame().as<rs2::depth_frame>();
+	void* data_ptr = (void*)depthFrame.get_data();
+	rs2_error* error;
+	rs2_intrinsics intrisnic = pipe.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
+	rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
+	float depth_scale = depth_sensor.get_depth_scale();
+
+	return depthToWorld->calcWorldCoordinatesNormal((uint16_t*)data_ptr, depth_scale, depthFrame.get_width(), depthFrame.get_height(), intrisnic);
 }

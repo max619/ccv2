@@ -25,6 +25,7 @@ nuiPluginManager::nuiPluginManager()
 	pluginFrameworkService.version.major = MAJOR_VERSION;
 	pluginFrameworkService.version.minor = MINOR_VERSION;
 	pluginFrameworkService.registerModule = registerModule;
+	pluginFrameworkService.frameworkPointer = nuiFrameworkManager::getInstancePoiner();
 
 	loadingPlugin = NULL;
 };
