@@ -58,6 +58,7 @@
     <Import Project="..\nuiModule.props" />
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\OpenCV.props" />
+    <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\Eigen.props" />
     <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\librealsense.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />

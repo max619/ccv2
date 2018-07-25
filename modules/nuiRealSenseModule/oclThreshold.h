@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        modules/oclDepthToWorld.h
+// Name:        modules/oclThreshold.h
 // Purpose:     Example Module to be used for developments.
 // Author:      Maxim Bagryantsev
 // Copyright:   (c) 2018 NUI Group

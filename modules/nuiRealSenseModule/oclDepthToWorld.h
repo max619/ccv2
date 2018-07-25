@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        modules/nuiRealSenseModule.h
+// Name:        modules/oclDepthToWorld.h
 // Purpose:     Example Module to be used for developments.
 // Author:      Maxim Bagryantsev
 // Copyright:   (c) 2018 NUI Group

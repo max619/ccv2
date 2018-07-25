@@ -1,3 +1,10 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name:        modules/ocvRealsenseWrapper.h
+// Purpose:     Example Module to be used for developments.
+// Author:      Maxim Bagryantsev
+// Copyright:   (c) 2018 NUI Group
+/////////////////////////////////////////////////////////////////////////////
+
 #ifndef OCV_REALSENSE_WRAPPER
 #define OCV_REALSENSE_WRAPPER
 
