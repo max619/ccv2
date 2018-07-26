@@ -15,6 +15,7 @@
     <ClInclude Include="nuiRealSenseModule.h" />
     <ClInclude Include="ocl3DPointCloudRotation.h" />
     <ClInclude Include="oclDepthToWorld.h" />
+    <ClInclude Include="oclRSWorldProcessor.h" />
     <ClInclude Include="oclThreshold.h" />
     <ClInclude Include="ocvRealsenseWrapper.h" />
     <ClInclude Include="rs2DeviceContainer.h" />
@@ -25,6 +26,7 @@
     <ClCompile Include="nuiRealSenseModule.cpp" />
     <ClCompile Include="ocl3DPointCloudRotation.cpp" />
     <ClCompile Include="oclDepthToWorld.cpp" />
+    <ClCompile Include="oclRSWorldProcessor.cpp" />
     <ClCompile Include="oclThreshold.cpp" />
     <ClCompile Include="ocvRealsenseWrapper.cpp" />
     <ClCompile Include="rs2DeviceContainer.cpp" />
@@ -32,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ocl\calcWorldCoordinatesNormal.cl" />
+    <None Include="ocl\processWorld.cl" />
     <None Include="ocl\rotate.cl" />
   </ItemGroup>
   <PropertyGroup Label="Globals" />

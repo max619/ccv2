@@ -9,6 +9,8 @@
 #define OCV_REALSENSE_WRAPPER
 #define BENCHMARK_OCV_REALSENSE_WRAPPER //uncomment if need benchmarking
 
+#define EIGEN_DONT_ALIGN_STATICALLY
+
 #include <opencv2\core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <librealsense2\rs.hpp>
@@ -20,6 +22,7 @@
 #include "nuiOpenCl.h"
 #include "Eigen/Geometry"
 #include "helpers.h"
+#include "oclRSWorldProcessor.h"
 
 class ocvRealsenseWrapper
 {
@@ -53,6 +56,9 @@ private:
 	oclThreshold* threshold;
 	oclDepthToWorld* depthToWorld;
 	ocl3DPointCloudRotation* rotation;
+	oclRSWorldProcessor* processor;
+	IplImage* procres;
+
 	rs2_intrinsics intrisnic;
 	float depth_scale;
 	Eigen::Quaternionf q;

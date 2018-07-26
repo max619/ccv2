@@ -10,13 +10,12 @@ nuiDebugVideoSink::nuiDebugVideoSink() : nuiModule() {
 	this->input->setTypeDescriptor(std::string("IplImage"));
 	this->setInputEndpointCount(1);
 	this->setInputEndpoint(0, this->input);
-
 	dispFrame = NULL;
 }
 
 nuiDebugVideoSink::~nuiDebugVideoSink()
 {
-
+	cvReleaseImage(&dispFrame);
 }
 
 void nuiDebugVideoSink::update()
@@ -25,11 +24,16 @@ void nuiDebugVideoSink::update()
 	void* data;
 	nuiDataPacket* packet = this->input->getData();
 	if (packet == NULL)
-		return;
+		return; 
+#ifdef BENCMARK_NUI_DEBUG_VIDEO_SINK_H
+		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#endif	
 	packet->unpackData(data);
 	IplImage* frame = (IplImage*)data;
-	dispFrame = NULL;
-	dispFrame = cvCloneImage(frame);
+	if (dispFrame == NULL)
+		dispFrame = cvCloneImage(frame);
+	else
+		cvCopy(frame, dispFrame);
 	CvFont font;
 	double hScale = 0.5;
 	double vScale = 0.5;
@@ -41,10 +45,18 @@ void nuiDebugVideoSink::update()
 	cvRectangle(dispFrame, cvPoint(0, 0), cvPoint(150, 20), cvScalar(255, 255, 255), 2, CV_AA);
 	cvPutText(dispFrame, oss.str().c_str(), cvPoint(5, 15), &font, cvScalar(255, 255, 255));
 	cvShowImage((this->property("id")).asString().c_str(), dispFrame);
-	cv::waitKey(1);
-	cvReleaseImage(&dispFrame);
+	cvWaitKey(1);
+#ifdef BENCMARK_NUI_DEBUG_VIDEO_SINK_H	
+	QueryPerformanceCounter(&performanceCountNDRangeStop);
+	QueryPerformanceFrequency(&perfFrequency);
+	printf("TOTAL: rendering of image took %f ms.\n", 1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+
+	//delete formated;
+#endif
 	delete packet;
 	this->input->unlock();
+
+
 }
 
 void nuiDebugVideoSink::start()

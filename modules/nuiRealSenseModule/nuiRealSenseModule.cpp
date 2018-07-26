@@ -46,7 +46,7 @@ void nuiRealSenseModule::update() {
 	}
 
 	this->output->unlock();
-	cvReleaseImage(&timg);
+	//cvReleaseImage(&timg);
 }
 
 void nuiRealSenseModule::start() {

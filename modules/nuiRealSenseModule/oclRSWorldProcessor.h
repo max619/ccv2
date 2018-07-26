@@ -1,46 +1,52 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        modules/ocl3DPointCloudRotation.h
+// Name:        modules/oclRSWorldProcessor.h
 // Purpose:     Example Module to be used for developments.
 // Author:      Maxim Bagryantsev
 // Copyright:   (c) 2018 NUI Group
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef OCL_3D_POINT_CLOUD_ROTATION
-#define OCL_3D_POINT_CLOUD_ROTATION
+#ifndef OCL_RS_WORLD_PROCESSOR
+#define OCL_RS_WORLD_PROCESSOR
+//#define BENCHMARK_OCL_RS_WORLD_PROCESSOR
 
+#include "static.h"
+#include "nuiFrameworkManager.h"
 #include "nuiOpenCl.h"
 #include "CL/cl.hpp"
-#include "Eigen/Geometry"
 #include <mutex>
-#include "nuiFrameworkManager.h"
-#include "static.h"
 #include <opencv2/core.hpp>
+#include <Eigen/Geometry>
+#include <librealsense2/rs.hpp>
+#include <Windows.h>
 #include "helpers.h"
 
-class ocl3DPointCloudRotation : public nuiOpenClAlgorithm
+
+class oclRSWorldProcessor : public nuiOpenClAlgorithm
 {
 public:
-	ocl3DPointCloudRotation();
-	~ocl3DPointCloudRotation();
+	oclRSWorldProcessor();
+	~oclRSWorldProcessor();
+	void processWorld(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Quaternionf& quaterninon, IplImage* res);
 
-	IplImage* rotate(IplImage* src, Eigen::Quaternion<float> quaterninon);
-
-	DEFAULT_OPENCL_PROGRAM_INTERFACE_DECLARATION()
-
-private:
-#ifdef _DEBUG
+#ifdef BENCHMARK_OCL_RS_WORLD_PROCESSOR
 	LARGE_INTEGER perfFrequency;
 	LARGE_INTEGER performanceCountNDRangeStart;
 	LARGE_INTEGER performanceCountNDRangeStop;
 #endif
+private:
 	std::mutex mutex;
 	bool clmeminit;
 	cl_mem inputMem;
 	cl_mem outputMem;
 	cl_int inputSize, outputSize;
 	void* input;
-	cl_float4* output;
+	void* output;
 	int initMem(ocl_container* container, int width, int height);
+
+	DEFAULT_OPENCL_PROGRAM_INTERFACE_DECLARATION()
 };
 
-#endif
+#endif // !OCL_RS_WORLD_PROCESSOR
+
+
+

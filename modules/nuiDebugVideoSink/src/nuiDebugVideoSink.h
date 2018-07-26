@@ -7,6 +7,8 @@
  */
 #ifndef NUI_DEBUG_VIDEO_SINK_H
 #define NUI_DEBUG_VIDEO_SINK_H
+#define BENCMARK_NUI_DEBUG_VIDEO_SINK_H
+
 
 #include "nuiModule.h"
 #include "nuiPlugin.h"
@@ -16,6 +18,7 @@
 #include "nuiDebugLogger.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
+#include <Windows.h>
 
 class nuiDebugVideoSink : public nuiModule {
 public:
@@ -31,6 +34,12 @@ private:
 	CvFont font;
 
 	IplImage *dispFrame;
+
+#ifdef BENCMARK_NUI_DEBUG_VIDEO_SINK_H
+	LARGE_INTEGER perfFrequency;
+	LARGE_INTEGER performanceCountNDRangeStart;
+	LARGE_INTEGER performanceCountNDRangeStop;
+#endif
 
 	MODULE_INTERNALS();
 };
