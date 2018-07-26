@@ -19,6 +19,7 @@
 #include "ocl3DPointCloudRotation.h"
 #include "nuiOpenCl.h"
 #include "Eigen/Geometry"
+#include "helpers.h"
 
 class ocvRealsenseWrapper
 {

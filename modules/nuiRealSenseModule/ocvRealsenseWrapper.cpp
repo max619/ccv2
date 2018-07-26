@@ -198,49 +198,117 @@ IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
 #endif
 
+	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
+	if (factory.isOpenClSupported() && false)
+	{
 #ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-	QueryPerformanceCounter(&performanceCountNDRangeStart);
+		QueryPerformanceCounter(&performanceCountNDRangeStart);
 #endif
 
-	IplImage* worldcoords = depthToWorld->calcWorldCoordinatesNormal((uint16_t*)data_ptr, depth_scale, depthFrame.get_width(), depthFrame.get_height(), intrisnic);
+		IplImage* worldcoords = depthToWorld->calcWorldCoordinatesNormal((uint16_t*)data_ptr, depth_scale, depthFrame.get_width(), depthFrame.get_height(), intrisnic);
 
 #ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-	QueryPerformanceCounter(&performanceCountNDRangeStop);
-	QueryPerformanceFrequency(&perfFrequency);
-	LogInfo("calcWorldCoordinatesNormal took %f ms.\n",
-		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
-#endif
-
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-	QueryPerformanceCounter(&performanceCountNDRangeStart);
-#endif
-
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-	QueryPerformanceCounter(&performanceCountNDRangeStart);
-#endif
-
-	IplImage* rotatedcoords = rotation->rotate(worldcoords, q);
-
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-	QueryPerformanceCounter(&performanceCountNDRangeStop);
-	QueryPerformanceFrequency(&perfFrequency);
-	LogInfo("rotate took %f ms.\n",
-		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+		QueryPerformanceCounter(&performanceCountNDRangeStop);
+		QueryPerformanceFrequency(&perfFrequency);
+		LogInfo("calcWorldCoordinatesNormal took %f ms.\n",
+			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
 #endif
 
 #ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-	QueryPerformanceCounter(&performanceCountNDRangeStart);
+		QueryPerformanceCounter(&performanceCountNDRangeStart);
 #endif
-
-	cvReleaseImage(&worldcoords);
 
 #ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-	QueryPerformanceCounter(&performanceCountNDRangeStop);
-	QueryPerformanceFrequency(&perfFrequency);
-	LogInfo("release took %f ms.\n",
-		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+		QueryPerformanceCounter(&performanceCountNDRangeStart);
 #endif
 
-	return rotatedcoords;
+		IplImage* rotatedcoords = rotation->rotate(worldcoords, q);
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+		QueryPerformanceCounter(&performanceCountNDRangeStop);
+		QueryPerformanceFrequency(&perfFrequency);
+		LogInfo("rotate took %f ms.\n",
+			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#endif
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#endif
+
+		cvReleaseImage(&worldcoords);
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+		QueryPerformanceCounter(&performanceCountNDRangeStop);
+		QueryPerformanceFrequency(&perfFrequency);
+		LogInfo("release took %f ms.\n",
+			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#endif
+
+		return rotatedcoords;
+	}
+	else
+	{
+		IplImage* res = cvCreateImage(cvSize(intrisnic.width, intrisnic.height), IPL_DEPTH_32F, 4);
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#endif
+		cl_float4 quat = castQuaternionToFloat4(q);
+		
+
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif		
+		for (int y = 0; y < depthFrame.get_height(); y++)
+		{
+			float* res_ptr = reinterpret_cast<float*>(res->imageData + (y * depthFrame.get_width() * sizeof(float)));
+			uint16_t* src_ptr = reinterpret_cast<uint16_t*>((uint16_t*)data_ptr + (y * depthFrame.get_width() * sizeof(unsigned char)));
+			for (int x = 0; x < depthFrame.get_width(); x++, res_ptr++, src_ptr++)
+			{
+				float u = (x - intrisnic.ppx) / intrisnic.fx;
+				float v = (y - intrisnic.ppy) / intrisnic.fy;
+				float ddepth = *src_ptr * depth_scale;
+
+				float x1, y1, z1, w;
+				x1 = u * ddepth;
+				y1 = v * ddepth;
+				z1 = ddepth;
+				w = 0;
+
+				cl_float4 fmul;
+
+				fmul.w = w * quat.w - x1 * quat.x - y1 * quat.y - z1 * quat.z;
+				fmul.x = w * quat.x + x1 * quat.w + y1 * quat.z + z1 * quat.y;
+				fmul.y = w * quat.y + y1 * quat.w + z1 * quat.x + x1 * quat.z;
+				fmul.z = w * quat.z + z1 * quat.w + x1 * quat.y + y1 * quat.x;
+
+				cl_float4 res;
+
+				res.w = fmul.w * quat.w + fmul.x * quat.x + fmul.y * quat.y + fmul.z * quat.z;
+				res.x = -fmul.w * quat.x + fmul.x * quat.w - fmul.y * quat.z - fmul.z * quat.y;
+				res.y = -fmul.w * quat.y + fmul.y * quat.w - fmul.z * quat.x - fmul.x * quat.z;
+				res.z = -fmul.w * quat.z + fmul.z * quat.w - fmul.x * quat.y - fmul.y * quat.x;
+
+				*res_ptr = res.w;
+				res_ptr++;
+				*res_ptr = res.x;
+				res_ptr++;
+				*res_ptr = res.y;
+				res_ptr++;
+				*res_ptr = res.z;
+			}
+		}
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER
+		QueryPerformanceCounter(&performanceCountNDRangeStop);
+		QueryPerformanceFrequency(&perfFrequency);
+		LogInfo("process took %f ms.\n",
+			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#endif
+		return res;
+	}
+
+
+
 
 }
