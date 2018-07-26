@@ -51,6 +51,16 @@ bool ocvRealsenseWrapper::open(int index)
 			factory.initProgram(depthToWorld);
 			factory.initProgram(rotation);
 		}
+
+		Eigen::Vector3f a(1, 0, 0);
+		Eigen::Vector3f b(0.5, 0.5, 0);
+		rs2_error* error;
+		rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
+
+		intrisnic = pipe.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
+		depth_scale = depth_sensor.get_depth_scale();
+
+		q = Eigen::Quaternionf::FromTwoVectors(a, b);
 	}
 	catch (_exception& ex)
 	{
@@ -173,26 +183,64 @@ IplImage* ocvRealsenseWrapper::thresholdDepthImage(float min, float max)
 
 IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 {
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+	QueryPerformanceCounter(&performanceCountNDRangeStart);
+#endif
+
 	frameset = pipe.wait_for_frames();
 	auto depthFrame = frameset.get_depth_frame().as<rs2::depth_frame>();
 	void* data_ptr = (void*)depthFrame.get_data();
-	rs2_error* error;
-	rs2_intrinsics intrisnic = pipe.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
-	rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
-	float depth_scale = depth_sensor.get_depth_scale();
 
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+	QueryPerformanceCounter(&performanceCountNDRangeStop);
+	QueryPerformanceFrequency(&perfFrequency);
+	LogInfo("get_depth_frame took %f ms.\n",
+		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#endif
 
-	Eigen::Vector3f a(1, 0, 0);
-	Eigen::Vector3f b(0.5, 0.5, 0);
-
-
-
-	Eigen::Quaternionf q = Eigen::Quaternionf::FromTwoVectors(a, b);
-
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+	QueryPerformanceCounter(&performanceCountNDRangeStart);
+#endif
 
 	IplImage* worldcoords = depthToWorld->calcWorldCoordinatesNormal((uint16_t*)data_ptr, depth_scale, depthFrame.get_width(), depthFrame.get_height(), intrisnic);
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+	QueryPerformanceCounter(&performanceCountNDRangeStop);
+	QueryPerformanceFrequency(&perfFrequency);
+	LogInfo("calcWorldCoordinatesNormal took %f ms.\n",
+		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#endif
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+	QueryPerformanceCounter(&performanceCountNDRangeStart);
+#endif
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+	QueryPerformanceCounter(&performanceCountNDRangeStart);
+#endif
+
 	IplImage* rotatedcoords = rotation->rotate(worldcoords, q);
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+	QueryPerformanceCounter(&performanceCountNDRangeStop);
+	QueryPerformanceFrequency(&perfFrequency);
+	LogInfo("rotate took %f ms.\n",
+		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#endif
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+	QueryPerformanceCounter(&performanceCountNDRangeStart);
+#endif
+
 	cvReleaseImage(&worldcoords);
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
+	QueryPerformanceCounter(&performanceCountNDRangeStop);
+	QueryPerformanceFrequency(&perfFrequency);
+	LogInfo("release took %f ms.\n",
+		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#endif
+
 	return rotatedcoords;
 
 }

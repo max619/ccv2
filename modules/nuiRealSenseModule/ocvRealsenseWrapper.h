@@ -7,6 +7,7 @@
 
 #ifndef OCV_REALSENSE_WRAPPER
 #define OCV_REALSENSE_WRAPPER
+#define BENCHMARK_OCV_REALSENSE_WRAPPER //uncomment if need benchmarking
 
 #include <opencv2\core.hpp>
 #include <opencv2/imgproc.hpp>
@@ -51,7 +52,16 @@ private:
 	oclThreshold* threshold;
 	oclDepthToWorld* depthToWorld;
 	ocl3DPointCloudRotation* rotation;
+	rs2_intrinsics intrisnic;
+	float depth_scale;
+	Eigen::Quaternionf q;
 
 	bool opened;
+
+#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER
+	LARGE_INTEGER perfFrequency;
+	LARGE_INTEGER performanceCountNDRangeStart;
+	LARGE_INTEGER performanceCountNDRangeStop;
+#endif
 };
 #endif

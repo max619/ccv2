@@ -25,7 +25,19 @@ void nuiRealSenseModule::update() {
 	this->output->lock();
 	this->output->clear();
 
+#ifdef BENCHMARK_NUI_REALSENSE_MODULE_H	
+		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#endif
+
 	IplImage* timg = realsenseW.queryWorldCoordinates();
+
+#ifdef BENCHMARK_NUI_REALSENSE_MODULE_H	
+	QueryPerformanceCounter(&performanceCountNDRangeStop);
+	QueryPerformanceFrequency(&perfFrequency);
+	LogInfo("TOTAL: queryWorldCoordinates took %f ms.\n",
+		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+
+#endif
 	if (timg != NULL)
 	{
 		this->outputDataPacket->packData(timg);

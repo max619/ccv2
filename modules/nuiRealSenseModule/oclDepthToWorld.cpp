@@ -26,7 +26,7 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 	if (!mutex.try_lock())
 		return NULL;
 #ifdef _DEBUG	
-	bool queueProfilingEnable = true;
+	bool queueProfilingEnable = false;
 	if (queueProfilingEnable)
 		QueryPerformanceCounter(&performanceCountNDRangeStart);
 #endif

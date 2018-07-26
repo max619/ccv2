@@ -25,7 +25,7 @@ IplImage * ocl3DPointCloudRotation::rotate(IplImage * src, Eigen::Quaternion<flo
 	if (!mutex.try_lock())
 		return NULL;
 #ifdef _DEBUG	
-	bool queueProfilingEnable = true;
+	bool queueProfilingEnable = false;
 	if (queueProfilingEnable)
 		QueryPerformanceCounter(&performanceCountNDRangeStart);
 #endif
