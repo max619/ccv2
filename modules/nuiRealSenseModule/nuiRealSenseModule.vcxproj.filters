@@ -17,6 +17,7 @@
     <ClCompile Include="oclThreshold.cpp">
       <Filter>ocl</Filter>
     </ClCompile>
+    <ClCompile Include="helpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nuiRealSenseModule.h" />
@@ -35,6 +36,7 @@
     <ClInclude Include="oclThreshold.h">
       <Filter>ocl</Filter>
     </ClInclude>
+    <ClInclude Include="helpers.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ocl">
@@ -52,6 +54,9 @@
       <Filter>ocl\kernels</Filter>
     </None>
     <None Include="ocl\processWorld.cl">
+      <Filter>ocl\kernels</Filter>
+    </None>
+    <None Include="ocl\getTouchedPoints.cl">
       <Filter>ocl\kernels</Filter>
     </None>
   </ItemGroup>

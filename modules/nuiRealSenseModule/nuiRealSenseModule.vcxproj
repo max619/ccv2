@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ocl\calcWorldCoordinatesNormal.cl" />
+    <None Include="ocl\getTouchedPoints.cl" />
     <None Include="ocl\processWorld.cl" />
     <None Include="ocl\rotate.cl" />
   </ItemGroup>

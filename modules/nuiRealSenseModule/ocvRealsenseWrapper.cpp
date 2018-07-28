@@ -232,13 +232,13 @@ IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
 
 	//TODO: Optimize all processing (put in one kernel)
-	if (factory.isOpenClSupported() && false)
+	if (factory.isOpenClSupported())
 	{
 
 #ifdef ALLOW_BENCHMARKING	
 		benchmark.startBencmarking();
 #endif
-		processor->processWorld((uint16_t*)data_ptr, depth_scale, intrisnic, q, procres);
+		processor->getTouchedPoints((uint16_t*)data_ptr, depth_scale, intrisnic, n, p0, thresh, /*perspectiveTransformMatrix,*/ procres);
 
 #ifdef ALLOW_BENCHMARKING	
 		benchmark.stopBenchmarking("ocvRealsenseWrapper::queryWorldCoordinates processor->processWorld");

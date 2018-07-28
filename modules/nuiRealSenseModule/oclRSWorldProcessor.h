@@ -30,6 +30,7 @@ public:
 	oclRSWorldProcessor();
 	~oclRSWorldProcessor();
 	void processWorld(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Quaternionf& quaterninon, IplImage* res);
+	void getTouchedPoints(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Vector3f& normal, Eigen::Vector3f& basept, Eigen::Vector2f& threshold, /*CvMat* homography,*/ IplImage* res);
 
 	void processWorldCpu(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Quaternionf& quaterninon, IplImage* res);
 	void getTouchedPointsCpu(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Vector3f& normal, Eigen::Vector3f& basept, Eigen::Vector2f& threshold, IplImage* res);
@@ -42,9 +43,11 @@ private:
 	bool clmeminit;
 	cl_mem inputMem;
 	cl_mem outputMem;
-	cl_int inputSize, outputSize;
+	cl_mem getTouchedPoints_output;
+	cl_int inputSize, outputSize, getTouchedPoints_size;
 	void* input;
 	void* output;
+	void* getTouchedPoints_output_buff;
 	int initMem(ocl_container* container, int width, int height);
 
 	DEFAULT_OPENCL_PROGRAM_INTERFACE_DECLARATION()

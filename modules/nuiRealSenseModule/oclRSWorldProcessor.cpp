@@ -2,10 +2,11 @@
 
 
 
-oclRSWorldProcessor::oclRSWorldProcessor() : nuiOpenClAlgorithm(1)
+oclRSWorldProcessor::oclRSWorldProcessor() : nuiOpenClAlgorithm(2)
 {
-	functionsNames = new const char*[1];
+	functionsNames = new const char*[2];
 	functionsNames[0] = "processWorld";
+	functionsNames[1] = "getTouchedPoints";
 	clmeminit = false;
 }
 
@@ -162,6 +163,119 @@ void oclRSWorldProcessor::processWorldCpu(uint16_t * data, float & scale, rs2_in
 	}
 }
 
+void oclRSWorldProcessor::getTouchedPoints(uint16_t * data, float & scale, rs2_intrinsics & intrisnic, Eigen::Vector3f & normal, Eigen::Vector3f & basept, Eigen::Vector2f & threshold, /*CvMat* homography,*/ IplImage * res)
+{
+	if (!mutex.try_lock())
+		return;
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
+#endif
+
+	int width = intrisnic.width;
+	int height = intrisnic.height;
+
+	cl_float16 depthprocess;
+	depthprocess.s0 = intrisnic.fx;
+	depthprocess.s1 = intrisnic.fy;
+	depthprocess.s2 = intrisnic.ppx;
+	depthprocess.s3 = intrisnic.ppy;
+	depthprocess.s4 = scale;
+	depthprocess.s5 = normal.x();
+	depthprocess.s6 = normal.y();
+	depthprocess.s7 = normal.z();
+	depthprocess.s8 = basept.x();
+	depthprocess.s9 = basept.y();
+	depthprocess.sA = basept.z();
+	depthprocess.sB = threshold.x();
+	depthprocess.sC = threshold.y();
+	/*float* hA = homography->data.fl;
+	cl_float16 h;
+	h.s0 = hA[0];
+	h.s1 = hA[1];
+	h.s2 = hA[2];
+	h.s3 = hA[3];
+	h.s4 = hA[4];
+	h.s5 = hA[5];
+	h.s6 = hA[6];
+	h.s7 = hA[7];
+	h.s8 = hA[8];*/
+
+
+	cl_int err = CL_SUCCESS;
+	ocl_container* container = getOclFunctionPtr(1);
+	if (!clmeminit)
+		initMem(container, width, height);
+
+
+	size_t origin[] = { 0, 0, 0 };
+	size_t region[] = { width, height, 1 };
+	size_t image_row_pitch;
+	size_t image_slice_pitch;
+	cl_int *inptPtr = (cl_int *)clEnqueueMapImage(container->commandQueue, inputMem, true, CL_MAP_WRITE, origin, region, &image_row_pitch, &image_slice_pitch, 0, NULL, NULL, &err);
+	if (CL_SUCCESS != err)
+	{
+		LogError("Error: clEnqueueMapBuffer returned %s\n", TranslateOpenCLError(err));
+		mutex.unlock();
+		return;
+	}
+
+	memcpy_s(input, inputSize, data, width * height * sizeof(uint16_t));
+
+	err = clEnqueueUnmapMemObject(container->commandQueue, inputMem, inptPtr, 0, NULL, NULL);
+	if (CL_SUCCESS != err)
+	{
+		LogError("Error: clEnqueueUnmapMemObject returned %s\n", TranslateOpenCLError(err));
+		mutex.unlock();
+		return;
+	}
+
+
+	err = clSetKernelArg(container->kernel, 0, sizeof(cl_float16), &depthprocess);
+	//err = clSetKernelArg(container->kernel, 1, sizeof(cl_float16), &h);
+	err = clSetKernelArg(container->kernel, 1, sizeof(cl_mem), &inputMem);
+	err = clSetKernelArg(container->kernel, 2, sizeof(cl_mem), &getTouchedPoints_output);
+
+
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("oclRSWorldProcessor::processWorld kernel initializing");
+#endif
+
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
+#endif
+	err = ExecKernel(container, width, height);
+
+	if (CL_SUCCESS != err)
+	{
+		LogError("Error: ExecKernel %s\n", TranslateOpenCLError(err));
+		mutex.unlock();
+		return;
+	}
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("oclRSWorldProcessor::processWorld kernel processing");
+#endif
+
+	cl_int *resultPtr = (cl_int *)clEnqueueMapImage(container->commandQueue, getTouchedPoints_output, true, CL_MAP_READ, origin, region, &image_row_pitch, &image_slice_pitch, 0, NULL, NULL, &err);
+	if (CL_SUCCESS != err)
+	{
+		LogError("Error: clEnqueueMapBuffer returned %s\n", TranslateOpenCLError(err));
+		mutex.unlock();
+	}
+
+
+	err = clEnqueueUnmapMemObject(container->commandQueue, getTouchedPoints_output, resultPtr, 0, NULL, NULL);
+	if (CL_SUCCESS != err)
+	{
+		LogError("Error: clEnqueueUnmapMemObject returned %s\n", TranslateOpenCLError(err));
+		mutex.unlock();
+	}
+
+	memcpy_s(res->imageDataOrigin, width * height * sizeof(unsigned char), getTouchedPoints_output_buff, width * height * sizeof(unsigned char));
+
+
+	mutex.unlock();
+}
+
 void oclRSWorldProcessor::getTouchedPointsCpu(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Vector3f& normal, Eigen::Vector3f& basept, Eigen::Vector2f& threshold, IplImage* res)
 {	
 #ifdef _OPENMP
@@ -211,6 +325,8 @@ int oclRSWorldProcessor::initMem(ocl_container * container, int width, int heigh
 	outputSize = getAllignedBufferSize(width, height, sizeof(float) * 4);
 	output = (cl_float4*)allocAlligned(outputSize);
 
+	getTouchedPoints_size = getAllignedBufferSize(width, height, sizeof(unsigned char));
+	getTouchedPoints_output_buff = allocAlligned(getTouchedPoints_size);
 
 	cl_image_format format;
 	cl_image_desc desc;
@@ -236,7 +352,17 @@ int oclRSWorldProcessor::initMem(ocl_container * container, int width, int heigh
 	desc.buffer = NULL;
 #endif
 
+
 	inputMem = clCreateImage(container->context, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, &format, &desc, input, &err);
+	if (CL_SUCCESS != err)
+	{
+		LogError("Error: clCreateImage for srcA returned %s\n", TranslateOpenCLError(err));
+		return err;
+	}
+
+	format.image_channel_data_type = CL_UNSIGNED_INT8;
+
+	getTouchedPoints_output = clCreateImage(container->context, CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR, &format, &desc, getTouchedPoints_output_buff, &err);
 	if (CL_SUCCESS != err)
 	{
 		LogError("Error: clCreateImage for srcA returned %s\n", TranslateOpenCLError(err));
@@ -265,17 +391,16 @@ char * oclRSWorldProcessor::getSourceCode(int id)
 	{
 		std::string str = ptr->getRelativeToStartupPath("modules\\ocl\\processWorld.cl");
 		ReadSourceFromFile(str.c_str(), &source, &size);
-		/*char* sourcecropped = new char[size];
-		memcpy(sourcecropped, source, size);
-		delete source;
-		source = sourcecropped;*/
-		return source;
 	}
 	else
-		return "constant sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP | CLK_FILTER_NEAREST;__kernel void calcWorldCoordinatesInverseBrownConrady(float ppx, float ppy, float fx, float fy, float depthmul, read_only image2d_t imageA, write_only image2d_t imageC, float c0, float c1, float c2, float c3, float c4 ){const int x = get_global_id(0);const int y = get_global_id(1);float u = (x - ppx) / fx;float v = (y - ppy) / fy;float r2 = u * u + v * v;float f = 1 + c0 * r2 + c1 * r2*r2 + c4 * r2*r2*r2;float ux = x * f + 2 * c2*u*v + c3 * (r2 + 2 * x*x);float uy = y * f + 2 * c3*u*v + c2 * (r2 + 2 * x*x);u = ux;v = uy;float ddepth = (read_imageui(imageA, sampler, (int2)(x, y)).x) * depthmul;write_imagef(imageC, (int2)(x, y), float3(ddepth * u, ddepth * v, ddepth));}";
+	{
+		std::string str = ptr->getRelativeToStartupPath("modules\\ocl\\getTouchedPoints.cl");
+		ReadSourceFromFile(str.c_str(), &source, &size);
+	}
+	return source;
 }
 
 int oclRSWorldProcessor::getFunctionsCount()
 {
-	return 1;
+	return 2;
 }
