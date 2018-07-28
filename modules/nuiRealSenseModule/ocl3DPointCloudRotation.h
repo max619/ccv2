@@ -17,6 +17,10 @@
 #include <opencv2/core.hpp>
 #include "helpers.h"
 
+#ifdef ALLOW_BENCHMARKING
+#include "nuiBenchmark.h"
+#endif
+
 class ocl3DPointCloudRotation : public nuiOpenClAlgorithm
 {
 public:
@@ -28,10 +32,8 @@ public:
 	DEFAULT_OPENCL_PROGRAM_INTERFACE_DECLARATION()
 
 private:
-#ifdef _DEBUG
-	LARGE_INTEGER perfFrequency;
-	LARGE_INTEGER performanceCountNDRangeStart;
-	LARGE_INTEGER performanceCountNDRangeStop;
+#ifdef ALLOW_BENCHMARKING
+	nuiBenchmark benchmark;
 #endif
 	std::mutex mutex;
 	bool clmeminit;

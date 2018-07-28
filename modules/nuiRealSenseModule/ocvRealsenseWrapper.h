@@ -7,7 +7,6 @@
 
 #ifndef OCV_REALSENSE_WRAPPER
 #define OCV_REALSENSE_WRAPPER
-#define BENCHMARK_OCV_REALSENSE_WRAPPER //uncomment if need benchmarking
 
 #define EIGEN_DONT_ALIGN_STATICALLY
 
@@ -23,6 +22,10 @@
 #include "Eigen/Geometry"
 #include "helpers.h"
 #include "oclRSWorldProcessor.h"
+
+#ifdef ALLOW_BENCHMARKING	
+#include "nuiBenchmark.h"
+#endif
 
 class ocvRealsenseWrapper
 {
@@ -74,10 +77,8 @@ private:
 
 	bool opened;
 
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER
-	LARGE_INTEGER perfFrequency;
-	LARGE_INTEGER performanceCountNDRangeStart;
-	LARGE_INTEGER performanceCountNDRangeStop;
+#ifdef ALLOW_BENCHMARKING	
+	nuiBenchmark benchmark;
 #endif
 };
 #endif

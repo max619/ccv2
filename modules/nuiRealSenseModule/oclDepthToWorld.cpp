@@ -23,16 +23,14 @@ oclDepthToWorld::~oclDepthToWorld()
 
 IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float scale, uint width, uint height, rs2_intrinsics intrisnic)
 {
+	cl_int err = CL_SUCCESS;
 	if (!mutex.try_lock())
 		return NULL;
-#ifdef _DEBUG	
-	bool queueProfilingEnable = false;
-	if (queueProfilingEnable)
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
 #endif
 
 
-	cl_int err = CL_SUCCESS;
 	ocl_container* container = getOclFunctionPtr(0);
 	if (!clmeminit)
 		initMem(container, width, height);
@@ -70,19 +68,12 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 	err = clSetKernelArg(container->kernel, 6, sizeof(cl_mem), &outputMem);
 
 
-#ifdef _DEBUG	
-	if (queueProfilingEnable)
-	{
-		QueryPerformanceCounter(&performanceCountNDRangeStop);
-		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("Kerenel initialization took time %f ms.\n",
-			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
-	}
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("oclDepthToWorld::calcWorldCoordinatesNormal memory initialization");
 #endif
 
-#ifdef _DEBUG	
-	if (queueProfilingEnable)
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
 #endif
 	err = ExecKernel(container, width, height);
 
@@ -92,14 +83,8 @@ IplImage * oclDepthToWorld::calcWorldCoordinatesNormal(uint16_t * data, float sc
 		mutex.unlock();
 		return nullptr;
 	}
-#ifdef _DEBUG	
-	if (queueProfilingEnable)
-	{
-		QueryPerformanceCounter(&performanceCountNDRangeStop);
-		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("NDRange performance counter time %f ms.\n",
-			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
-	}
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("oclDepthToWorld::calcWorldCoordinatesNormal kernel processing");
 #endif
 
 	cl_int *resultPtr = (cl_int *)clEnqueueMapImage(container->commandQueue, outputMem, true, CL_MAP_READ, origin, region, &image_row_pitch, &image_slice_pitch, 0, NULL, NULL, &err);

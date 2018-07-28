@@ -202,8 +202,8 @@ IplImage* ocvRealsenseWrapper::thresholdDepthImage(float min, float max)
 
 IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 {
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-	QueryPerformanceCounter(&performanceCountNDRangeStart);
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
 #endif
 	if (procres == NULL)
 	{
@@ -225,11 +225,8 @@ IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 		isPlaneInit = true;
 	}	
 
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-	QueryPerformanceCounter(&performanceCountNDRangeStop);
-	QueryPerformanceFrequency(&perfFrequency);
-	LogInfo("get_depth_frame took %f ms.\n",
-		1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("ocvRealsenseWrapper::queryWorldCoordinates depth frame query");
 #endif
 
 	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
@@ -238,37 +235,26 @@ IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 	if (factory.isOpenClSupported() && false)
 	{
 
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#ifdef ALLOW_BENCHMARKING	
+		benchmark.startBencmarking();
 #endif
-
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
-#endif
-
 		processor->processWorld((uint16_t*)data_ptr, depth_scale, intrisnic, q, procres);
 
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-		QueryPerformanceCounter(&performanceCountNDRangeStop);
-		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("rotate took %f ms.\n",
-			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#ifdef ALLOW_BENCHMARKING	
+		benchmark.stopBenchmarking("ocvRealsenseWrapper::queryWorldCoordinates processor->processWorld");
 #endif
 	}
 	else
 	{
 
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER	
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
-#endif	
+#ifdef ALLOW_BENCHMARKING	
+		benchmark.startBencmarking();
+#endif
 
 		processor->getTouchedPointsCpu((uint16_t*)data_ptr, depth_scale, intrisnic, n, p0, thresh, procres);
 
-#ifdef BENCHMARK_OCV_REALSENSE_WRAPPER
-		QueryPerformanceCounter(&performanceCountNDRangeStop);
-		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("process took %f ms.\n",
-			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
+#ifdef ALLOW_BENCHMARKING	
+		benchmark.stopBenchmarking("ocvRealsenseWrapper::queryWorldCoordinates processor->getTouchedPointsCpu");
 #endif
 	}
 	cvWarpPerspective(procres, procres, perspectiveTransformMatrix);

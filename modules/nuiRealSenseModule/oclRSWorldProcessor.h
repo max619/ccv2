@@ -7,7 +7,6 @@
 
 #ifndef OCL_RS_WORLD_PROCESSOR
 #define OCL_RS_WORLD_PROCESSOR
-//#define BENCHMARK_OCL_RS_WORLD_PROCESSOR
 
 #include "static.h"
 #include "nuiFrameworkManager.h"
@@ -19,6 +18,10 @@
 #include <librealsense2/rs.hpp>
 #include <Windows.h>
 #include "helpers.h"
+
+#ifdef ALLOW_BENCHMARKING
+#include "nuiBenchmark.h"
+#endif
 
 
 class oclRSWorldProcessor : public nuiOpenClAlgorithm
@@ -32,9 +35,7 @@ public:
 	void getTouchedPointsCpu(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Vector3f& normal, Eigen::Vector3f& basept, Eigen::Vector2f& threshold, IplImage* res);
 
 #ifdef BENCHMARK_OCL_RS_WORLD_PROCESSOR
-	LARGE_INTEGER perfFrequency;
-	LARGE_INTEGER performanceCountNDRangeStart;
-	LARGE_INTEGER performanceCountNDRangeStop;
+	nuiBenchmark benchmark;
 #endif
 private:
 	std::mutex mutex;

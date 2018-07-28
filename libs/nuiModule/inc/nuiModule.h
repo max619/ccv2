@@ -9,6 +9,11 @@
 #ifndef NUI_MODULE_H
 #define NUI_MODULE_H
 
+#ifdef _DEBUG
+#define ALLOW_BENCHMARKING
+#endif // _DEBUG
+
+
 #include <string>
 #include <map>
 #include "nuiProperty.h"

@@ -12,8 +12,8 @@
 #include <CL/cl.hpp>
 #include <mutex>
 
-#ifdef _DEBUG
-#include <Windows.h>
+#ifdef ALLOW_BENCHMARKING	
+#include "nuiBenchmark.h"
 #endif
 
 class oclThreshold : public nuiOpenClAlgorithm
@@ -28,10 +28,8 @@ public:
 
 
 private:
-#ifdef _DEBUG
-	LARGE_INTEGER perfFrequency;
-	LARGE_INTEGER performanceCountNDRangeStart;
-	LARGE_INTEGER performanceCountNDRangeStop;
+#ifdef ALLOW_BENCHMARKING
+	nuiBenchmark bencmark;
 #endif
 	std::mutex mutex;
 	bool clmeminit;

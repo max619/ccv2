@@ -7,7 +7,6 @@
  */
 #ifndef NUI_DEBUG_VIDEO_SINK_H
 #define NUI_DEBUG_VIDEO_SINK_H
-#define BENCMARK_NUI_DEBUG_VIDEO_SINK_H
 
 
 #include "nuiModule.h"
@@ -19,6 +18,10 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
 #include <Windows.h>
+
+#ifdef ALLOW_BENCHMARKING	
+#include "nuiBenchmark.h"
+#endif
 
 class nuiDebugVideoSink : public nuiModule {
 public:
@@ -35,10 +38,8 @@ private:
 
 	IplImage *dispFrame;
 
-#ifdef BENCMARK_NUI_DEBUG_VIDEO_SINK_H
-	LARGE_INTEGER perfFrequency;
-	LARGE_INTEGER performanceCountNDRangeStart;
-	LARGE_INTEGER performanceCountNDRangeStop;
+#ifdef ALLOW_BENCHMARKING	
+	nuiBenchmark benchmark;
 #endif
 
 	MODULE_INTERNALS();

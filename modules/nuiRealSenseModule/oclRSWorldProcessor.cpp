@@ -24,10 +24,8 @@ void oclRSWorldProcessor::processWorld(uint16_t * data, float& scale, rs2_intrin
 {
 	if (!mutex.try_lock())
 		return;
-#ifdef BENCHMARK_OCL_RS_WORLD_PROCESSOR	
-	bool queueProfilingEnable = true;
-	if (queueProfilingEnable)
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
 #endif
 
 	int width = intrisnic.width;
@@ -79,19 +77,12 @@ void oclRSWorldProcessor::processWorld(uint16_t * data, float& scale, rs2_intrin
 	err = clSetKernelArg(container->kernel, 2, sizeof(cl_mem), &outputMem);
 
 
-#ifdef BENCHMARK_OCL_RS_WORLD_PROCESSOR	
-	if (queueProfilingEnable)
-	{
-		QueryPerformanceCounter(&performanceCountNDRangeStop);
-		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("Kerenel initialization took time %f ms.\n",
-			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
-	}
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("oclRSWorldProcessor::processWorld kernel initializing");
 #endif
 
-#ifdef BENCHMARK_OCL_RS_WORLD_PROCESSOR	
-	if (queueProfilingEnable)
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
 #endif
 	err = ExecKernel(container, width, height);
 
@@ -101,14 +92,8 @@ void oclRSWorldProcessor::processWorld(uint16_t * data, float& scale, rs2_intrin
 		mutex.unlock();
 		return;
 	}
-#ifdef BENCHMARK_OCL_RS_WORLD_PROCESSOR	
-	if (queueProfilingEnable)
-	{
-		QueryPerformanceCounter(&performanceCountNDRangeStop);
-		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("NDRange performance counter time %f ms.\n",
-			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
-	}
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("oclRSWorldProcessor::processWorld kernel processing");
 #endif
 
 	cl_int *resultPtr = (cl_int *)clEnqueueMapBuffer(container->commandQueue, outputMem, true, CL_MAP_READ, 0, width * height * sizeof(float) * 4, 0, NULL, NULL, &err);

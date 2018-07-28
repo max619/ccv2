@@ -8,8 +8,6 @@
 
 #ifndef NUI_REALSENSE_MODULE_H
 #define NUI_REALSENSE_MODULE_H
-#define BENCHMARK_NUI_REALSENSE_MODULE_H //uncomment if need benchmarking
-
 #include "nuiModule.h"
 #include "nuiPlugin.h"
 #include "nuiDataPacket.h"
@@ -21,6 +19,10 @@
 #include "ocvRealsenseWrapper.h"
 #include "static.h"
 #include <Windows.h>
+
+#ifdef ALLOW_BENCHMARKING	
+#include "nuiBenchmark.h"
+#endif
 
 NUI_DATAPACKET_DEFAULT_DECLARATION(RealSenseModule, IplImage*)
 
@@ -41,10 +43,8 @@ private:
 	IplImage* img;
 
 	ocvRealsenseWrapper realsenseW;
-#ifdef BENCHMARK_NUI_REALSENSE_MODULE_H
-	LARGE_INTEGER perfFrequency;
-	LARGE_INTEGER performanceCountNDRangeStart;
-	LARGE_INTEGER performanceCountNDRangeStop;
+#ifdef ALLOW_BENCHMARKING	
+	nuiBenchmark benchmark;
 #endif
 
 	MODULE_INTERNALS();

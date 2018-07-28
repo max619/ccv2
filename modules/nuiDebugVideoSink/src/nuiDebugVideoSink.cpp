@@ -25,9 +25,9 @@ void nuiDebugVideoSink::update()
 	nuiDataPacket* packet = this->input->getData();
 	if (packet == NULL)
 		return; 
-#ifdef BENCMARK_NUI_DEBUG_VIDEO_SINK_H
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
-#endif	
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
+#endif
 	packet->unpackData(data);
 	IplImage* frame = (IplImage*)data;
 	if (dispFrame == NULL)
@@ -46,12 +46,8 @@ void nuiDebugVideoSink::update()
 	cvPutText(dispFrame, oss.str().c_str(), cvPoint(5, 15), &font, cvScalar(255, 255, 255));
 	cvShowImage((this->property("id")).asString().c_str(), dispFrame);
 	cvWaitKey(1);
-#ifdef BENCMARK_NUI_DEBUG_VIDEO_SINK_H	
-	QueryPerformanceCounter(&performanceCountNDRangeStop);
-	QueryPerformanceFrequency(&perfFrequency);
-	printf("TOTAL: rendering of image took %f ms.\n", 1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
-
-	//delete formated;
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("nuiDebugVideoSink::update frame rendering");
 #endif
 	delete packet;
 	this->input->unlock();

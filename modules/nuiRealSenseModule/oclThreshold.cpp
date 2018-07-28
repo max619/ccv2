@@ -24,10 +24,8 @@ IplImage * oclThreshold::calcThreshold(uint16_t * src, uint width, uint height, 
 {
 	if (!mutex.try_lock())
 		return NULL;
-#ifdef _DEBUG	
-	bool queueProfilingEnable = true;
-	if (queueProfilingEnable)
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
 #endif
 
 
@@ -68,19 +66,12 @@ IplImage * oclThreshold::calcThreshold(uint16_t * src, uint width, uint height, 
 	err = clSetKernelArg(container->kernel, 3, sizeof(cl_mem), &outputMem);
 
 
-#ifdef _DEBUG	
-	if (queueProfilingEnable)
-	{
-		QueryPerformanceCounter(&performanceCountNDRangeStop);
-		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("Kerenel initialization took time %f ms.\n",
-			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
-	}
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("oclThreshold::calcThreshold kernel initializing");
 #endif
 
-#ifdef _DEBUG	
-	if (queueProfilingEnable)
-		QueryPerformanceCounter(&performanceCountNDRangeStart);
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.startBencmarking();
 #endif
 	err = ExecKernel(container, width, height);
 
@@ -90,14 +81,8 @@ IplImage * oclThreshold::calcThreshold(uint16_t * src, uint width, uint height, 
 		mutex.unlock();
 		return nullptr;
 	}
-#ifdef _DEBUG	
-	if (queueProfilingEnable)
-	{
-		QueryPerformanceCounter(&performanceCountNDRangeStop);
-		QueryPerformanceFrequency(&perfFrequency);
-		LogInfo("NDRange performance counter time %f ms.\n",
-			1000.0f*(float)(performanceCountNDRangeStop.QuadPart - performanceCountNDRangeStart.QuadPart) / (float)perfFrequency.QuadPart);
-	}
+#ifdef ALLOW_BENCHMARKING	
+	benchmark.stopBenchmarking("oclThreshold::calcThreshold kernel processing");
 #endif
 
 	cl_int *resultPtr = (cl_int *)clEnqueueMapImage(container->commandQueue, outputMem, true, CL_MAP_READ, origin, region, &image_row_pitch, &image_slice_pitch, 0, NULL, NULL, &err);
