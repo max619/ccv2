@@ -35,6 +35,7 @@ public:
 private:
 	nuiEndpoint * output;
 	nuiDataPacket* outputDataPacket;
+	void initAnchorPoints();
 
 	//cv::Mat frame;
 	IplImage* img;

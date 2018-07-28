@@ -45,7 +45,25 @@
                         "oscillator_mode": "true",
                         "path": "D:\\LLDevelopment\\Work\\ccv2\\data\\out.avi",
                         "oscillator_wait": 40,
-                        "synced_input": "true"
+                        "synced_input": "true",
+                        "x0": 288,
+                        "y0": 265,
+                        "x1": 849,
+                        "y1": 253,
+                        "x2": 346,
+                        "y2": 543,
+                        "min": 2,
+                        "max": 6,
+                        "screenWidth": 1280,
+                        "screenHeight": 720,
+                        "sx0": 288,
+                        "sy0": 265,
+                        "sx1": 849,
+                        "sy1": 253,
+                        "sx2": 849,
+                        "sy2": 543,
+                        "sx2": 346,
+                        "sy2": 543
                     }
                 },
                 {

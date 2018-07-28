@@ -133,6 +133,88 @@ void oclRSWorldProcessor::processWorld(uint16_t * data, float& scale, rs2_intrin
 	mutex.unlock();
 }
 
+void oclRSWorldProcessor::processWorldCpu(uint16_t * data, float & scale, rs2_intrinsics & intrisnic, Eigen::Quaternionf & quaterninon, IplImage * res)
+{
+	cl_float4 quat = castQuaternionToFloat4(quaterninon);
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif	
+	for (int y = 0; y < intrisnic.height; y++)
+	{
+		float* res_ptr = reinterpret_cast<float*>(res->imageData + (y * intrisnic.width * sizeof(float) * 4));
+		uint16_t* src_ptr = reinterpret_cast<uint16_t*>((uint16_t*)data + (y * intrisnic.width * sizeof(unsigned char)));
+		cl_float4 fmul, res;
+		float x1, y1, z1, w, u, v, ddepth;
+		for (int x = 0; x < intrisnic.width; x++, res_ptr++, src_ptr++)
+		{
+			u = (x - intrisnic.ppx) / intrisnic.fx;
+			v = (y - intrisnic.ppy) / intrisnic.fy;
+			ddepth = *src_ptr * scale;
+
+			x1 = u * ddepth;
+			y1 = v * ddepth;
+			z1 = ddepth;
+			w = 0;
+
+			fmul.w = w * quat.w - x1 * quat.x - y1 * quat.y - z1 * quat.z;
+			fmul.x = w * quat.x + x1 * quat.w + y1 * quat.z + z1 * quat.y;
+			fmul.y = w * quat.y + y1 * quat.w + z1 * quat.x + x1 * quat.z;
+			fmul.z = w * quat.z + z1 * quat.w + x1 * quat.y + y1 * quat.x;
+
+			res.w = fmul.w * quat.w + fmul.x * quat.x + fmul.y * quat.y + fmul.z * quat.z;
+			res.x = -fmul.w * quat.x + fmul.x * quat.w - fmul.y * quat.z - fmul.z * quat.y;
+			res.y = -fmul.w * quat.y + fmul.y * quat.w - fmul.z * quat.x - fmul.x * quat.z;
+			res.z = -fmul.w * quat.z + fmul.z * quat.w - fmul.x * quat.y - fmul.y * quat.x;
+
+			*res_ptr = res.x;
+			res_ptr++;
+			*res_ptr = res.y;
+			res_ptr++;
+			*res_ptr = res.z;
+			res_ptr++;
+			*res_ptr = res.w;
+		}
+	}
+}
+
+void oclRSWorldProcessor::getTouchedPointsCpu(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Vector3f& normal, Eigen::Vector3f& basept, Eigen::Vector2f& threshold, IplImage* res)
+{	
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif	
+	for (int y = 0; y < intrisnic.height; y++)
+	{
+		unsigned char* res_ptr = reinterpret_cast<unsigned char*>(res->imageData + (y * intrisnic.width * sizeof(unsigned char)));
+		uint16_t* src_ptr = reinterpret_cast<uint16_t*>((uint16_t*)data + (y * intrisnic.width * sizeof(unsigned char)));
+		cl_float4 fmul, res;
+		float u, v, ddepth, dist;
+		Eigen::Vector3f respt;
+		for (int x = 0; x < intrisnic.width; x++, res_ptr++, src_ptr++)
+		{
+			u = (x - intrisnic.ppx) / intrisnic.fx;
+			v = (y - intrisnic.ppy) / intrisnic.fy;
+			ddepth = *src_ptr * scale;
+
+			respt.x() = u * ddepth;
+			respt.y() = v * ddepth;
+			respt.z() = ddepth;
+
+			respt = respt - basept;
+			float dot = respt.dot(normal);
+
+			if (dot > threshold.x() && dot < threshold.y())
+			{
+				*res_ptr = 255;
+			}
+			else
+			{
+				unsigned char ndepth = static_cast<unsigned char>(((1 / (0.5f + dot)) * 128));
+				*res_ptr = 0;
+			}
+		}
+	}
+}
+
 
 int oclRSWorldProcessor::initMem(ocl_container * container, int width, int height)
 {

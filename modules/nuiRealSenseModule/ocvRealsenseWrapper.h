@@ -39,6 +39,11 @@ public:
 	IplImage * thresholdDepthImage(float min, float max);
 
 	IplImage * queryWorldCoordinates();
+	CvPoint2D32f* screenpoints;
+	CvSize2D32f destsize; 
+	Eigen::Vector2f thresh; 
+	Eigen::Vector3f n, p0;
+	CvPoint pos[3];
 
 private:
 	/*rs2::video_frame colorFrame;
@@ -58,6 +63,10 @@ private:
 	ocl3DPointCloudRotation* rotation;
 	oclRSWorldProcessor* processor;
 	IplImage* procres;
+	CvPoint2D32f* dstscreenpoints;
+	CvMat* perspectiveTransformMatrix;
+	bool isPlaneInit;
+	
 
 	rs2_intrinsics intrisnic;
 	float depth_scale;
