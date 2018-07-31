@@ -47,6 +47,7 @@ public:
 	Eigen::Vector2f thresh; 
 	Eigen::Vector3f n, p0;
 	CvPoint pos[3];
+	bool shouldWarp;
 
 private:
 	/*rs2::video_frame colorFrame;

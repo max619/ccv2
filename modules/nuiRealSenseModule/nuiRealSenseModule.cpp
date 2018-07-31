@@ -69,4 +69,6 @@ void nuiRealSenseModule::initAnchorPoints()
 	realsenseW.screenpoints[1] = CvPoint2D32f(this->hasProperty("sx1") ? this->property("sx1").asDouble() : 0., this->hasProperty("sy1") ? this->property("sy1").asDouble() : 0.);
 	realsenseW.screenpoints[2] = CvPoint2D32f(this->hasProperty("sx2") ? this->property("sx2").asDouble() : 0., this->hasProperty("sy2") ? this->property("sy2").asDouble() : 0.);
 	realsenseW.screenpoints[3] = CvPoint2D32f(this->hasProperty("sx3") ? this->property("sx3").asDouble() : 0., this->hasProperty("sy3") ? this->property("sy3").asDouble() : 0.);
+
+	realsenseW.shouldWarp = this->hasProperty("shouldWarp") ? this->property("shouldWarp").asBool() : false;
 }
