@@ -5,7 +5,7 @@
 // Copyright:	(c) 2012 NUI Group
 //////////////////////////////////////////////////////////////////////////
 
-#include "ofxNCore.h"
+//#include "ofxNCore.h"
 #include "nuiTUIO.h"
 #include "..\..\..\libs\nuiSystem\inc\nuiDebugLogger.h"
 
@@ -13,18 +13,24 @@ nuiTUIOOutputDataPacket::~nuiTUIOOutputDataPacket()
 { };
 
 // never used as TUIO Output is output module
-nuiDataPacketError nuiTUIOOutputDataPacket::packData(const void *_data)
-{	return NUI_DATAPACKET_OK; };
+nuiDataPacketError::err nuiTUIOOutputDataPacket::packData(const void *_data)
+{
+	return nuiDataPacketError::NoError;
+};
 
-nuiDataPacketError nuiTUIOOutputDataPacket::unpackData(void* &_data)
+nuiDataPacketError::err nuiTUIOOutputDataPacket::unpackData(void* &_data)
 {
 	_data = (void*)this->data;
-	return NUI_DATAPACKET_OK;
+
+	return nuiDataPacketError::NoError;
 };
 
 // never used as TUIO Output is output module
-nuiDataPacket* nuiTUIOOutputDataPacket::copyPacketData(nuiDataPacketError &errorCode)
-{	return NULL; };
+nuiDataPacket* nuiTUIOOutputDataPacket::copyPacketData(nuiDataPacketError::err &errorCode)
+{	
+	errorCode = nuiDataPacketError::NoError;
+	return NULL;
+};
 
 char* nuiTUIOOutputDataPacket::getDataPacketType()
 {

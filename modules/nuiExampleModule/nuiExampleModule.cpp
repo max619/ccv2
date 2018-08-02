@@ -1,41 +1,6 @@
 #include "nuiExampleModule.h"
 
-nuiExampleModuleDataPacket::~nuiExampleModuleDataPacket()
-{
-	cvReleaseImage(&data);
-};
-
-nuiDataPacketError::err nuiExampleModuleDataPacket::packData(const void *_data)
-{
-	this->setLocalCopy(false);
-	this->data = (IplImage*)_data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacketError::err nuiExampleModuleDataPacket::unpackData(void* &_data)
-{
-	_data = (void*)this->data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacket* nuiExampleModuleDataPacket::copyPacketData(nuiDataPacketError::err &errorCode)
-{
-	nuiExampleModuleDataPacket* newDataPacket = new nuiExampleModuleDataPacket();
-
-	//! TODO : Test if this implies deep copy
-	IplImage* newData = cvCloneImage(this->data);
-
-	newDataPacket->packData(newData);
-	newDataPacket->setLocalCopy(true);
-
-	errorCode = nuiDataPacketError::NoError;
-	return newDataPacket;
-};
-
-char* nuiExampleModuleDataPacket::getDataPacketType()
-{
-	return "IplImage";
-};
+NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(ExampleModule)
 
 MODULE_DECLARE(ExampleModule, "native", "Example Module to be used for developments.");
 

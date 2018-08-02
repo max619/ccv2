@@ -1,43 +1,6 @@
 #include "nuiBackgroundSubtractModule.h"
 
-nuiBackgroundSubtractModuleDataPacket::~nuiBackgroundSubtractModuleDataPacket()
-{
-	if (data != NULL && isLocalCopy())
-		cvReleaseImage(&data);
-};
-
-nuiDataPacketError::err nuiBackgroundSubtractModuleDataPacket::packData(const void *_data)
-{
-	this->setLocalCopy(false);
-	this->data = (IplImage*)_data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacketError::err nuiBackgroundSubtractModuleDataPacket::unpackData(void* &_data)
-{
-	_data = (void*)this->data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacket* nuiBackgroundSubtractModuleDataPacket::copyPacketData(nuiDataPacketError::err &errorCode)
-{
-	nuiBackgroundSubtractModuleDataPacket* newDataPacket = new nuiBackgroundSubtractModuleDataPacket();
-
-	//! TODO : Test if this implies deep copy
-
-	IplImage* newData = cvCloneImage((this->data));
-
-	newDataPacket->packData(newData);
-	newDataPacket->setLocalCopy(true);
-
-	errorCode = nuiDataPacketError::NoError;
-	return newDataPacket;
-};
-
-char* nuiBackgroundSubtractModuleDataPacket::getDataPacketType()
-{
-	return "IplImage";
-};
+NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(BackgroundSubtractModule)
 
 MODULE_DECLARE(BackgroundSubtractModule, "native", "Filter out background");
 

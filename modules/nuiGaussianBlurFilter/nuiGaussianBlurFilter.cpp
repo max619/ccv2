@@ -1,41 +1,6 @@
 #include "nuiGaussianBlurFilter.h"
 
-nuiGaussianBlurFilterDataPacket::~nuiGaussianBlurFilterDataPacket()
-{
-	cvReleaseImage(&data);
-};
-
-nuiDataPacketError::err nuiGaussianBlurFilterDataPacket::packData(const void *_data)
-{
-	this->setLocalCopy(false);
-	this->data = (IplImage*)_data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacketError::err nuiGaussianBlurFilterDataPacket::unpackData(void* &_data)
-{
-	_data = (void*)this->data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacket* nuiGaussianBlurFilterDataPacket::copyPacketData(nuiDataPacketError::err &errorCode)
-{
-	nuiGaussianBlurFilterDataPacket* newDataPacket = new nuiGaussianBlurFilterDataPacket();
-
-	//! TODO : Test if this implies deep copy
-	IplImage* newData = cvCloneImage((this->data));
-
-	newDataPacket->packData(newData);
-	newDataPacket->setLocalCopy(true);
-
-	errorCode = nuiDataPacketError::NoError;
-	return newDataPacket;
-};
-
-char* nuiGaussianBlurFilterDataPacket::getDataPacketType()
-{
-	return "IplImage";
-};
+NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(GaussianBlurFilter)
 
 MODULE_DECLARE(GaussianBlurFilter, "native", "Filter gaussian");
 

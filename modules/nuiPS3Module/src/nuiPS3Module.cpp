@@ -5,42 +5,8 @@
 
 #include "..\..\..\libs\nuiSystem\inc\nuiDebugLogger.h"
 
-nuiPSModuleDataPacket::~nuiPSModuleDataPacket()
-{
-	cvReleaseImage(&data);
-};
 
-nuiDataPacketError::err nuiPSModuleDataPacket::packData(const void *_data)
-{
-	this->setLocalCopy(false);
-	this->data = (IplImage*)_data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacketError::err nuiPSModuleDataPacket::unpackData(void* &_data)
-{
-	_data = (void*)this->data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacket* nuiPSModuleDataPacket::copyPacketData(nuiDataPacketError::err &errorCode)
-{
-	nuiPSModuleDataPacket* newDataPacket = new nuiPSModuleDataPacket();
-
-	//! TODO : Test if this implies deep copy
-	IplImage* newData = cvCloneImage((this->data));
-
-	newDataPacket->packData(newData);
-	newDataPacket->setLocalCopy(true);
-
-	errorCode = nuiDataPacketError::NoError;
-	return newDataPacket;
-};
-
-char* nuiPSModuleDataPacket::getDataPacketType()
-{
-	return "IplImage";
-};
+NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(PSModule)
 
 MODULE_DECLARE(PSModule, "native", "Capture video from PS3 camera using Code Laborotories PS3 Eye SDK")
 

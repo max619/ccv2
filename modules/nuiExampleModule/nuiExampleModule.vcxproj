@@ -45,13 +45,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)</IntDir>
+    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\modules\</OutDir>
     <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)</IntDir>
+    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\modules\</OutDir>
     <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>

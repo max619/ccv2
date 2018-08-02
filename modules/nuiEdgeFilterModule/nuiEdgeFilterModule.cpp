@@ -1,41 +1,6 @@
 #include "nuiEdgeFilterModule.h"
 
-nuiEdgeFilterModuleDataPacket::~nuiEdgeFilterModuleDataPacket()
-{
-	cvReleaseImage(&data);
-};
-
-nuiDataPacketError::err nuiEdgeFilterModuleDataPacket::packData(const void *_data)
-{
-	this->setLocalCopy(false);
-	this->data = (IplImage*)_data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacketError::err nuiEdgeFilterModuleDataPacket::unpackData(void* &_data)
-{
-	_data = (void*)this->data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacket* nuiEdgeFilterModuleDataPacket::copyPacketData(nuiDataPacketError::err &errorCode)
-{
-	nuiEdgeFilterModuleDataPacket* newDataPacket = new nuiEdgeFilterModuleDataPacket();
-
-	//! TODO : Test if this implies deep copy
-	IplImage* newData = cvCloneImage(this->data);
-
-	newDataPacket->packData(newData);
-	newDataPacket->setLocalCopy(true);
-
-	errorCode = nuiDataPacketError::NoError;
-	return newDataPacket;
-};
-
-char* nuiEdgeFilterModuleDataPacket::getDataPacketType()
-{
-	return "IplImage";
-};
+NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(EdgeFilterModule)
 
 MODULE_DECLARE(EdgeFilterModule, "native", "Filter edges");
 

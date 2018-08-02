@@ -28,6 +28,9 @@
             "path": "modules\\nuiRealSenseModule.dll"
         },
         {
+            "path": "modules\\nuiBlobTrackerModule.dll"
+        },
+        {
             "path": "modules\\nuiExampleModule.dll"
         }
     ],
@@ -46,14 +49,14 @@
                         "path": "D:\\LLDevelopment\\Work\\ccv2\\data\\out.avi",
                         "oscillator_wait": 1,
                         "synced_input": "true",
-                        "x0": 107,
-                        "y0": 199,
-                        "x1": 660,
-                        "y1": 72,
-                        "x2": 136,
-                        "y2": 433,
-                        "min": 2,
-                        "max": 15,
+                        "x0": 64,
+                        "y0": 95,
+                        "x1": 537,
+                        "y1": 92,
+                        "x2": 518,
+                        "y2": 434,
+                        "min": 7,
+                        "max": 70,
                         "screenWidth": 848,
                         "screenHeight": 480,
                         "sx0": 215,
@@ -65,32 +68,30 @@
                         "sx3": 69,
                         "sy3": 671,
                         "shouldWarp": "false",
-                        "frameWidth": 848,
+                        "frameWidth": 640,
                         "frameHeight": 480,
                         "fps": 60
                     }
                 },
                 {
                     "id": 1,
-                    "type": "nuiBackgroundSubtractModule",
+                    "type": "nuiBlobTrackerModule",
                     "properties": {
                         "use_thread": "true",
                         "oscillator_mode": "false",
-                        "history": 1500,
-                        "detectshadows": "false",
-                        "threshold": 15,
-                        "synced_input": "true"
+                        "synced_input": "false",
+                        "maxDistance": 15,
+                        "filterByArea":1,
+                        "minArea":100,
+                        "maxArea":1500
                     }
-                },
+                },                
                 {
                     "id": 2,
-                    "type": "nuiGaussianBlurFilter",
+                    "type": "nuiDebugVideoSink",
                     "properties": {
                         "use_thread": "true",
-                        "oscillator_mode": "false",
-                        "amount": 9,
-                        "disablegauss": "true",
-                        "synced_input": "true"
+                        "oscillator_mode": "false"
                     }
                 },
                 {
@@ -126,14 +127,44 @@
                         "port": 0
                     },
                     "destination": {
-                        "id": 3,
+                        "id": 2,
                         "port": 0
                     },
                     "properties": {
                         "async": 1,
                         "deepcopy": 1,
                         "lastpacket": 0
-                    }
+                    }                    
+                },
+                {
+                    "source": {
+                        "id": 0,
+                        "port": 0
+                    },
+                    "destination": {
+                        "id": 1,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 1,
+                        "lastpacket": 0
+                    }                    
+                },
+                {
+                    "source": {
+                        "id": 1,
+                        "port": 0
+                    },
+                    "destination": {
+                        "id": 3,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 0,
+                        "lastpacket": 0
+                    }                    
                 }
             ]
         }

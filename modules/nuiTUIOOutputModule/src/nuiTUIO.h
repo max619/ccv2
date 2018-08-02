@@ -11,10 +11,11 @@
 #include "nuiModule.h"
 #include "nuiPlugin.h"
 #include "nuiDataPacket.h"
-#include "nuiEndpoint.h"
 #include "nuiDataStream.h"
+#include "nuiEndpoint.h"
+#include "nuiDebugLogger.h"
 
-NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(TUIOOutput, void*)
+NUI_DATAPACKET_DEFAULT_DECLARATION(TUIOOutput, void*)
 
 class nuiTUIOOutputModule : public nuiModule
 {
@@ -28,7 +29,7 @@ public:
 
 protected:
 private:
-	nuiEndpoint*	_pInput;
+	nuiEndpoint * _pInput;
 
 	// TUIO broadcast params
 	char*			host;
@@ -40,22 +41,19 @@ private:
 	MODULE_INTERNALS();
 };
 
-	IMPLEMENT_ALLOCATOR(nuiTUIOOutputModule)
-	IMPLEMENT_DEALLOCATOR(nuiTUIOOutputModule)
+IMPLEMENT_ALLOCATOR(nuiTUIOOutputModule)
+IMPLEMENT_DEALLOCATOR(nuiTUIOOutputModule)
 
-START_IMPLEMENT_DESCRIPTOR(nuiTUIOOutputModule,"native","Output TUIO")
+START_IMPLEMENT_DESCRIPTOR(nuiTUIOOutputModule, "native", "Output TUIO")
 
-	descriptor->setInputEndpointsCount(1);
-	nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor("std::map<int, Blob>");
-	descriptor->addInputEndpointDescriptor(inputDescriptor, 0);
+descriptor->setInputEndpointsCount(1);
+nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor("std::map<int, Blob>");
+descriptor->addInputEndpointDescriptor(inputDescriptor, 0);
 
 END_IMPLEMENT_DESCRIPTOR(nuiTUIOOutputModule)
 
-	START_MODULE_EXIT()
-	END_MODULE_EXIT()
-
-START_MODULE_REGISTRATION()
-	REGISTER_PLUGIN(nuiTUIOOutputModule,"nuiTUIOOutputModule", 1, 0)
-END_MODULE_REGISTRATION()
+START_EXPORT_MODULES(TUIOOutputModule)
+REGISTER_MODULE(nuiTUIOOutputModule, "nuiGaussianBlurFilter", 1, 0)
+END_EXPORT_MODULES()
 
 #endif

@@ -39,24 +39,22 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\OpenCV.props" />
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\nuiModule.props" />
+    <Import Project="..\..\libs\nuiTracking\nuiTracking.props" />
+    <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\OpenCV.props" />
     <Import Project="..\..\libs\3rdParty\_props\ptypes.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)</IntDir>
+    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\modules\</OutDir>
     <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)</IntDir>
+    <IntDir>$(SolutionDir)..\..\obj\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\modules\</OutDir>
     <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)..\..\libs\nuiModule\inc;$(SolutionDir)..\..\libs\nuiSystem\inc;$(SolutionDir)..\..\libs\3rdParty\ptypes-2.1.1\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>

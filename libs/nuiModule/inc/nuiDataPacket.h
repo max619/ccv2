@@ -27,16 +27,21 @@ struct nuiDataPacketError
 class nui##moduleName##DataPacket : public nuiDataPacket \
 { \
 public: \
-  ~nui##moduleName##DataPacket(); \
-  nuiDataPacketError::err packData(const void *data); \
-  nuiDataPacketError::err unpackData(void* &data); \
-  nuiDataPacket* copyPacketData(nuiDataPacketError::err &errorCode); \
-  char* getDataPacketType(); \
+	nui##moduleName##DataPacket(); \
+	~nui##moduleName##DataPacket(); \
+	nuiDataPacketError::err packData(const void *data); \
+	nuiDataPacketError::err unpackData(void* &data); \
+	nuiDataPacket* copyPacketData(nuiDataPacketError::err &errorCode); \
+	char* getDataPacketType(); \
 private: \
-  datatype## data; \
+	datatype## data; \
 }; \
 
 #define NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(moduleName) \
+nui##moduleName##DataPacket::nui##moduleName##DataPacket() : nuiDataPacket()\
+{\
+	data = NULL;\
+}\
 nui##moduleName##DataPacket::~nui##moduleName##DataPacket()\
 {\
 	cvReleaseImage(&data);\
@@ -77,6 +82,7 @@ char* nui##moduleName##DataPacket::getDataPacketType()\
 class nuiDataPacket
 {
 public:
+	nuiDataPacket() {localCopy = false;};
 	virtual ~nuiDataPacket() { };
 	virtual nuiDataPacketError::err packData(const void *data) = 0;
 	virtual nuiDataPacketError::err unpackData(void* &data) = 0;
@@ -88,7 +94,7 @@ public:
 	virtual bool isLocalCopy() { return localCopy; };
 
 	virtual void setLocalCopy(bool value) { localCopy = value; };
-private:
+protected:
 	bool localCopy;
 };
 

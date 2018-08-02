@@ -7,10 +7,11 @@ nuiDebugVideoSink::nuiDebugVideoSink() : nuiModule() {
 	MODULE_INIT();
 
 	this->input = new nuiEndpoint(this);
-	this->input->setTypeDescriptor(std::string("IplImage"));
+	this->input->setTypeDescriptor(std::string("*"));
 	this->setInputEndpointCount(1);
 	this->setInputEndpoint(0, this->input);
 	dispFrame = NULL;
+	cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX | CV_FONT_ITALIC, hScale, vScale, 0, lineWidth);
 }
 
 nuiDebugVideoSink::~nuiDebugVideoSink()
@@ -20,38 +21,77 @@ nuiDebugVideoSink::~nuiDebugVideoSink()
 
 void nuiDebugVideoSink::update()
 {
-	this->input->lock();
-	void* data = NULL;
-	nuiDataPacket* packet = this->input->getData();
-	if (packet == NULL)
-		return; 
 #ifdef ALLOW_BENCHMARKING	
 	benchmark.startBencmarking();
 #endif
+	this->input->lock();
+	void* data = NULL;
+	nuiDataPacket* packet = this->input->getData(); 
+	if (packet == NULL)
+	{
+		this->input->unlock();
+		return;
+	}
 	packet->unpackData(data);
-	IplImage* frame = (IplImage*)data;
-	if (dispFrame == NULL)
-		dispFrame = cvCloneImage(frame);
-	else
-		cvCopy(frame, dispFrame);
-	CvFont font;
-	double hScale = 0.5;
-	double vScale = 0.5;
-	int lineWidth = 1;
-	cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX | CV_FONT_ITALIC, hScale, vScale, 0, lineWidth);
-	std::ostringstream oss;
-	oss << "~ " << this->timer->getAverageFPS() << " FPS";
-	cvRectangle(dispFrame, cvPoint(0, 0), cvPoint(150, 20), cvScalar(0, 0, 0), CV_FILLED, CV_AA);
-	cvRectangle(dispFrame, cvPoint(0, 0), cvPoint(150, 20), cvScalar(255, 255, 255), 2, CV_AA);
-	cvPutText(dispFrame, oss.str().c_str(), cvPoint(5, 15), &font, cvScalar(255, 255, 255));
-	cvShowImage((this->property("id")).asString().c_str(), dispFrame);
-	cvWaitKey(1);
+	if (data == NULL)
+	{
+		this->input->unlock();
+		return;
+	}
+	
+	if (strcmp( packet->getDataPacketType(), "IplImage") == 0)
+	{
+		IplImage* frame = (IplImage*)data;
+		if (dispFrame == NULL)
+			dispFrame = cvCloneImage(frame);
+		else
+			cvCopy(frame, dispFrame);
+		
+		
+
+	}
+	else if(strcmp(packet->getDataPacketType(), "BlobVector") == 0)
+	{
+		BlobVector* blobs = (BlobVector*)data;
+
+		if (dispFrame == NULL)
+			dispFrame = cvCreateImage(blobs->targetResolution, IPL_DEPTH_8U, 1);
+
+		ZeroMemory(dispFrame->imageDataOrigin, dispFrame->height*dispFrame->width * sizeof(unsigned char));
+
+
+		for (size_t i =0; i<blobs->size; i++)
+		{
+			Blob& blob = blobs->blobs[i];
+			char str[11];
+			char area[50];
+			int number = blob.id;
+			sprintf(str, "%d", number);
+			sprintf(area, "R: %f", blob.keyPoint.response);
+			CvSize size = CvSize((int)blob.keyPoint.size, (int)blob.keyPoint.size);
+			cvEllipse(dispFrame, cvPoint(blob.keyPoint.pt.x, blob.keyPoint.pt.y), size, 0, 0, 360, cvScalar(255), CV_FILLED, CV_AA);
+			cvPutText(dispFrame, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y - 15), &font, cvScalar(128));
+			cvPutText(dispFrame, area, cvPoint(blob.keyPoint.pt.x, blob.keyPoint.pt.y), &font, cvScalar(128));
+		}
+		releaseBlobVector(blobs);
+	}
+	if (dispFrame != NULL)
+	{
+		std::ostringstream oss;
+		oss << "~ " << this->timer->getAverageFPS() << " FPS";
+		cvRectangle(dispFrame, cvPoint(0, 0), cvPoint(150, 20), cvScalar(0), CV_FILLED, CV_AA);
+		cvRectangle(dispFrame, cvPoint(0, 0), cvPoint(150, 20), cvScalar(255), 2, CV_AA);
+		cvPutText(dispFrame, oss.str().c_str(), cvPoint(5, 15), &font, cvScalar(255));
+		cvShowImage((this->property("id")).asString().c_str(), dispFrame);
+		cvWaitKey(1);
+	}
+
+	if(packet->isLocalCopy())
+		delete packet;
+	this->input->unlock();
 #ifdef ALLOW_BENCHMARKING	
 	benchmark.stopBenchmarking("nuiDebugVideoSink::update frame rendering");
 #endif
-	delete packet;
-	this->input->unlock();
-
 
 }
 

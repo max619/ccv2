@@ -60,7 +60,7 @@ bool nuiDataStream::isBuffered()
 
 bool nuiDataStream::isOverflow()
 {
-	return isBuffered() ? (streamMetadata & nuiDatastreamMode::Overflow) : false;
+	return isBuffered() ? (packetData.size()>bufferSize) : false;
 }
 
 int nuiDataStream::getBufferSize()
@@ -139,6 +139,7 @@ void nuiDataStream::setLastPacketPriority(bool lastPacketPriority)
 void nuiDataStream::startStream()
 {
 	running = true;
+	initStream();
 	if (isAsyncMode())
 	{
 		if (asyncThread == NULL) // if selected async mode then create new process

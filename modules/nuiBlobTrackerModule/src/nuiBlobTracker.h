@@ -11,16 +11,16 @@
 #include "nuiModule.h"
 #include "nuiPlugin.h"
 #include "nuiDataPacket.h"
-#include "nuiEndpoint.h"
 #include "nuiDataStream.h"
-
-#include "ofxCvColorImage.h"
-#include "ofxCvGrayscaleImage.h"
-#include "ofxCvFloatImage.h"
-#include "Tracking/ContourFinder.h"
-#include "Tracking/Tracking.h"
-
-NUI_DATAPACKET_DEFAULT_IMPLEMENTATION(BlobTracker, void*)
+#include "nuiEndpoint.h"
+#include "nuiDebugLogger.h"
+#include "blobDetector.h"
+#include "blobTracker.h"
+#include <nuiTrackerStructs.h>
+#ifdef ALLOW_BENCHMARKING	
+#include "nuiBenchmark.h"
+#endif
+NUI_DATAPACKET_DEFAULT_DECLARATION(BlobTracker, void*)
 
 class nuiBlobTrackerModule : public nuiModule
 {
@@ -34,35 +34,37 @@ public:
 
 protected:
 private:
-	BlobTracker		blobTracker;
-	
+	blobTracker*	bTracker;
+	blobDetector*	bDetector;
+
 	nuiDataPacket*	_pOutputDataPacket;
 	nuiEndpoint*	_pInput;
-	nuiEndpoint*	_pOutput;
+	nuiEndpoint*	_pOutput; 
+#ifdef ALLOW_BENCHMARKING
+	nuiBenchmark benchmark;
+#endif
 
 	MODULE_INTERNALS();
 };
 
-	IMPLEMENT_ALLOCATOR(nuiBlobTrackerModule)
-	IMPLEMENT_DEALLOCATOR(nuiBlobTrackerModule)
+IMPLEMENT_ALLOCATOR(nuiBlobTrackerModule)
+IMPLEMENT_DEALLOCATOR(nuiBlobTrackerModule)
 
-START_IMPLEMENT_DESCRIPTOR(nuiBlobTrackerModule,"native","Track found contours/blobs")
+START_IMPLEMENT_DESCRIPTOR(nuiBlobTrackerModule, "native", "Track found contours/blobs")
 
-	descriptor->setInputEndpointsCount(1);
-	nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor("ContourFinder");
-	descriptor->addInputEndpointDescriptor(inputDescriptor, 0);
+descriptor->setInputEndpointsCount(1);
+nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor("IplImage");
+descriptor->addInputEndpointDescriptor(inputDescriptor, 0);
 
-	descriptor->setOutputEndpointsCount(1);
-	nuiEndpointDescriptor* outputDescriptor = new nuiEndpointDescriptor("std::map<int, Blob>");
-	descriptor->addInputEndpointDescriptor(outputDescriptor, 0);
+descriptor->setOutputEndpointsCount(1);
+nuiEndpointDescriptor* outputDescriptor = new nuiEndpointDescriptor("BlobVector");
+descriptor->addInputEndpointDescriptor(outputDescriptor, 0);
 
 END_IMPLEMENT_DESCRIPTOR(nuiBlobTrackerModule)
 
-	START_MODULE_EXIT()
-	END_MODULE_EXIT()
 
-START_MODULE_REGISTRATION()
-	REGISTER_PLUGIN(nuiBlobTrackerModule,"nuiBlobTrackerModule", 1, 0)
-END_MODULE_REGISTRATION()
+START_EXPORT_MODULES(BlobTrackerModule)
+REGISTER_MODULE(nuiBlobTrackerModule, "nuiBlobTrackerModule", 1, 0)
+END_EXPORT_MODULES()
 
 #endif

@@ -1,41 +1,8 @@
 #include "nuiVideoFileSource.h"
 
-nuiVideoFileSourceDataPacket::~nuiVideoFileSourceDataPacket()
-{
-	if (this->isLocalCopy()) cvReleaseImage(&data);
-};
 
-nuiDataPacketError::err nuiVideoFileSourceDataPacket::packData(const void *_data)
-{
-	this->setLocalCopy(false);
-	this->data = (IplImage*)_data;
-	return nuiDataPacketError::NoError;
-};
 
-nuiDataPacketError::err nuiVideoFileSourceDataPacket::unpackData(void* &_data)
-{
-	_data = (void*)this->data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacket* nuiVideoFileSourceDataPacket::copyPacketData(nuiDataPacketError::err &errorCode)
-{
-	nuiVideoFileSourceDataPacket* newDataPacket = new nuiVideoFileSourceDataPacket();
-
-	//! TODO : Test if this implies deep copy
-	IplImage* newData = cvCloneImage((this->data));
-
-	newDataPacket->packData(newData);
-	newDataPacket->setLocalCopy(true);
-
-	errorCode = nuiDataPacketError::NoError;
-	return newDataPacket;
-};
-
-char* nuiVideoFileSourceDataPacket::getDataPacketType()
-{
-	return "IplImage";
-};
+NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(VideoFileSource)
 
 MODULE_DECLARE(VideoFileSource, "native", "Get video from a file source")
 

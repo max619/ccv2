@@ -1,41 +1,6 @@
 #include "nuiHighpassFilter.h"
 
-nuiHighpassFilterDataPacket::~nuiHighpassFilterDataPacket()
-{
-	cvReleaseImage(&data);
-};
-
-nuiDataPacketError::err nuiHighpassFilterDataPacket::packData(const void *_data)
-{
-	this->setLocalCopy(false);
-	this->data = (IplImage*)_data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacketError::err nuiHighpassFilterDataPacket::unpackData(void* &_data)
-{
-	_data = (void*)this->data;
-	return nuiDataPacketError::NoError;
-};
-
-nuiDataPacket* nuiHighpassFilterDataPacket::copyPacketData(nuiDataPacketError::err &errorCode)
-{
-	nuiHighpassFilterDataPacket* newDataPacket = new nuiHighpassFilterDataPacket();
-
-	//! TODO : Test if this implies deep copy
-	IplImage* newData = cvCloneImage(this->data);
-
-	newDataPacket->packData(newData);
-	newDataPacket->setLocalCopy(true);
-
-	errorCode = nuiDataPacketError::NoError;
-	return newDataPacket;
-};
-
-char* nuiHighpassFilterDataPacket::getDataPacketType()
-{
-	return "IplImage";
-};
+NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_IPLIMAGE(HighpassFilter)
 
 MODULE_DECLARE(HighpassFilter, "native", "Filter gaussian");
 

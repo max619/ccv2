@@ -58,9 +58,9 @@ bool ocvRealsenseWrapper::open(int index)
 
 		if (factory.isOpenClSupported())
 		{
-			factory.initProgram(threshold);
+			/*factory.initProgram(threshold);
 			factory.initProgram(depthToWorld);
-			factory.initProgram(rotation);
+			factory.initProgram(rotation);*/
 			factory.initProgram(processor);
 		}
 

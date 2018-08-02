@@ -25,6 +25,11 @@ nuiEndpoint::~nuiEndpoint()
 void nuiEndpoint::writeData(nuiDataPacket* dataPacket)
 {
 	mtx->lock();
+	if (this->dataPacket != NULL && this->dataPacket->isLocalCopy())
+	{
+		delete this->dataPacket;
+		this->dataPacket = NULL;
+	}
 	this->dataPacket = dataPacket;
 	if (moduleHoster != NULL)
 		moduleHoster->notifyDataReceived(this);
@@ -123,7 +128,11 @@ void nuiEndpoint::setData(nuiDataPacket *dataPacket)
 
 nuiDataPacket *nuiEndpoint::getData()
 {
-	return dataPacket;
+	mtx->lock();
+	nuiDataPacket* data = dataPacket;
+	dataPacket = NULL;
+	mtx->unlock();
+	return data;
 }
 
 std::string nuiEndpoint::getTypeDescriptor()
@@ -163,6 +172,9 @@ void nuiEndpoint::unlock()
 
 void nuiEndpoint::clear()
 {
+	nuiDataPacket* packet = getData();
+	if (packet != NULL && packet->isLocalCopy())
+		delete packet;
 	setData(NULL);
 }
 
