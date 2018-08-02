@@ -18,6 +18,7 @@ class nuiOpenClFactory
 {
 public:
 	static nuiOpenClFactory& getInstance();
+	std::string platformName;
 
 	nuiOpenClFactory();
 	~nuiOpenClFactory();

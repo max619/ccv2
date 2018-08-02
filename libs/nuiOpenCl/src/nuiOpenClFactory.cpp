@@ -8,6 +8,7 @@ nuiOpenClFactory & nuiOpenClFactory::getInstance()
 
 nuiOpenClFactory::nuiOpenClFactory()
 {
+	platformName = "Intel";
 }
 
 nuiOpenClFactory::~nuiOpenClFactory()
@@ -270,7 +271,7 @@ int nuiOpenClFactory::SetupOpenCL(ocl_container *ocl, cl_device_type deviceType)
 
 	// Query for all available OpenCL platforms on the system
 	// Here you enumerate all platforms and pick one which name has preferredPlatform as a sub-string
-	cl_platform_id platformId = FindOpenCLPlatform("Intel", deviceType);
+	cl_platform_id platformId = FindOpenCLPlatform(platformName.c_str(), deviceType);
 	if (NULL == platformId)
 	{
 		LogError("Error: Failed to find OpenCL platform.\n");

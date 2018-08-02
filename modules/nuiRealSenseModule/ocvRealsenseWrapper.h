@@ -44,9 +44,12 @@ public:
 	IplImage * queryWorldCoordinates();
 	CvPoint2D32f* screenpoints;
 	CvSize2D32f destsize; 
+
 	Eigen::Vector2f thresh; 
 	Eigen::Vector3f n, p0;
 	CvPoint pos[3];
+	CvSize frameSize;
+	int fps;
 	bool shouldWarp;
 
 private:

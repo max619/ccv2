@@ -83,7 +83,6 @@ rs2::pipeline rs2DeviceContainer::getPipeline(rs2::device & device)
 
 	rs2::pipeline p;
 	rs2::config c;
-	c.enable_stream(rs2_stream::RS2_STREAM_DEPTH, 0, 848, 480, RS2_FORMAT_Z16, 60);
 	c.enable_device(serial_number);
 	rs2::pipeline_profile profile = p.start(c);
 	profiles.emplace(std::pair<rs2::device&, rs2::pipeline_profile>(device, profile));
@@ -93,10 +92,31 @@ rs2::pipeline rs2DeviceContainer::getPipeline(rs2::device & device)
 	return p;
 }
 
-rs2::pipeline rs2DeviceContainer::getPipeline(int index)
+rs2::pipeline rs2DeviceContainer::getPipeline(rs2::device & device, int width, int height, int fps)
+{
+	std::string serial_number(device.get_info(RS2_CAMERA_INFO_SERIAL_NUMBER));
+	_mutex.lock();
+	/*if (devices.find(serial_number) != devices.end())
+	{
+	throw _exception();
+	}*/
+
+	rs2::pipeline p;
+	rs2::config c;
+	c.enable_stream(rs2_stream::RS2_STREAM_DEPTH, 0, width, height, RS2_FORMAT_Z16, fps);
+	c.enable_device(serial_number);
+	rs2::pipeline_profile profile = p.start(c);
+	profiles.emplace(std::pair<rs2::device&, rs2::pipeline_profile>(device, profile));
+
+	_mutex.unlock();
+
+	return p;
+}
+
+rs2::pipeline rs2DeviceContainer::getPipeline(int index, int width, int height, int fps)
 {
 	rs2::device dev = getDeviceAt(index);
-	return getPipeline(dev);
+	return getPipeline(dev, width, height, fps);
 }
 
 rs2::pipeline_profile rs2DeviceContainer::getPipelineProfile(rs2::device& device)

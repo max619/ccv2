@@ -71,4 +71,11 @@ void nuiRealSenseModule::initAnchorPoints()
 	realsenseW.screenpoints[3] = CvPoint2D32f(this->hasProperty("sx3") ? this->property("sx3").asDouble() : 0., this->hasProperty("sy3") ? this->property("sy3").asDouble() : 0.);
 
 	realsenseW.shouldWarp = this->hasProperty("shouldWarp") ? this->property("shouldWarp").asBool() : false;
+
+	realsenseW.fps = this->hasProperty("fps") ? this->property("fps").asInteger() : 30;
+	realsenseW.frameSize.width = this->hasProperty("frameWidth") ? this->property("frameWidth").asInteger() : 1280;
+	realsenseW.frameSize.height = this->hasProperty("frameHeight") ? this->property("frameHeight").asInteger() : 720;
+
+	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
+	factory.platformName = this->hasProperty("platformName") ? this->property("platformName").asString() : "Intel";
 }

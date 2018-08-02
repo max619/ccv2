@@ -51,7 +51,7 @@ bool ocvRealsenseWrapper::open(int index)
 	{
 		rs2::context ctx;
 		container.initDevices(ctx);
-		pipe = container.getPipeline(index);
+		pipe = container.getPipeline(index, frameSize.width, frameSize.height, fps);
 		opened = true;
 
 		nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();

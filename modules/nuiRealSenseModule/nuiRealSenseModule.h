@@ -19,6 +19,7 @@
 #include "ocvRealsenseWrapper.h"
 #include "static.h"
 #include <Windows.h>
+#include <nuiOpenCl.h>
 
 #ifdef ALLOW_BENCHMARKING	
 #include "nuiBenchmark.h"

@@ -22,6 +22,8 @@ public:
 	rs2::device getDeviceAt(int index);
 	size_t getDevicesCount();
 	rs2::pipeline getPipeline(rs2::device& device);
+	rs2::pipeline getPipeline(rs2::device & device, int width, int height, int fps);
+	rs2::pipeline getPipeline(int index, int width, int height, int fps);
 	rs2::pipeline getPipeline(int index);
 	rs2::pipeline_profile getPipelineProfile(rs2::device& pipeline);
 
