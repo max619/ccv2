@@ -83,6 +83,7 @@ rs2::pipeline rs2DeviceContainer::getPipeline(rs2::device & device)
 
 	rs2::pipeline p;
 	rs2::config c;
+	c.enable_stream(rs2_stream::RS2_STREAM_DEPTH, 0, 848, 480, RS2_FORMAT_Z16, 60);
 	c.enable_device(serial_number);
 	rs2::pipeline_profile profile = p.start(c);
 	profiles.emplace(std::pair<rs2::device&, rs2::pipeline_profile>(device, profile));

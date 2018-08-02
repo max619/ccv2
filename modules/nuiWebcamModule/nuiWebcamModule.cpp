@@ -54,8 +54,11 @@ void nuiWebcamModule::start() {
 
 void nuiWebcamModule::initCapture()
 {
-	/*DeviceEnumerator enumer = DeviceEnumerator();
-	auto map = enumer.getVideoDevicesMap();*/
+	DeviceEnumerator enumer = DeviceEnumerator();
+	auto map = enumer.getVideoDevicesMap();
 	int camid = this->hasProperty("camid") ? this->property("camid").asInteger() : 0;
-	capture->open(camid);
+	if (capture->open(camid))
+	{
+		LOG(NUI_DEBUG, "Capture opened succsesfully");
+	}
 }

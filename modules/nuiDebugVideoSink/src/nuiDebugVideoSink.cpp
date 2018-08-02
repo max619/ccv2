@@ -21,7 +21,7 @@ nuiDebugVideoSink::~nuiDebugVideoSink()
 void nuiDebugVideoSink::update()
 {
 	this->input->lock();
-	void* data;
+	void* data = NULL;
 	nuiDataPacket* packet = this->input->getData();
 	if (packet == NULL)
 		return; 

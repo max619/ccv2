@@ -68,7 +68,7 @@ bool ocvRealsenseWrapper::open(int index)
 		Eigen::Vector3f b(1., 0.5, 3.);
 		rs2_error* error;
 		rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
-
+		
 		intrisnic = pipe.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
 		depth_scale = depth_sensor.get_depth_scale();
 
@@ -259,5 +259,7 @@ IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 	}
 	if(shouldWarp)
 		cvWarpPerspective(procres, procres, perspectiveTransformMatrix);
+
+	
 	return procres;
 }
