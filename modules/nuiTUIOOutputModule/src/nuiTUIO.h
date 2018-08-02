@@ -36,7 +36,6 @@ private:
 	int				flashport;
 
 	// TUIO class for broadcasting
-	TUIO			tuioOutput;
 
 	MODULE_INTERNALS();
 };

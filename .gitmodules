@@ -1,0 +1,3 @@
+[submodule "libs/3rdParty/tuio"]
+	path = libs/3rdParty/tuio
+	url = https://github.com/max619/TUIO20_CPP.git
