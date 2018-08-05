@@ -1,0 +1,176 @@
+{
+    "module_library": [
+        {
+            "path": "modules\\nuiDebugVideoSink.dll"
+        },
+        {
+            "path": "modules\\nuiRealSenseModule.dll"
+        },
+        {
+            "path": "modules\\nuiBlobTrackerModule.dll"
+        },
+        {
+            "path": "modules\\nuiTUIOOutputModule.dll"
+        }
+    ],
+    "pipelines": [
+        {
+            "type": "root",
+            "author": "NUI Group Authors",
+            "description": "Default Server Configuations",
+            "modules": [
+                {
+                    "id": 0,
+                    "type": "nuiRealSenseModule",
+                    "properties": {
+                        "use_thread": "false",
+                        "oscillator_mode": "true",
+                        "path": "D:\\LLDevelopment\\Work\\ccv2\\data\\out.avi",
+                        "oscillator_wait": 1,
+                        "synced_input": "true",
+                        "x0": 64,
+                        "y0": 95,
+                        "x1": 537,
+                        "y1": 92,
+                        "x2": 518,
+                        "y2": 434,
+                        "min": 7,
+                        "max": 50,
+                        "screenWidth": 848,
+                        "screenHeight": 480,
+                        "sx0": 215,
+                        "sy0": 257,
+                        "sx1": 1029,
+                        "sy1": 129,
+                        "sx2": 1270,
+                        "sy2": 423,
+                        "sx3": 69,
+                        "sy3": 671,
+                        "shouldWarp": "false",
+                        "frameWidth": 640,
+                        "frameHeight": 480,
+                        "fps": 60
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "nuiBlobTrackerModule",
+                    "properties": {
+                        "use_thread": "true",
+                        "oscillator_mode": "false",
+                        "synced_input": "false",
+                        "maxDistance": 50,
+                        "filterByArea":1,
+                        "minArea":1500,
+                        "maxArea":15000
+                    }
+                },                
+                {
+                    "id": 2,
+                    "type": "nuiDebugVideoSink",
+                    "properties": {
+                        "use_thread": "true",
+                        "oscillator_mode": "false"
+                    }
+                },
+                {
+                    "id": 3,
+                    "type": "nuiDebugVideoSink",
+                    "properties": {
+                        "use_thread": "true",
+                        "oscillator_mode": "false"
+                    }
+                },
+                {
+                    "id": 4,
+                    "type": "nuiTUIOOutputModule",
+                    "properties": {
+                        "use_thread": "true",
+                        "oscillator_mode": "false",
+                        "host": "127.0.0.1",
+                        "port": 3333
+                    }
+                }
+            ],
+            "properties": {
+                "global": "property"
+            },
+            "endpoints": {
+                "input": [
+                    {
+                        "id": 0,
+                        "type": "input"
+                    }
+                ],
+                "output": [
+                    {
+                        "id": 0,
+                        "type": "output"
+                    }
+                ]
+            },
+            "connections": [
+                {
+                    "source": {
+                        "id": 0,
+                        "port": 0
+                    },
+                    "destination": {
+                        "id": 2,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 1,
+                        "lastpacket": 0
+                    }                    
+                },
+                {
+                    "source": {
+                        "id": 0,
+                        "port": 0
+                    },
+                    "destination": {
+                        "id": 1,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 1,
+                        "lastpacket": 0
+                    }                    
+                },
+                {
+                    "source": {
+                        "id": 1,
+                        "port": 0
+                    },
+                    "destination": {
+                        "id": 3,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 1,
+                        "lastpacket": 0
+                    }                    
+                },
+                {
+                    "source": {
+                        "id": 1,
+                        "port": 0
+                    },
+                    "destination": {
+                        "id": 4,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 1,
+                        "lastpacket": 0
+                    }                    
+                }
+            ]
+        }
+    ]
+}

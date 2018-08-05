@@ -14,8 +14,13 @@
 #include "nuiDataStream.h"
 #include "nuiEndpoint.h"
 #include "nuiDebugLogger.h"
+#include <nuiTrackerStructs.h>
+#include <TuioServer.h>
+#include <FlashSender.h>
+#include "BlobTuioPointer.h"
 
-NUI_DATAPACKET_DEFAULT_DECLARATION(TUIOOutput, void*)
+#define BLOB_POINTER_PAIR std::pair<long, TUIO2::TuioPointer*>
+#define BLOB_POINTER_MAP std::map<long, TUIO2::TuioPointer*>
 
 class nuiTUIOOutputModule : public nuiModule
 {
@@ -34,9 +39,16 @@ private:
 	// TUIO broadcast params
 	char*			host;
 	int				port;
-	int				flashport;
+	const char*			flashhost;
+	const char*			flashmeth;
+	TUIO2::TuioTime		frameTime;
 
 	// TUIO class for broadcasting
+	TUIO2::TuioServer* server;
+	//std::list<BlobTuioPointer*> trackedPointers;
+	BLOB_POINTER_MAP trackedPointers;
+	void ProcessBlobVector(BlobVector* vector);
+	void trackEvents(BlobVector* vector);
 
 	MODULE_INTERNALS();
 };
@@ -47,7 +59,7 @@ IMPLEMENT_DEALLOCATOR(nuiTUIOOutputModule)
 START_IMPLEMENT_DESCRIPTOR(nuiTUIOOutputModule, "native", "Output TUIO")
 
 descriptor->setInputEndpointsCount(1);
-nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor("std::map<int, Blob>");
+nuiEndpointDescriptor* inputDescriptor = new nuiEndpointDescriptor(NUI_DATAPACKET_THROUGH_BLOBVECTOR_PACKET_DATA_TYPE);
 descriptor->addInputEndpointDescriptor(inputDescriptor, 0);
 
 END_IMPLEMENT_DESCRIPTOR(nuiTUIOOutputModule)

@@ -1,28 +1,7 @@
 {
     "module_library": [
         {
-            "path": "modules\\nuiBackgroundSubtractModule.dll"
-        },
-        {
             "path": "modules\\nuiDebugVideoSink.dll"
-        },
-        {
-            "path": "modules\\nuiEdgeFilterModule.dll"
-        },
-        {
-            "path": "modules\\nuiGaussianBlurFilter.dll"
-        },
-        {
-            "path": "modules\\nuiHighpassFilter.dll"
-        },
-        {
-            "path": "modules\\nuiPS3Module.dll"
-        },
-        {
-            "path": "modules\\nuiVideoFileSource.dll"
-        },
-        {
-            "path": "modules\\nuiWebcamModule.dll"
         },
         {
             "path": "modules\\nuiRealSenseModule.dll"
@@ -31,7 +10,7 @@
             "path": "modules\\nuiBlobTrackerModule.dll"
         },
         {
-            "path": "modules\\nuiExampleModule.dll"
+            "path": "modules\\nuiTUIOOutputModule.dll"
         }
     ],
     "pipelines": [
@@ -56,7 +35,7 @@
                         "x2": 518,
                         "y2": 434,
                         "min": 7,
-                        "max": 70,
+                        "max": 50,
                         "screenWidth": 848,
                         "screenHeight": 480,
                         "sx0": 215,
@@ -80,10 +59,10 @@
                         "use_thread": "true",
                         "oscillator_mode": "false",
                         "synced_input": "false",
-                        "maxDistance": 15,
+                        "maxDistance": 50,
                         "filterByArea":1,
-                        "minArea":100,
-                        "maxArea":1500
+                        "minArea":1500,
+                        "maxArea":15000
                     }
                 },                
                 {
@@ -100,6 +79,16 @@
                     "properties": {
                         "use_thread": "true",
                         "oscillator_mode": "false"
+                    }
+                },
+                {
+                    "id": 4,
+                    "type": "nuiTUIOOutputModule",
+                    "properties": {
+                        "use_thread": "true",
+                        "oscillator_mode": "false",
+                        "host": "127.0.0.1",
+                        "port": 3333
                     }
                 }
             ],
@@ -162,7 +151,22 @@
                     },
                     "properties": {
                         "async": 1,
-                        "deepcopy": 0,
+                        "deepcopy": 1,
+                        "lastpacket": 0
+                    }                    
+                },
+                {
+                    "source": {
+                        "id": 1,
+                        "port": 0
+                    },
+                    "destination": {
+                        "id": 4,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 1,
                         "lastpacket": 0
                     }                    
                 }

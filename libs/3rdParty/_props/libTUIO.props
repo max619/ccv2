@@ -7,12 +7,14 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\3rdParty\tuio\TUIO2\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\3rdParty\tuio\TUIO2\;$(SolutionDir)..\..\libs\3rdParty\tuio\oscpack\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\</AdditionalLibraryDirectories>
-
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\3rdParty\tuio\build\$(PlatformName)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libTUIO2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(SolutionDir)..\..\libs\3rdParty\tuio\build\$(PlatformName)\$(Configuration)\libTUIO2.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
 </Project>

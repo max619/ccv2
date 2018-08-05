@@ -11,9 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BlobTuioPointer.cpp" />
     <ClCompile Include="src\nuiTUIO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BlobTuioPointer.h" />
     <ClInclude Include="src\nuiTUIO.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals" />
@@ -39,15 +41,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\OpenCV.props" />
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\nuiModule.props" />
+    <Import Project="$(SolutionDir)..\..\libs\3rdParty\_props\OpenCV.props" />
     <Import Project="..\..\libs\3rdParty\_props\ptypes.props" />
     <Import Project="..\..\libs\3rdParty\_props\libTUIO.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\libs\nuiTracking\nuiTracking.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

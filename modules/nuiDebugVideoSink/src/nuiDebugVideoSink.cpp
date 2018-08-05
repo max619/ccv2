@@ -60,9 +60,9 @@ void nuiDebugVideoSink::update()
 		ZeroMemory(dispFrame->imageDataOrigin, dispFrame->height*dispFrame->width * sizeof(unsigned char));
 
 
-		for (size_t i =0; i<blobs->size; i++)
+		for (size_t i =0; i<blobs->updatedBlobSize; i++)
 		{
-			Blob& blob = blobs->blobs[i];
+			Blob& blob = *(blobs->updatedBlob[i]);
 			char str[11];
 			char area[50];
 			int number = blob.id;
@@ -73,7 +73,6 @@ void nuiDebugVideoSink::update()
 			cvPutText(dispFrame, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y - 15), &font, cvScalar(128));
 			cvPutText(dispFrame, area, cvPoint(blob.keyPoint.pt.x, blob.keyPoint.pt.y), &font, cvScalar(128));
 		}
-		releaseBlobVector(blobs);
 	}
 	if (dispFrame != NULL)
 	{

@@ -7,39 +7,7 @@
 
 #include "nuiBlobTracker.h"
 
-nuiBlobTrackerDataPacket::nuiBlobTrackerDataPacket() : nuiDataPacket()
-{
-	data = NULL;
-}
-
-nuiBlobTrackerDataPacket::~nuiBlobTrackerDataPacket()
-{
-};
-
-nuiDataPacketError::err nuiBlobTrackerDataPacket::packData(const void *_data)
-{	
-	this->setLocalCopy(false);
-	//std::vector<Blob>* vec = (std::vector<Blob>*)_data;
-	this->data = (void*)_data;
-	return NUI_DATAPACKET_OK; 
-};
-
-nuiDataPacketError::err nuiBlobTrackerDataPacket::unpackData(void* &_data)
-{
-	_data = (void*)this->data;
-	return NUI_DATAPACKET_OK;
-};
-
-nuiDataPacket* nuiBlobTrackerDataPacket::copyPacketData(nuiDataPacketError::err &errorCode)
-{	
-	//! TODO : Not Implemented
-	return NULL;
-};
-
-char* nuiBlobTrackerDataPacket::getDataPacketType()
-{
-	return "BlobVector";
-};
+NUI_DATAPACKET_DEFAULT_DEFENITION_THROUGH_BLOBVECTOR(BlobTracker)
 
 MODULE_DECLARE(BlobTrackerModule, "native", "Track found contours/blobs")
 
@@ -85,8 +53,7 @@ void nuiBlobTrackerModule::update()
 
 	IplImage* img = (IplImage*)data;
 	std::vector<Blob> blobs = bDetector->detectBlobs(img);
-	std::vector<Blob> trackedblobs = bTracker->trackBlobs(blobs);
-	BlobVector* trackedblobsPtr = vecToArr(trackedblobs);
+	BlobVector* trackedblobsPtr = bTracker->trackBlobs(blobs);
 	trackedblobsPtr->targetResolution.width = img->width;
 	trackedblobsPtr->targetResolution.height = img->height;
 
@@ -97,6 +64,9 @@ void nuiBlobTrackerModule::update()
 
 	if (packet->isLocalCopy())
 		delete packet;
+
+	releaseBlobVector(trackedblobsPtr);
+	
 #ifdef ALLOW_BENCHMARKING	
 	benchmark.stopBenchmarking("nuiBlobTrackerModule::update blob detecting");
 #endif

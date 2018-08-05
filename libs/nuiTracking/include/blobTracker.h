@@ -9,7 +9,7 @@ class blobTracker
 public:
 	blobTracker();
 	~blobTracker();
-	std::vector<Blob> trackBlobs(std::vector<Blob>& input);
+	BlobVector* trackBlobs(std::vector<Blob>& input);
 	void setMaxDistance(float val);
 private:
 	bool isFirstFrameArrived;
