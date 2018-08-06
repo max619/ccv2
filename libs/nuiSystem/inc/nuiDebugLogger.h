@@ -26,6 +26,8 @@
 
 #else // NO_LOG
 
+extern int g_loglevel;
+
 #define LOG_DECLARE(x) \
 	static char log_name[] = x;
 
@@ -52,8 +54,6 @@
 		this->os << __n; \
 	return *this; \
 }
-
-extern int g_loglevel;
 
 enum {
     NUI_CRITICAL	= 0,

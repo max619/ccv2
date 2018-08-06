@@ -71,6 +71,16 @@ bool nuiUtils::inList(const std::string &pattern, const std::string &str, const 
         pos = str.find_first_of(delimiters, lastPos);
     }
 
+	lastPos = pattern.find_first_not_of(delimiters, 0);
+	pos = pattern.find_first_of(delimiters, lastPos);
+
+	while (std::string::npos != pos || std::string::npos != lastPos) {
+		if (pattern.substr(lastPos, pos - lastPos) == str)
+			return true;
+		lastPos = pattern.find_first_not_of(delimiters, pos);
+		pos = pattern.find_first_of(delimiters, lastPos);
+	}
+
     return false;
 }
 

@@ -41,10 +41,15 @@ private: \
 nui##moduleName##DataPacket::nui##moduleName##DataPacket() : nuiDataPacket()\
 {\
 	data = NULL;\
-}\
+};\
 nui##moduleName##DataPacket::~nui##moduleName##DataPacket()\
 {\
-	cvReleaseImage(&data);\
+	if(isLocalCopy())\
+	{\
+		IplImage* img = (IplImage*)data; \
+		cvReleaseImage(&img); \
+		data = NULL; \
+	}\
 };\
 nuiDataPacketError::err nui##moduleName##DataPacket::packData(const void *_data)\
 {\
@@ -52,18 +57,17 @@ nuiDataPacketError::err nui##moduleName##DataPacket::packData(const void *_data)
 	this->data = (IplImage*)_data;\
 	return nuiDataPacketError::NoError;\
 };\
-\
 nuiDataPacketError::err nui##moduleName##DataPacket::unpackData(void* &_data)\
 {\
 	_data = (void*)this->data;\
 	return nuiDataPacketError::NoError;\
 };\
-\
 nuiDataPacket* nui##moduleName##DataPacket::copyPacketData(nuiDataPacketError::err &errorCode)\
 {\
 	nui##moduleName##DataPacket* newDataPacket = new nui##moduleName##DataPacket();\
 \
-	IplImage* newData = cvCloneImage((this->data));\
+	IplImage* current = (IplImage*)this->data;\
+	IplImage* newData = cvCloneImage(current);\
 \
 	newDataPacket->packData(newData);\
 	newDataPacket->setLocalCopy(true);\
@@ -71,7 +75,6 @@ nuiDataPacket* nui##moduleName##DataPacket::copyPacketData(nuiDataPacketError::e
 	errorCode = nuiDataPacketError::NoError;\
 	return newDataPacket;\
 };\
-\
 char* nui##moduleName##DataPacket::getDataPacketType()\
 {\
 	return "IplImage";\
@@ -82,7 +85,7 @@ char* nui##moduleName##DataPacket::getDataPacketType()\
 class nuiDataPacket
 {
 public:
-	nuiDataPacket() {localCopy = false;};
+	nuiDataPacket() { localCopy = false; };
 	virtual ~nuiDataPacket() { };
 	virtual nuiDataPacketError::err packData(const void *data) = 0;
 	virtual nuiDataPacketError::err unpackData(void* &data) = 0;

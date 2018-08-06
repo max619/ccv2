@@ -2,7 +2,7 @@
 // Name:        modules/oclDepthToWorld.h
 // Purpose:     Example Module to be used for developments.
 // Author:      Maxim Bagryantsev
-// Copyright:   (c) 2018 NUI Group
+// Copyright:   (c) 2018 Appollo Pro
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef OCL_DEPTH_TO_WORLD

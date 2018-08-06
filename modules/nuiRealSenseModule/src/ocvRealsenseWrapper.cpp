@@ -72,14 +72,14 @@ bool ocvRealsenseWrapper::open(int index)
 		intrisnic = pipe.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
 		depth_scale = depth_sensor.get_depth_scale();
 
-		dstscreenpoints[0] = CvPoint2D32f(0, 0);
+		/*dstscreenpoints[0] = CvPoint2D32f(0, 0);
 		dstscreenpoints[1] = CvPoint2D32f(destsize.width, 0);
 		dstscreenpoints[2] = CvPoint2D32f(destsize.width, destsize.height);
 		dstscreenpoints[3] = CvPoint2D32f(0, destsize.height);
 		cvGetPerspectiveTransform(screenpoints, dstscreenpoints, perspectiveTransformMatrix);
 		
 
-		q = Eigen::Quaternionf::FromTwoVectors(a, b);
+		q = Eigen::Quaternionf::FromTwoVectors(a, b);*/
 	}
 	catch (_exception& ex)
 	{

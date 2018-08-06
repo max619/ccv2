@@ -11,6 +11,9 @@
         },
         {
             "path": "modules\\nuiTUIOOutputModule.dll"
+        },
+        {
+            "path": "modules\\nuiScreenCalibrationModule.dll"
         }
     ],
     "pipelines": [
@@ -35,17 +38,7 @@
                         "x2": 518,
                         "y2": 434,
                         "min": 7,
-                        "max": 50,
-                        "screenWidth": 848,
-                        "screenHeight": 480,
-                        "sx0": 215,
-                        "sy0": 257,
-                        "sx1": 1029,
-                        "sy1": 129,
-                        "sx2": 1270,
-                        "sy2": 423,
-                        "sx3": 69,
-                        "sy3": 671,
+                        "max": 50,                        
                         "shouldWarp": "false",
                         "frameWidth": 640,
                         "frameHeight": 480,
@@ -89,6 +82,24 @@
                         "oscillator_mode": "false",
                         "host": "127.0.0.1",
                         "port": 3333
+                    }
+                },
+                {
+                    "id": 5,
+                    "type": "nuiScreenCalibrationModule",
+                    "properties": {
+                        "use_thread": "true",
+                        "oscillator_mode": "false",
+                        "screenWidth": 1280,
+                        "screenHeight": 720,
+                        "sx0": 47,
+                        "sy0": 40,
+                        "sx1": 575,
+                        "sy1": 50,
+                        "sx2": 535,
+                        "sy2": 365,
+                        "sx3": 45,
+                        "sy3": 364
                     }
                 }
             ],
@@ -146,6 +157,21 @@
                         "port": 0
                     },
                     "destination": {
+                        "id": 5,
+                        "port": 0
+                    },
+                    "properties": {
+                        "async": 1,
+                        "deepcopy": 1,
+                        "lastpacket": 0
+                    }                    
+                },
+                {
+                    "source": {
+                        "id": 5,
+                        "port": 0
+                    },
+                    "destination": {
                         "id": 3,
                         "port": 0
                     },
@@ -157,7 +183,7 @@
                 },
                 {
                     "source": {
-                        "id": 1,
+                        "id": 5,
                         "port": 0
                     },
                     "destination": {

@@ -11,26 +11,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="helpers.h" />
-    <ClInclude Include="nuiRealSenseModule.h" />
-    <ClInclude Include="ocl3DPointCloudRotation.h" />
-    <ClInclude Include="oclDepthToWorld.h" />
-    <ClInclude Include="oclRSWorldProcessor.h" />
-    <ClInclude Include="oclThreshold.h" />
-    <ClInclude Include="ocvRealsenseWrapper.h" />
-    <ClInclude Include="rs2DeviceContainer.h" />
-    <ClInclude Include="static.h" />
+    <ClInclude Include="src\helpers.h" />
+    <ClInclude Include="src\nuiRealSenseModule.h" />
+    <ClInclude Include="src\ocl3DPointCloudRotation.h" />
+    <ClInclude Include="src\oclDepthToWorld.h" />
+    <ClInclude Include="src\oclRSWorldProcessor.h" />
+    <ClInclude Include="src\oclThreshold.h" />
+    <ClInclude Include="src\ocvRealsenseWrapper.h" />
+    <ClInclude Include="src\rs2DeviceContainer.h" />
+    <ClInclude Include="src\static.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="helpers.cpp" />
-    <ClCompile Include="nuiRealSenseModule.cpp" />
-    <ClCompile Include="ocl3DPointCloudRotation.cpp" />
-    <ClCompile Include="oclDepthToWorld.cpp" />
-    <ClCompile Include="oclRSWorldProcessor.cpp" />
-    <ClCompile Include="oclThreshold.cpp" />
-    <ClCompile Include="ocvRealsenseWrapper.cpp" />
-    <ClCompile Include="rs2DeviceContainer.cpp" />
-    <ClCompile Include="static.cpp" />
+    <ClCompile Include="src\helpers.cpp" />
+    <ClCompile Include="src\nuiRealSenseModule.cpp" />
+    <ClCompile Include="src\ocl3DPointCloudRotation.cpp" />
+    <ClCompile Include="src\oclDepthToWorld.cpp" />
+    <ClCompile Include="src\oclRSWorldProcessor.cpp" />
+    <ClCompile Include="src\oclThreshold.cpp" />
+    <ClCompile Include="src\ocvRealsenseWrapper.cpp" />
+    <ClCompile Include="src\rs2DeviceContainer.cpp" />
+    <ClCompile Include="src\static.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ocl\calcWorldCoordinatesNormal.cl" />
