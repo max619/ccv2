@@ -91,8 +91,10 @@ namespace WrapperTest
     {
         static void Main(string[] args)
         {
-            ImportContext impctx = new ImportContext();
+            NuiState state = NuiState.Instance;
 
+            state.Connect("http://127.0.0.1:7500");
+            state.GetPipeline("root");
         }
     }
 }

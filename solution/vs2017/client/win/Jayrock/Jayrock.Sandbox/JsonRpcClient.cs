@@ -93,6 +93,7 @@ namespace Jayrock.JsonRpc
             WebRequest request = GetWebRequest(new Uri(Url));
             request.Method = "POST";
             
+            
             using (Stream stream = request.GetRequestStream())
             using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
             {

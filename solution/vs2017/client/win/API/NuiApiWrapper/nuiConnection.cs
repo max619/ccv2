@@ -30,10 +30,10 @@ namespace NuiApiWrapper
         public int destinationModule;
         public int destinationPort;
         public bool deepCopy;
-        public int asyncMode;
-        public int buffered;
+        public bool asyncMode;
+        public bool buffered;
         public int bufferSize;
         public bool lastPacket;
-        public int overflow;
+        public bool overflow;
     }
 }

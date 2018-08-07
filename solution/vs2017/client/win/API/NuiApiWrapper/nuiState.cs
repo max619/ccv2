@@ -1,4 +1,4 @@
-﻿#define TEST
+﻿//#define TEST
 
 using System;
 using System.Collections.Generic;
@@ -206,7 +206,7 @@ namespace NuiApiWrapper
         {
             PipelineDescriptor newPipeline  = (PipelineDescriptor) NuiState.Instance.client.Invoke( 
                 typeof(PipelineDescriptor),
-                "web_navigate_push");
+                "nui_navigate_push");
 
             NuiState.Instance.level++;
             currentPipeline = newPipeline;
@@ -239,7 +239,7 @@ namespace NuiApiWrapper
         {
             PipelineDescriptor newPipeline = (PipelineDescriptor)NuiState.Instance.client.Invoke(
                 typeof(PipelineDescriptor),
-                "web_navigate_pop");
+                "nui_navigate_pop");
 
             NuiState.Instance.level--;
             currentPipeline = newPipeline;
@@ -266,7 +266,7 @@ namespace NuiApiWrapper
             string[] listDynamic = (string[])(new ArrayList((ICollection)
                 NuiState.Instance.client.Invoke(
                     typeof(PipelineDescriptor),
-                    "web_list_dynamic")).ToArray(typeof(string)));
+                    "nui_list_dynamic")).ToArray(typeof(string)));
 
             return listDynamic;
         }
@@ -288,7 +288,7 @@ namespace NuiApiWrapper
             string[] listPipelines = (string[])(new ArrayList((ICollection)
                 NuiState.Instance.client.Invoke(
                     typeof(PipelineDescriptor),
-                    "web_list_pipeline")).ToArray(typeof(string)));
+                    "nui_list_pipeline")).ToArray(typeof(string)));
 
             return listPipelines;
         }
@@ -302,21 +302,21 @@ namespace NuiApiWrapper
         {
             return (bool)NuiState.Instance.client.Invoke(
                     typeof(bool),
-                    "web_workflow_start");
+                    "nui_workflow_start");
         }
 
         public bool WorkflowStop()
         {
             return (bool)NuiState.Instance.client.Invoke(
                     typeof(bool),
-                    "web_workflow_stop");
+                    "nui_workflow_stop");
         }
 
         public bool WorkflowQuit()
         {
             return (bool)NuiState.Instance.client.Invoke(
                     typeof(bool),
-                    "web_workflow_quit");
+                    "nui_workflow_quit");
         }
 
         /************************************************************************/
@@ -327,7 +327,7 @@ namespace NuiApiWrapper
         {
             PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(PipelineDescriptor),
-                "web_create_pipeline",
+                "nui_create_pipeline",
                 name);
 
             return pipeline;
@@ -338,7 +338,7 @@ namespace NuiApiWrapper
         {
             ModuleDescriptor module = (ModuleDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(PipelineDescriptor),
-                "web_create_module",
+                "nui_create_module",
                 pipelineName, moduleName);
 
             return module;
@@ -351,7 +351,7 @@ namespace NuiApiWrapper
         {
             bool status = (bool)NuiState.Instance.client.InvokeVargs(
                 typeof(PipelineDescriptor),
-                "web_create_module",
+                "nui_create_module",
                 pipelineName, srcModuleIdx, srcModulePort, dstModuleIdx, dstModulePort);
 
             return status;
@@ -364,7 +364,7 @@ namespace NuiApiWrapper
         {
             PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(PipelineDescriptor),
-                "web_update_pipeline",
+                "nui_update_pipeline",
                 pipelineName, newName, newDescription, author);
 
             return pipeline;
@@ -375,7 +375,7 @@ namespace NuiApiWrapper
         {
             PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(PipelineDescriptor),
-                "web_update_pipelineProperty",
+                "nui_update_pipelineProperty",
                 pipelineName, key, value, description);
 
             return pipeline;
@@ -386,7 +386,7 @@ namespace NuiApiWrapper
         {
             PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(PipelineDescriptor),
-                "web_update_moduleProperty",
+                "nui_update_moduleProperty",
                 pipelineName, moduleIdx, key, value);
 
             return pipeline;
@@ -399,14 +399,14 @@ namespace NuiApiWrapper
             {
                 endpoint = (EndpointDescriptor)NuiState.Instance.client.InvokeVargs(
                     typeof(EndpointDescriptor),
-                    "web_update_endpoint",
+                    "nui_update_endpoint",
                     type, endpointIdx, descriptor, null);
             }
             else 
             {
                 endpoint = (EndpointDescriptor)NuiState.Instance.client.InvokeVargs(
                     typeof(EndpointDescriptor),
-                    "web_update_endpoint",
+                    "nui_update_endpoint",
                     type, endpointIdx, descriptor, newIndex);
             }
 
@@ -419,7 +419,7 @@ namespace NuiApiWrapper
         {
             var connection = (ConnectionDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(ConnectionDescriptor),
-                "web_update_endpoint",
+                "nui_update_endpoint",
                 pipelineName, srcModuleIdx, srcModulePort,
                 dstModuleIdx, dstModulePort, keyValues);
 
@@ -430,7 +430,7 @@ namespace NuiApiWrapper
         {
             var count = (int)NuiState.Instance.client.InvokeVargs(
                 typeof(int),
-                "web_update_endpointCount",
+                "nui_update_endpointCount",
                 pipelineName, type, newCount);
 
             return count;
@@ -443,7 +443,7 @@ namespace NuiApiWrapper
         {
             var status = (bool)NuiState.Instance.client.InvokeVargs(
                 typeof(bool),
-                "web_delete_pipeline",
+                "nui_delete_pipeline",
                 pipelineName);
 
             return status;
@@ -453,7 +453,7 @@ namespace NuiApiWrapper
         {
             var pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
                  typeof(PipelineDescriptor),
-                 "web_delete_module",
+                 "nui_delete_module",
                  pipelineName, moduleIndex);
 
             return pipeline;
@@ -465,7 +465,7 @@ namespace NuiApiWrapper
         {
             var pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(PipelineDescriptor),
-                "web_delete_connection",
+                "nui_delete_connection",
                 pipelineName, srcModuleIdx, srcModulePort, dstModuleIdx, dstModulePort);
 
             return pipeline;
@@ -505,7 +505,7 @@ namespace NuiApiWrapper
         {
             var pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(PipelineDescriptor),
-                "web_get_pipeline",
+                "nui_get_pipeline",
                 pipelineName);
 
             return pipeline;
@@ -524,7 +524,7 @@ namespace NuiApiWrapper
         {
             var module = (ModuleDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(ModuleDescriptor),
-                "web_get_module",
+                "nui_get_module",
                 pipelineName, moduleIdx);
 
             return module;
@@ -543,7 +543,7 @@ namespace NuiApiWrapper
         {
             var connection = (ConnectionDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(ConnectionDescriptor),
-                "web_get_connection",
+                "nui_get_connection",
                 pipelineName, connectionIdx);
 
             return connection;
@@ -557,7 +557,7 @@ namespace NuiApiWrapper
         {
             var response = (bool)NuiState.Instance.client.InvokeVargs(
                 typeof(bool),
-                "web_save_pipeline",
+                "nui_save_pipeline",
                 pipelineName, fileName);
 
             return response;

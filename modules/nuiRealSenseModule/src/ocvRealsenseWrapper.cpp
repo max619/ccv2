@@ -208,6 +208,8 @@ IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 	if (procres == NULL)
 	{
 		//procres = cvCreateImage(cvSize(intrisnic.width, intrisnic.height), IPL_DEPTH_32F, 4);
+		if (intrisnic.width < 1 || intrisnic.height < 1)
+			return NULL;
 		procres = cvCreateImage(cvSize(intrisnic.width, intrisnic.height), IPL_DEPTH_8U, 1);
 	}
 	frameset = pipe.wait_for_frames();
