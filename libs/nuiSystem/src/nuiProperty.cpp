@@ -31,6 +31,9 @@
 		case NUI_PROPERTY_POINTLIST: \
 			*(static_cast<nuiPointList*>(this->val)) = convertToPointList(typein, &value); \
 			break; \
+		case NUI_PROPERTY_FLOAT: \
+			*(static_cast<float*>(this->val)) = convertToFloat(typein, &value); \
+			break; \
 		default:; \
 	}
 
@@ -56,6 +59,11 @@ static bool convertToBool(nuiPropertyType type, void *val) {
 
 		case NUI_PROPERTY_DOUBLE: {
 			CASTEDGET(double);
+			return value == 0 ? false : true;
+		}
+
+		case NUI_PROPERTY_FLOAT: {
+			CASTEDGET(float);
 			return value == 0 ? false : true;
 		}
 
@@ -94,6 +102,13 @@ static std::string convertToString(nuiPropertyType type, void *val) {
 		case NUI_PROPERTY_DOUBLE: {
 			char buffer[64];
 			CASTEDGET(double);
+			snprintf(buffer, sizeof(buffer), "%f", value);
+			return buffer;
+		}
+
+		case NUI_PROPERTY_FLOAT: {
+			char buffer[64];
+			CASTEDGET(float);
 			snprintf(buffer, sizeof(buffer), "%f", value);
 			return buffer;
 		}
@@ -137,7 +152,47 @@ static double convertToDouble(nuiPropertyType type, void *val) {
 			return value;
 		}
 
+		case NUI_PROPERTY_FLOAT: {
+			CASTEDGET(float);
+			return (double)value;
+		}
+
 		default:;
+		assert(0);
+	}
+
+	assert(0);
+	return 0.0;
+}
+
+static float convertToFloat(nuiPropertyType type, void *val) {
+	switch (type) {
+	case NUI_PROPERTY_STRING: {
+		CASTEDGET(std::string);
+		return atof(value.c_str());
+	}
+
+	case NUI_PROPERTY_BOOL: {
+		CASTEDGET(bool);
+		return value ? 1.0f : 0.0f;
+	}
+
+	case NUI_PROPERTY_INTEGER: {
+		CASTEDGET(int);
+		return (float)value;
+	}
+
+	case NUI_PROPERTY_DOUBLE: {
+		CASTEDGET(double);
+		return (float)value;
+	}
+
+	case NUI_PROPERTY_FLOAT: {
+		CASTEDGET(float);
+		return value;
+	}
+
+	default:;
 		assert(0);
 	}
 
@@ -164,6 +219,11 @@ static int convertToInteger(nuiPropertyType type, void *val) {
 
 		case NUI_PROPERTY_DOUBLE: {
 			CASTEDGET(double);
+			return (int)value;
+		}
+
+		case NUI_PROPERTY_FLOAT: {
+			CASTEDGET(float);
 			return (int)value;
 		}
 
@@ -254,6 +314,14 @@ nuiProperty::nuiProperty(double value, const std::string &description) {
 	this->set(value);
 }
 
+nuiProperty::nuiProperty(float value, const std::string & description)
+{
+	this->init(description);
+	this->type = NUI_PROPERTY_FLOAT;
+	this->val = new float();
+	this->set(value);
+}
+
 nuiProperty::nuiProperty(nuiPointList value, const std::string &description) {
 	this->init(description);
 	this->type = NUI_PROPERTY_POINTLIST;
@@ -311,6 +379,14 @@ void nuiProperty::set(double value) {
 	this->fireCallback();
 }
 
+void nuiProperty::set(float value)
+{
+	if (this->isReadOnly())
+		return;
+	AUTOCONVERT(NUI_PROPERTY_FLOAT, value);
+	this->fireCallback();
+}
+
 void nuiProperty::set(nuiPointList value) {
 	if ( this->isReadOnly() )
 		return;
@@ -338,6 +414,11 @@ double nuiProperty::asDouble() {
 	return convertToDouble(this->type, this->val);
 }
 
+float nuiProperty::asFloat()
+{
+	return convertToFloat(this->type, this->val);
+}
+
 int nuiProperty::asInteger() {
 	return convertToInteger(this->type, this->val);
 }
@@ -363,6 +444,9 @@ void nuiProperty::free() {
 		case NUI_PROPERTY_DOUBLE:
 			delete static_cast<double *>(this->val);
 			break;
+		case NUI_PROPERTY_FLOAT:
+			delete static_cast<float *>(this->val);
+			break;
 		default:;
 	}
 
@@ -372,6 +456,7 @@ void nuiProperty::free() {
 std::string nuiProperty::getPropertyTypeName(nuiPropertyType type) {
 	switch ( type ) {
 		case NUI_PROPERTY_DOUBLE: return "double";
+		case NUI_PROPERTY_FLOAT: return "float";
 		case NUI_PROPERTY_INTEGER: return "integer";
 		case NUI_PROPERTY_STRING: return "string";
 		case NUI_PROPERTY_BOOL: return "bool";
@@ -392,6 +477,7 @@ std::ostream& operator<< (std::ostream& o, const nuiProperty& p) {
 		case NUI_PROPERTY_BOOL:		return o << f->asBool();
 		case NUI_PROPERTY_INTEGER:	return o << f->asInteger();
 		case NUI_PROPERTY_DOUBLE:	return o << f->asDouble();
+		case NUI_PROPERTY_FLOAT:	return o << f->asFloat();
 		case NUI_PROPERTY_POINTLIST: return o << f->asPointList();
 		default:;
 	}
@@ -516,6 +602,9 @@ void __execLinkedPropertyCallback(nuiProperty * prop, void * userdata)
 		break;
 	case NUI_PROPERTY_DOUBLE:
 		*(double*)linkedProp->prop = prop->asDouble();
+		break;
+	case NUI_PROPERTY_FLOAT:
+		*(float*)linkedProp->prop = prop->asFloat();
 		break;
 	case NUI_PROPERTY_POINTLIST:
 		*(nuiPointList*)linkedProp->prop = prop->asPointList();

@@ -117,3 +117,8 @@ void nuiScreenCalibrationModule::stop()
 {
 	nuiModule::stop();
 }
+
+void nuiScreenCalibrationModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+
+}

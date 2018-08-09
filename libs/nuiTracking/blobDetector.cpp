@@ -7,7 +7,7 @@ blobDetector::blobDetector()
 	detector = cv::SimpleBlobDetector::create();	
 }
 
-blobDetector::blobDetector(cv::SimpleBlobDetector::Params params)
+blobDetector::blobDetector(cv::SimpleBlobDetector::Params& params)
 {
 	detector = cv::SimpleBlobDetector::create(params);
 }

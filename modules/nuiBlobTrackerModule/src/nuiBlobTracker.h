@@ -40,6 +40,9 @@ private:
 	nuiDataPacket*	_pOutputDataPacket;
 	nuiEndpoint*	_pInput;
 	nuiEndpoint*	_pOutput; 
+
+	double maxdist;
+	cv::SimpleBlobDetector::Params p;
 #ifdef ALLOW_BENCHMARKING
 	nuiBenchmark benchmark;
 #endif

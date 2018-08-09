@@ -17,6 +17,7 @@
 #include "nuiDebugLogger.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/core.hpp"
+#include <mutex>
 
 NUI_DATAPACKET_DEFAULT_DECLARATION(WebcamModule, IplImage*)
 
@@ -32,10 +33,11 @@ private:
 	cv::VideoCapture * capture;
 	nuiEndpoint* output;
 	nuiDataPacket* outputDataPacket;
-	void initCapture();
 
+	int camid;
 	cv::Mat frame;
 	IplImage* img;
+	std::mutex mutex;
 
 	MODULE_INTERNALS();
 };

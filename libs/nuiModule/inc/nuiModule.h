@@ -59,6 +59,10 @@ protected:\
 
 #define LinkProperty(propName, propType, prop) this->linkProperty(std::string(##propName##), propType, &(##prop##));
 
+#define LinkPropertyAndSetDefaultVal(propName, propType, prop, defaultval)\
+	prop = defaultval;\
+	this->linkProperty(std::string(##propName##), propType, &(##prop##));\
+
 #define LinkProperty(propName, propType, prop, description) this->linkProperty(std::string(##propName##), propType, &(##prop##), std::string(##description##));
 
 class nuiEndpointDescriptor;

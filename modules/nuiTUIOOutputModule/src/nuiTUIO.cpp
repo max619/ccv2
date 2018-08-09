@@ -148,3 +148,7 @@ void nuiTUIOOutputModule::trackEvents(BlobVector * vector)
 	}
 }
 
+void nuiTUIOOutputModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+
+}

@@ -39,6 +39,7 @@ typedef enum nuiPropertyType {
     NUI_PROPERTY_STRING,
     NUI_PROPERTY_INTEGER,
     NUI_PROPERTY_DOUBLE,
+	NUI_PROPERTY_FLOAT,
     NUI_PROPERTY_POINTLIST,
 };
 
@@ -72,6 +73,7 @@ public:
     nuiProperty(std::string value, const std::string &description = "");
     nuiProperty(int value, const std::string &description = "");
     nuiProperty(double value, const std::string &description = "");
+	nuiProperty(float value, const std::string &description = "");
     nuiProperty(nuiPointList, const std::string &description = "");
     ~nuiProperty();
 
@@ -86,6 +88,7 @@ public:
     bool asBool();
     std::string asString();
     double asDouble();
+	float asFloat();
     int asInteger();
     nuiPointList asPointList();
 
@@ -94,6 +97,7 @@ public:
     void set(const char* value);
     void set(int value);
     void set(double value);
+	void set(float value);
     void set(nuiPointList value);
 
     bool haveMin();

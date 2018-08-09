@@ -26,8 +26,33 @@ nuiBlobTrackerModule::nuiBlobTrackerModule() : nuiModule()
 
 	this->_pOutputDataPacket = new nuiBlobTrackerDataPacket();
 
-	bTracker = NULL;
-	bDetector = NULL;
+	bTracker = new blobTracker();
+
+	LinkPropertyAndSetDefaultVal("blobColor", NUI_PROPERTY_INTEGER, p.blobColor, 255);
+	LinkPropertyAndSetDefaultVal("filterByArea", NUI_PROPERTY_BOOL, p.filterByArea, true);
+	LinkPropertyAndSetDefaultVal("filterByColor", NUI_PROPERTY_BOOL, p.filterByColor, true);
+	LinkPropertyAndSetDefaultVal("filterByCircularity", NUI_PROPERTY_BOOL, p.filterByCircularity, false);
+	LinkPropertyAndSetDefaultVal("filterByInertia", NUI_PROPERTY_BOOL, p.filterByInertia, false);
+	LinkPropertyAndSetDefaultVal("filterByConvexity", NUI_PROPERTY_BOOL, p.filterByConvexity, false);
+
+	LinkPropertyAndSetDefaultVal("maxArea", NUI_PROPERTY_FLOAT, p.maxArea, 5000.);
+	LinkPropertyAndSetDefaultVal("maxCircularity", NUI_PROPERTY_FLOAT, p.maxCircularity, 3.4028E+38f);
+	LinkPropertyAndSetDefaultVal("maxConvexity", NUI_PROPERTY_FLOAT, p.maxConvexity, 3.4028E+38f);
+	LinkPropertyAndSetDefaultVal("maxInertiaRatio", NUI_PROPERTY_FLOAT, p.maxInertiaRatio, 3.4028E+38f);
+	LinkPropertyAndSetDefaultVal("maxThreshold", NUI_PROPERTY_FLOAT, p.maxThreshold, 220.f);
+	LinkPropertyAndSetDefaultVal("minArea", NUI_PROPERTY_FLOAT, p.minArea, 25.f);
+	LinkPropertyAndSetDefaultVal("minCircularity", NUI_PROPERTY_FLOAT, p.minCircularity, 0.8f);
+	LinkPropertyAndSetDefaultVal("minConvexity", NUI_PROPERTY_FLOAT, p.minConvexity, 0.949f);
+	LinkPropertyAndSetDefaultVal("minDistBetweenBlobs", NUI_PROPERTY_FLOAT, p.minDistBetweenBlobs, 10.);
+	LinkPropertyAndSetDefaultVal("minInertiaRatio", NUI_PROPERTY_FLOAT, p.minInertiaRatio, 0.1);
+	LinkPropertyAndSetDefaultVal("minRepeatability", NUI_PROPERTY_FLOAT, p.minRepeatability, 2.);
+	LinkPropertyAndSetDefaultVal("minThreshold", NUI_PROPERTY_FLOAT, p.minThreshold, 50.);
+	LinkPropertyAndSetDefaultVal("thresholdStep", NUI_PROPERTY_FLOAT, p.thresholdStep, 10.);
+	
+	LinkPropertyAndSetDefaultVal("maxDistance", NUI_PROPERTY_FLOAT, maxdist, 20.);
+	bDetector = new blobDetector(p);
+
+	bTracker->setMaxDistance(maxdist);
 };
 
 nuiBlobTrackerModule::~nuiBlobTrackerModule()
@@ -45,9 +70,9 @@ void nuiBlobTrackerModule::update()
 
 	void* data;
 	nuiDataPacket* packet = this->_pInput->getData();
-	if(packet == NULL) 
+	if (packet == NULL)
 		return;
-	packet->unpackData(data);	
+	packet->unpackData(data);
 	if (data == NULL)
 		return;
 
@@ -66,7 +91,7 @@ void nuiBlobTrackerModule::update()
 		delete packet;
 
 	releaseBlobVector(trackedblobsPtr);
-	
+
 #ifdef ALLOW_BENCHMARKING	
 	benchmark.stopBenchmarking("nuiBlobTrackerModule::update blob detecting");
 #endif
@@ -74,32 +99,6 @@ void nuiBlobTrackerModule::update()
 
 void nuiBlobTrackerModule::start()
 {
-	cv::SimpleBlobDetector::Params p;
-	p.blobColor = (uchar)this->hasProperty("blobColor") ? this->property("blobColor").asInteger() : 255;
-	p.filterByArea = this->hasProperty("filterByArea") ? this->property("filterByArea").asBool() : true;
-	p.filterByCircularity = this->hasProperty("filterByCircularity") ? this->property("filterByCircularity").asBool() : false;
-	p.filterByColor = this->hasProperty("filterByColor") ? this->property("filterByColor").asBool() : true;
-	p.filterByConvexity = this->hasProperty("filterByConvexity") ? this->property("filterByConvexity").asBool() : false;
-	p.filterByInertia = this->hasProperty("filterByInertia") ? this->property("filterByInertia").asBool() : false;
-
-	p.maxArea = static_cast<float>(this->hasProperty("maxArea") ? this->property("maxArea").asDouble() : 5000.);
-	p.maxCircularity = static_cast<float>(this->hasProperty("maxCircularity") ? this->property("maxCircularity").asDouble() : 3.4028E+38f);
-	p.maxConvexity = static_cast<float>(this->hasProperty("maxConvexity") ? this->property("maxConvexity").asDouble() : 3.4028E+38f);
-	p.maxInertiaRatio = static_cast<float>(this->hasProperty("maxInertiaRatio") ? this->property("maxInertiaRatio").asDouble() : 3.4028E+38f);
-	p.maxThreshold = static_cast<float>(this->hasProperty("maxThreshold") ? this->property("maxThreshold").asDouble() : 220.f);
-	p.minArea = static_cast<float>(this->hasProperty("minArea") ? this->property("minArea").asDouble() : 25.f);
-	p.minCircularity = static_cast<float>(this->hasProperty("minCircularity") ? this->property("minCircularity").asDouble() : 0.8f);
-	p.minConvexity = static_cast<float>(this->hasProperty("minConvexity") ? this->property("minConvexity").asDouble() : 0.949f);
-	p.minDistBetweenBlobs = static_cast<float>(this->hasProperty("minDistBetweenBlobs") ? this->property("minDistBetweenBlobs").asDouble() : 10.);
-	p.minInertiaRatio = static_cast<float>(this->hasProperty("minInertiaRatio") ? this->property("minInertiaRatio").asDouble() : 0.1);
-	p.minRepeatability = static_cast<float>(this->hasProperty("minRepeatability") ? this->property("minRepeatability").asDouble() : 2);
-	p.minThreshold = static_cast<float>(this->hasProperty("minThreshold") ? this->property("minThreshold").asDouble() : 50);
-	p.thresholdStep = static_cast<float>(this->hasProperty("thresholdStep") ? this->property("thresholdStep").asDouble() : 10.);
-
-	bDetector = new blobDetector(p);
-
-	bTracker = new blobTracker();
-	bTracker->setMaxDistance(this->hasProperty("maxDistance") ? this->property("maxDistance").asDouble() : 20.);
 	nuiModule::start();
 };
 
@@ -107,3 +106,14 @@ void nuiBlobTrackerModule::stop()
 {
 	nuiModule::stop();
 };
+
+void nuiBlobTrackerModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+	if (name == "maxDistance")
+	{
+		bTracker->setMaxDistance(prop->asDouble());
+	}
+	else
+	{
+	}
+}

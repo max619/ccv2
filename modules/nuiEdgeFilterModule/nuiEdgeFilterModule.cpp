@@ -52,3 +52,8 @@ void nuiEdgeFilterModule::start() {
 	this->timer->Start();
 	LOG(NUI_DEBUG, "starting filter");
 }
+
+void nuiEdgeFilterModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+
+}

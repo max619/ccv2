@@ -65,3 +65,8 @@ void nuiVideoFileSource::stop()
 	//cvReleaseImage(&frame);
 	nuiModule::stop();
 };
+
+void nuiVideoFileSource::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+
+}

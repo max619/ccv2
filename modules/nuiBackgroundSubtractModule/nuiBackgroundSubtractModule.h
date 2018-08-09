@@ -40,6 +40,10 @@ private:
 	cv::Ptr<cv::BackgroundSubtractorMOG2> bg;
 	std::vector<std::vector<cv::Point> > contours;
 
+	int history;
+	double threshold;
+	bool detectshadows;
+
 	MODULE_INTERNALS();
 };
 

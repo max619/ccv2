@@ -69,3 +69,8 @@ void nuiPSModule::stop()
 {
 	nuiModule::stop();
 };
+
+void nuiPSModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+
+}

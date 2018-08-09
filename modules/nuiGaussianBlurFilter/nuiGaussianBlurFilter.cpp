@@ -52,3 +52,8 @@ void nuiGaussianBlurFilter::start() {
 	dev = false;
 	LOG(NUI_DEBUG, "starting gaussian filter");
 }
+
+void nuiGaussianBlurFilter::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+
+}

@@ -19,6 +19,10 @@ nuiBackgroundSubtractModule::nuiBackgroundSubtractModule() : nuiModule() {
 	this->setOutputEndpoint(1, this->bgOutput);
 
 	this->outputDataPacket = new nuiBackgroundSubtractModuleDataPacket();
+	LinkPropertyAndSetDefaultVal("history", NUI_PROPERTY_INTEGER, history, 500);
+	LinkPropertyAndSetDefaultVal("threshold", NUI_PROPERTY_DOUBLE, threshold, 16.);
+	LinkPropertyAndSetDefaultVal("detectshadows", NUI_PROPERTY_BOOL, detectshadows, false);
+	this->bg = cv::createBackgroundSubtractorMOG2(history, threshold, detectshadows);
 
 }
 
@@ -58,12 +62,22 @@ void nuiBackgroundSubtractModule::update() {
 }
 
 void nuiBackgroundSubtractModule::start() {
-
-	int history = hasProperty("history") ? property("history").asInteger() : 500;
-	double threshold = hasProperty("threshold") ? property("threshold").asDouble() : 16.;
-	bool detectshadows = hasProperty("detectshadows") ? property("detectshadows").asBool() : false;
-	this->bg = cv::createBackgroundSubtractorMOG2(history, threshold, detectshadows);
-
 	nuiModule::start();
 	LOG(NUI_DEBUG, "starting gaussian filter");
+}
+
+void nuiBackgroundSubtractModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+	if (name == "history")
+	{
+		bg->setHistory(history);
+	} 
+	else if (name == "threshold")
+	{
+		bg->setVarThreshold(threshold);
+	}
+	else if (name == "detectshadows")
+	{
+		bg->setDetectShadows(detectshadows);
+	}
 }

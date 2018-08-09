@@ -52,3 +52,8 @@ void nuiExampleModule::start() {
 	this->timer->Start();
 	LOG(NUI_DEBUG, "Starting nuiExampleModule");
 }
+
+void nuiExampleModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+
+}

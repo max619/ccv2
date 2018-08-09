@@ -99,3 +99,8 @@ void nuiDebugVideoSink::start()
 	nuiModule::start();
 	LOG(NUI_DEBUG, "starting video sink");
 }
+
+void nuiDebugVideoSink::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+
+}

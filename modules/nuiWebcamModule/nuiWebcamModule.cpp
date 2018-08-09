@@ -20,6 +20,7 @@ nuiWebcamModule::nuiWebcamModule() : nuiModule() {
 	this->setOutputEndpoint(0, this->output);
 
 	this->outputDataPacket = new nuiWebcamModuleDataPacket();
+	LinkPropertyAndSetDefaultVal("camid", NUI_PROPERTY_INTEGER, camid, 0);
 }
 
 nuiWebcamModule::~nuiWebcamModule() {
@@ -32,7 +33,7 @@ void nuiWebcamModule::update() {
 
 	if (capture == NULL)
 		return;
-	
+	mutex.lock();
 	if (capture->read(frame))
 	{
 		if (img == NULL)
@@ -41,24 +42,25 @@ void nuiWebcamModule::update() {
 		this->output->setData(this->outputDataPacket);
 		this->output->transmitData();		
 	}
+	mutex.unlock();
 	this->output->unlock();
 }
 
 void nuiWebcamModule::start() {
-	
-	initCapture();
-
+	if (!capture->isOpened())
+		capture->open(camid);
 	LOG(NUI_DEBUG, "Starting nuiWebcamModule");
 	nuiModule::start();
 }
 
-void nuiWebcamModule::initCapture()
+void nuiWebcamModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
 {
-	DeviceEnumerator enumer = DeviceEnumerator();
-	auto map = enumer.getVideoDevicesMap();
-	int camid = this->hasProperty("camid") ? this->property("camid").asInteger() : 0;
-	if (capture->open(camid))
+	if (name == "camid")
 	{
-		LOG(NUI_DEBUG, "Capture opened succsesfully");
+		mutex.lock();
+		delete capture;
+		capture = new cv::VideoCapture();
+		capture->open(camid);
+		mutex.unlock();
 	}
 }

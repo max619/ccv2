@@ -9,7 +9,7 @@ class blobDetector
 {
 public:
 	blobDetector();
-	blobDetector(cv::SimpleBlobDetector::Params params);
+	blobDetector(cv::SimpleBlobDetector::Params& params);
 	~blobDetector();
 
 	std::vector<Blob> detectBlobs(IplImage* img);

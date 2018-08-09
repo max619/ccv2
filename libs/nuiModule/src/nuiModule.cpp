@@ -488,6 +488,9 @@ void nuiModule::readLinkedProperties()
 		case NUI_PROPERTY_DOUBLE:
 			*(double*)linkedProp->prop = prop->asDouble();
 			break;
+		case NUI_PROPERTY_FLOAT:
+			*(float*)linkedProp->prop = prop->asFloat();
+			break;
 		case NUI_PROPERTY_POINTLIST:
 			*(nuiPointList*)linkedProp->prop = prop->asPointList();
 			break;
@@ -518,6 +521,9 @@ void nuiModule::writeLinkedproperties()
 			break;
 		case NUI_PROPERTY_DOUBLE:
 			prop->set((*(double*)linkedProp->prop));
+			break;
+		case NUI_PROPERTY_FLOAT:
+			prop->set((*(float*)linkedProp->prop));
 			break;
 		case NUI_PROPERTY_POINTLIST:
 			prop->set((*(nuiPointList*)linkedProp->prop));

@@ -58,3 +58,8 @@ void nuiHighpassFilter::start() {
 	nuiModule::start();
 	LOG(NUI_DEBUG, "starting highpass filter");
 }
+
+void nuiHighpassFilter::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
+{
+
+}
