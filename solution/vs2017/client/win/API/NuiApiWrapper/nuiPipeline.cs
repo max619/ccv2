@@ -7,12 +7,13 @@ namespace NuiApiWrapper
 {
     public class PipelineDescriptor
     {
-        public string name;
-        public string description;
-        public string author;
-        public ModuleDescriptor[] modules;
-        public EndpointDescriptor[] inputEndpoints;
-        public EndpointDescriptor[] outputEndpoints;
-        public ConnectionDescriptor[] connections;
+        public string author { get; set; }
+        public ConnectionDescriptor[] connections { get; set; }
+        public string description { get; set; }
+        public EndpointDescriptor[] inputEndpoints { get; set; }
+        public ModuleDescriptor[] modules { get; set; }
+        public string name { get; set; }
+        public EndpointDescriptor[] outputEndpoints { get; set; }
     }
+    
 }

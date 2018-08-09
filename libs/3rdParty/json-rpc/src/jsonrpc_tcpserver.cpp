@@ -16,11 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * \file jsonrpc_tcpserver.cpp
- * \brief JSON-RPC TCP server.
- * \author Sebastien Vincent
- */
+ /**
+  * \file jsonrpc_tcpserver.cpp
+  * \brief JSON-RPC TCP server.
+  * \author Sebastien Vincent
+  */
 
 #include <stdexcept>
 
@@ -31,222 +31,227 @@
 #include <cstring>
 #include <cerrno>
 
-namespace Json 
+namespace Json
 {
 
-  namespace Rpc
-  {
+	namespace Rpc
+	{
 
-    TcpServer::TcpServer(const std::string& address, uint16_t port) : Server(address, port)
-    {
-      m_protocol = networking::TCP;
-    }
+		TcpServer::TcpServer(const std::string& address, uint16_t port) : Server(address, port)
+		{
+			m_protocol = networking::TCP;
+		}
 
-    TcpServer::~TcpServer()
-    {
-      if(m_sock != -1)
-      {
-        Close();
-      }
-    }
-    
-    ssize_t TcpServer::Send(int fd, const std::string& data)
-    {
-      std::string rep = data;
+		TcpServer::~TcpServer()
+		{
+			if (m_sock != -1)
+			{
+				Close();
+			}
+		}
 
-      /* encoding if any */
-      if(GetEncapsulatedFormat() == Json::Rpc::NETSTRING)
-      {
-        rep = netstring::encode(rep);
-      }
+		ssize_t TcpServer::Send(int fd, const std::string& data)
+		{
+			std::string rep = data;
 
-      return ::send(fd, rep.c_str(), rep.length(), 0);
-    }
+			/* encoding if any */
+			if (GetEncapsulatedFormat() == Json::Rpc::NETSTRING)
+			{
+				rep = netstring::encode(rep);
+			}
 
-    bool TcpServer::Recv(int fd)
-    {
-      Json::Value response;
-      ssize_t nb = -1;
-      char buf[1500];
+			return ::send(fd, rep.c_str(), rep.length(), 0);
+		}
 
-      nb = recv(fd, buf, sizeof(buf), 0);
+		bool TcpServer::Recv(int fd)
+		{
+			Json::Value response;
+			ssize_t nb = -1;
+			char buf[1500];
 
-      /* give the message to JsonHandler */
-      if(nb > 0)
-      {
-        std::string msg = std::string(buf, nb);
+			nb = recv(fd, buf, sizeof(buf), 0);
 
-        if(GetEncapsulatedFormat() == Json::Rpc::NETSTRING)
-        {
-          try
-          {
-            msg = netstring::decode(msg);
-          }
-          catch(const netstring::NetstringException& e)
-          {
-            /* error parsing Netstring */
-            std::cerr << e.what() << std::endl;
-            return false;
-          }
-        }
+			/* give the message to JsonHandler */
+			if (nb > 0)
+			{
+				std::string msg = std::string(buf, nb);
 
-        m_jsonHandler.Process(msg, response);
+				if (GetEncapsulatedFormat() == Json::Rpc::NETSTRING)
+				{
+					try
+					{
+						msg = netstring::decode(msg);
+					}
+					catch (const netstring::NetstringException& e)
+					{
+						/* error parsing Netstring */
+						std::cerr << e.what() << std::endl;
+						return false;
+					}
+				}
 
-        /* in case of notification message received, the response could be Json::Value::null */
-        if(response != Json::Value::null)
-        {
-          std::string rep = m_jsonHandler.GetString(response);
+				m_jsonHandler.Process(msg, response);
 
-          /* encoding */
-          if(GetEncapsulatedFormat() == Json::Rpc::NETSTRING)
-          {
-            rep = netstring::encode(rep);
-          }
+				/* in case of notification message received, the response could be Json::Value::null */
+				if (response != Json::Value::null)
+				{
+					std::string rep = m_jsonHandler.GetString(response);
 
-          int bytesToSend = rep.length();
-          const char* ptrBuffer = rep.c_str();
-          do
-          {
-            int retVal = send(fd, ptrBuffer, bytesToSend, 0);
-            if(retVal == -1)
-            {
-              /* error */
-              std::cerr << "Error while sending data: " 
-                        << strerror(errno) << std::endl;
-              return false;
-            }
-            bytesToSend -= retVal;
-            ptrBuffer += retVal;
-          }while(bytesToSend > 0);
-        }
+					/* encoding */
+					if (GetEncapsulatedFormat() == Json::Rpc::NETSTRING)
+					{
+						rep = netstring::encode(rep);
+					}
 
-        return true;
-      }
-      else
-      {
-        m_purge.push_back(fd);
-        return false;
-      }
-    }
+					int bytesToSend = rep.length();
+					const char* ptrBuffer = rep.c_str();
+					do
+					{
+						int retVal = send(fd, ptrBuffer, bytesToSend, 0);
+						if (retVal == -1)
+						{
+							/* error */
+							std::cerr << "Error while sending data: "
+								<< strerror(errno) << std::endl;
+							return false;
+						}
+						bytesToSend -= retVal;
+						ptrBuffer += retVal;
+					} while (bytesToSend > 0);
+				}
 
-    void TcpServer::WaitMessage(uint32_t ms)
-    {
-      fd_set fdsr;
-      struct timeval tv;
-      int max_sock = m_sock;
+				return true;
+			}
+			else
+			{
+				m_purge.push_back(fd);
+				return false;
+			}
+		}
 
-      tv.tv_sec = ms / 1000;
-      tv.tv_usec = (ms % 1000 ) / 1000;
+		void TcpServer::WaitMessage(uint32_t ms)
+		{
+			fd_set fdsr;
+			struct timeval tv;
+			int max_sock = m_sock;
 
-      FD_ZERO(&fdsr);
+			tv.tv_sec = ms / 1000;
+			tv.tv_usec = (ms % 1000) / 1000;
+
+			FD_ZERO(&fdsr);
 
 #ifdef _WIN32
-      /* on Windows, a socket is not an int but a SOCKET (unsigned int) */
-      FD_SET((SOCKET)m_sock, &fdsr);
+			/* on Windows, a socket is not an int but a SOCKET (unsigned int) */
+			FD_SET((SOCKET)m_sock, &fdsr);
 #else
-      FD_SET(m_sock, &fdsr);
+			FD_SET(m_sock, &fdsr);
 #endif
 
-      for(std::list<int>::iterator it = m_clients.begin() ; it != m_clients.end() ; it++)
-      {
+			for (std::list<int>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
+			{
 #ifdef _WIN32
-        FD_SET((SOCKET)(*it), &fdsr);
+				FD_SET((SOCKET)(*it), &fdsr);
 #else
-        FD_SET((*it), &fdsr);
+				FD_SET((*it), &fdsr);
 #endif
 
-        if((*it) > max_sock)
-        {
-          max_sock = (*it);
-        }
-      }
+				if ((*it) > max_sock)
+				{
+					max_sock = (*it);
+				}
+			}
 
-      max_sock++;
+			max_sock++;
 
-      if(select(max_sock, &fdsr, NULL, NULL, ms ? &tv : NULL) > 0)
-      {
-        if(FD_ISSET(m_sock, &fdsr))
-        {
-          Accept();
-        }
+			if (select(max_sock, &fdsr, NULL, NULL, ms ? &tv : NULL) > 0)
+			{
+				if (FD_ISSET(m_sock, &fdsr))
+				{
+					Accept();
+				}
 
-        for(std::list<int>::iterator it = m_clients.begin() ; it != m_clients.end() ; it++)
-        {
-          if(FD_ISSET((*it), &fdsr))
-          {
-            Recv((*it));
-          }
-        }
+				for (std::list<int>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
+				{
+					if (FD_ISSET((*it), &fdsr))
+					{
+						Recv((*it));
+					}
+				}
 
-        /* remove disconnect socket descriptor */
-        for(std::list<int>::iterator it = m_purge.begin() ; it != m_purge.end() ; it++)
-        {
-          m_clients.remove((*it));
-        }
+				/* remove disconnect socket descriptor */
+				for (std::list<int>::iterator it = m_purge.begin(); it != m_purge.end(); it++)
+				{
+					m_clients.remove((*it));
+				}
 
-        /* purge disconnected list */
-        m_purge.erase(m_purge.begin(), m_purge.end());
-      }
-      else
-      {
-        /* error */
-      }
-    }
+				/* purge disconnected list */
+				m_purge.erase(m_purge.begin(), m_purge.end());
+			}
+			else
+			{
+				/* error */
+#ifdef _WIN32
+				int err = WSAGetLastError();
 
-    bool TcpServer::Listen() const
-    {
-      if(m_sock == -1)
-      {
-        return false;
-      }
+				err = err;
+#endif
+			}
+		}
 
-      if(listen(m_sock, 5) == -1)
-      {
-        return false;
-      }
+		bool TcpServer::Listen() const
+		{
+			if (m_sock == -1)
+			{
+				return false;
+			}
 
-      return true;
-    }
+			if (listen(m_sock, 5) == -1)
+			{
+				return false;
+			}
 
-    bool TcpServer::Accept()
-    {
-      int client = -1;
-      socklen_t addrlen = sizeof(struct sockaddr_storage);
+			return true;
+		}
 
-      if(m_sock == -1)
-      {
-        return false;
-      }
+		bool TcpServer::Accept()
+		{
+			int client = -1;
+			socklen_t addrlen = sizeof(struct sockaddr_storage);
 
-      client = accept(m_sock, 0, &addrlen);
+			if (m_sock == -1)
+			{
+				return false;
+			}
 
-      if(client == -1)
-      {
-        return false;
-      }
+			client = accept(m_sock, 0, &addrlen);
 
-      m_clients.push_back(client);
-      return true;
-    }
+			if (client == -1)
+			{
+				return false;
+			}
 
-    void TcpServer::Close()
-    {
-      /* close all client sockets */
-      for(std::list<int>::iterator it = m_clients.begin() ; it != m_clients.end() ; it++)
-      {
-        ::close((*it));
-      }
-      m_clients.erase(m_clients.begin(), m_clients.end());
-      
-      /* listen socket should be closed in Server destructor */
-    }
+			m_clients.push_back(client);
+			return true;
+		}
 
-    const std::list<int> TcpServer::GetClients() const
-    {
-      return m_clients;
-    }
+		void TcpServer::Close()
+		{
+			/* close all client sockets */
+			for (std::list<int>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
+			{
+				::close((*it));
+			}
+			m_clients.erase(m_clients.begin(), m_clients.end());
 
-  } /* namespace Rpc */
+			/* listen socket should be closed in Server destructor */
+		}
+
+		const std::list<int> TcpServer::GetClients() const
+		{
+			return m_clients;
+		}
+
+	} /* namespace Rpc */
 
 } /* namespace Json */
 

@@ -94,7 +94,8 @@ namespace WrapperTest
             NuiState state = NuiState.Instance;
 
             state.Connect("tcp://127.0.0.1:7500");
-            state.GetPipeline("root");
+            var res = state.GetPipeline("root");
+            
         }
     }
 }

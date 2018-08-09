@@ -116,6 +116,10 @@
     <Compile Include="JsonRpcClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="JsonRpcTcpClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Netstrings.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

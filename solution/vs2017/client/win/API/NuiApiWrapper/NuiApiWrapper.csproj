@@ -46,6 +46,7 @@
     <Compile Include="nuiEndpoint.cs" />
     <Compile Include="nuiModule.cs" />
     <Compile Include="nuiPipeline.cs" />
+    <Compile Include="nuiProperty.cs" />
     <Compile Include="nuiResponse.cs" />
     <Compile Include="nuiState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

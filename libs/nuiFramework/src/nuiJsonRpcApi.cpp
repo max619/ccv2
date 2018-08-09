@@ -14,7 +14,7 @@ LOG_DECLARE("RPC");
 
 //! \def ADDRPCMETHOD(FUNC, RPCCALL)
 //! Shortcut to easier add/control methods of JsonRpcApi
-#define ADDRPCMETHOD(FUNC, RPCCALL) server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::##FUNC,std::string("##RPCCALL")));
+#define ADDRPCMETHOD(func) server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::##func##, std::string(#func)));
 
 nuiJsonRpcApi *nuiJsonRpcApi::getInstance()
 {
@@ -68,34 +68,34 @@ bool nuiJsonRpcApi::init(std::string address, int port)
 	this->finished = false;
 	LOG(NUI_DEBUG, "running");
 
-	ADDRPCMETHOD(nui_list_dynamic, nui_list_dynamic)
-		ADDRPCMETHOD(nui_list_pipelines, nui_list_pipelines)
-		ADDRPCMETHOD(nui_workflow_start, nui_workflow_start)
-		ADDRPCMETHOD(nui_workflow_stop, nui_workflow_stop)
-		ADDRPCMETHOD(nui_workflow_quit, nui_workflow_quit)
-		ADDRPCMETHOD(nui_create_pipeline, nui_create_pipeline)
-		ADDRPCMETHOD(nui_create_module, nui_create_module)
-		ADDRPCMETHOD(nui_create_connection, nui_create_connection)
-		ADDRPCMETHOD(nui_update_pipeline, nui_update_pipeline)
-		ADDRPCMETHOD(nui_update_pipelineProperty, nui_update_pipelineProperty)
-		ADDRPCMETHOD(nui_update_moduleProperty, nui_update_moduleProperty)
-		ADDRPCMETHOD(nui_update_endpoint, nui_update_endpoint)
-		ADDRPCMETHOD(nui_update_connection, nui_update_connection)
-		ADDRPCMETHOD(nui_update_endpointCount, nui_update_endpointCount)
-		ADDRPCMETHOD(nui_delete_pipeline, nui_delete_pipeline)
-		ADDRPCMETHOD(nui_delete_module, nui_delete_module)
-		ADDRPCMETHOD(nui_delete_endpoint, nui_delete_endpoint)
-		ADDRPCMETHOD(nui_delete_connection, nui_delete_connection)
-		ADDRPCMETHOD(nui_get_current, nui_get_current)
-		ADDRPCMETHOD(nui_get_pipeline, nui_get_pipeline)
-		ADDRPCMETHOD(nui_get_module, nui_get_module)
-		ADDRPCMETHOD(nui_get_connection, nui_get_connection)
-		ADDRPCMETHOD(nui_navigate_push, nui_navigate_push)
-		ADDRPCMETHOD(nui_navigate_pop, nui_navigate_pop)
-		ADDRPCMETHOD(nui_save_workflow, nui_save_workflow)
-		ADDRPCMETHOD(nui_get_module_properties, nui_get_module_properties)
+	ADDRPCMETHOD(nui_list_dynamic);
+	ADDRPCMETHOD(nui_list_pipelines);
+	ADDRPCMETHOD(nui_workflow_start);
+	ADDRPCMETHOD(nui_workflow_stop);
+	ADDRPCMETHOD(nui_workflow_quit);
+	ADDRPCMETHOD(nui_create_pipeline);
+	ADDRPCMETHOD(nui_create_module);
+	ADDRPCMETHOD(nui_create_connection);
+	ADDRPCMETHOD(nui_update_pipeline);
+	ADDRPCMETHOD(nui_update_pipelineProperty);
+	ADDRPCMETHOD(nui_update_moduleProperty);
+	ADDRPCMETHOD(nui_update_endpoint);
+	ADDRPCMETHOD(nui_update_connection);
+	ADDRPCMETHOD(nui_update_endpointCount);
+	ADDRPCMETHOD(nui_delete_pipeline);
+	ADDRPCMETHOD(nui_delete_module);
+	ADDRPCMETHOD(nui_delete_endpoint);
+	ADDRPCMETHOD(nui_delete_connection);
+	ADDRPCMETHOD(nui_get_current);
+	ADDRPCMETHOD(nui_get_pipeline);
+	ADDRPCMETHOD(nui_get_module);
+	ADDRPCMETHOD(nui_get_connection);
+	ADDRPCMETHOD(nui_navigate_push);
+	ADDRPCMETHOD(nui_navigate_pop);
+	ADDRPCMETHOD(nui_save_workflow);
+	ADDRPCMETHOD(nui_get_module_properties);
 
-		return true;
+	return true;
 };
 
 bool nuiJsonRpcApi::isInitialized()
@@ -156,7 +156,8 @@ bool nuiJsonRpcApi::nui_list_dynamic(const Json::Value& root, Json::Value& respo
 		jModules->append(*it);
 
 	setSuccess(response);
-	response["list"] = *jModules;
+	response["result"] = *jModules;
+	response["data_type"] = "list";
 
 	return true;
 }
@@ -176,7 +177,8 @@ bool nuiJsonRpcApi::nui_list_pipelines(const Json::Value& root, Json::Value& res
 		jModules->append(*it);
 
 	setSuccess(response);
-	response["list"] = *jModules;
+	response["result"] = *jModules;
+	response["data_type"] = "list";
 
 	return true;
 }
@@ -238,7 +240,8 @@ bool nuiJsonRpcApi::nui_create_pipeline(const Json::Value& root, Json::Value& re
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -258,7 +261,8 @@ bool nuiJsonRpcApi::nui_create_module(const Json::Value& root, Json::Value& resp
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -283,7 +287,8 @@ bool nuiJsonRpcApi::nui_create_connection(const Json::Value& root, Json::Value& 
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_connection(descriptor);
+		response["result"] = serialize_connection(descriptor);
+		response["data_type"] = "nuiConnectionDescriptor";
 		return true;
 	}
 }
@@ -310,7 +315,8 @@ bool nuiJsonRpcApi::nui_update_pipeline(const Json::Value& root, Json::Value& re
 		descr->setDescription(newDescription);
 		nuiModuleDescriptor* res = nuiFrameworkManager::getInstance().updatePipeline(pipeline, descr);
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(res);
+		response["result"] = serialize_pipeline(res);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -341,7 +347,8 @@ bool nuiJsonRpcApi::nui_update_pipelineProperty(const Json::Value& root, Json::V
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -375,7 +382,8 @@ bool nuiJsonRpcApi::nui_update_moduleProperty(const Json::Value& root, Json::Val
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_module(descriptor);
+		response["result"] = serialize_module(descriptor);
+		response["data_type"] = "nuiModuleDescriptor";
 		return true;
 	}
 }
@@ -423,7 +431,8 @@ bool nuiJsonRpcApi::nui_update_endpoint(const Json::Value& root, Json::Value& re
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_endpoint(descriptor);
+		response["result"] = serialize_endpoint(descriptor);
+		response["data_type"] = "nuiEndpointDescriptor";
 		return true;
 	}
 }
@@ -464,7 +473,8 @@ bool nuiJsonRpcApi::nui_update_connection(const Json::Value& root, Json::Value& 
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_connection(descriptor);
+		response["result"] = serialize_connection(descriptor);
+		response["data_type"] = "nuiConnectionDescriptor";
 		return true;
 	}
 }
@@ -506,7 +516,8 @@ bool nuiJsonRpcApi::nui_update_endpointCount(const Json::Value& root, Json::Valu
 	else
 	{
 		setSuccess(response);
-		response["count"] = countUpdated;
+		response["result"] = countUpdated;
+		response["data_type"] = "int";
 		return true;
 	}
 }
@@ -546,7 +557,8 @@ bool nuiJsonRpcApi::nui_delete_module(const Json::Value& root, Json::Value& resp
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -576,7 +588,8 @@ bool nuiJsonRpcApi::nui_delete_endpoint(const Json::Value& root, Json::Value& re
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -600,7 +613,8 @@ bool nuiJsonRpcApi::nui_delete_connection(const Json::Value& root, Json::Value& 
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -617,7 +631,8 @@ bool nuiJsonRpcApi::nui_get_current(const Json::Value& root, Json::Value& respon
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -635,7 +650,8 @@ bool nuiJsonRpcApi::nui_get_pipeline(const Json::Value& root, Json::Value& respo
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -654,7 +670,8 @@ bool nuiJsonRpcApi::nui_get_module(const Json::Value& root, Json::Value& respons
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_module(descriptor);
+		response["result"] = serialize_module(descriptor);
+		response["data_type"] = "nuiModuleDescriptor";
 		return true;
 	}
 }
@@ -691,7 +708,8 @@ bool nuiJsonRpcApi::nui_get_connection(const Json::Value& root, Json::Value& res
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_connection(descriptor);
+		response["result"] = serialize_connection(descriptor);
+		response["data_type"] = "nuiConnectionDescriptor";
 		return true;
 	}
 }
@@ -711,7 +729,8 @@ bool nuiJsonRpcApi::nui_navigate_push(const Json::Value& root, Json::Value& resp
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -729,7 +748,8 @@ bool nuiJsonRpcApi::nui_navigate_pop(const Json::Value& root, Json::Value& respo
 	else
 	{
 		setSuccess(response);
-		response["descriptor"] = serialize_pipeline(descriptor);
+		response["result"] = serialize_pipeline(descriptor);
+		response["data_type"] = "nuiPipelineDescriptor";
 		return true;
 	}
 }
@@ -809,6 +829,9 @@ Json::Value nuiJsonRpcApi::serialize_module(nuiModuleDescriptor* descriptor)
 		connections->append(serialize_connection(descriptor->getDataStreamDescriptor(i)));
 	jModule["connections"] = *connections;
 
+	jModule["properties"] = serialize_properties(descriptor->getProperties());
+	
+
 	return jModule;
 }
 
@@ -853,11 +876,10 @@ Json::Value nuiJsonRpcApi::serialize_properties(std::map<std::string, nuiPropert
 		prop["type"] = p->getType();
 		prop["name"] = it->first;
 		prop["value"] = p->asString();
-		jProps[i] = prop;
+		jProps.append(prop);
 
-		i++;
 	}
-	
+
 	return jProps;
 }
 

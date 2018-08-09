@@ -45,12 +45,17 @@ namespace NuiApiWrapper
 
         public void Connect(string url = "http://localhost:8080/")
         {
-            client = new JsonRpcClient();
+            if (url.IndexOf("http") > -1)
+                client = new JsonRpcClient();
+            else if (url.IndexOf("tcp") > -1)
+                client = new JsonRpcTcpClient();
+            else
+                throw new ArgumentException("Defined unknown protocol", nameof(url));
             client.Url = url;
         }
 
 #if TEST
-    #region TestData
+        #region TestData
 
         private string test_RootPipelineJSON = @"
 {
@@ -175,7 +180,7 @@ namespace NuiApiWrapper
 			},
         ]
     }}";
-    #endregion
+        #endregion
 #endif
 
         /************************************************************************/
@@ -204,7 +209,7 @@ namespace NuiApiWrapper
         //! should really be module index and return null if we can navigate into selected module
         public PipelineDescriptor NavigatePush(int moduleIdx)
         {
-            PipelineDescriptor newPipeline  = (PipelineDescriptor) NuiState.Instance.client.Invoke( 
+            PipelineDescriptor newPipeline = (PipelineDescriptor)NuiState.Instance.client.Invoke(
                 typeof(PipelineDescriptor),
                 "nui_navigate_push");
 
@@ -402,7 +407,7 @@ namespace NuiApiWrapper
                     "nui_update_endpoint",
                     type, endpointIdx, descriptor, null);
             }
-            else 
+            else
             {
                 endpoint = (EndpointDescriptor)NuiState.Instance.client.InvokeVargs(
                     typeof(EndpointDescriptor),
@@ -415,7 +420,7 @@ namespace NuiApiWrapper
 
         public ConnectionDescriptor UpdateConnection(string pipelineName,
             int srcModuleIdx, int srcModulePort,
-            int dstModuleIdx, int dstModulePort, params KeyValuePair<string,object>[] keyValues)
+            int dstModuleIdx, int dstModulePort, params KeyValuePair<string, object>[] keyValues)
         {
             var connection = (ConnectionDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(ConnectionDescriptor),
@@ -503,10 +508,11 @@ namespace NuiApiWrapper
 #else
         public PipelineDescriptor GetPipeline(string pipelineName)
         {
-            var pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+            var args = new { pipeline = pipelineName };
+            var pipeline = (PipelineDescriptor)NuiState.Instance.client.Invoke(
                 typeof(PipelineDescriptor),
                 "nui_get_pipeline",
-                pipelineName);
+                args);
 
             return pipeline;
         }

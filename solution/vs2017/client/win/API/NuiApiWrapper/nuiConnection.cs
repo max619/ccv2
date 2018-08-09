@@ -25,15 +25,15 @@ namespace NuiApiWrapper
 
     public class ConnectionDescriptor
     {
-        public int sourceModule;
-        public int sourcePort;
-        public int destinationModule;
-        public int destinationPort;
-        public bool deepCopy;
-        public bool asyncMode;
-        public bool buffered;
-        public int bufferSize;
-        public bool lastPacket;
-        public bool overflow;
+        public int asyncMode { get; set; }
+        public int bufferSize { get; set; }
+        public int buffered { get; set; }
+        public int deepCopy { get; set; }
+        public int destinationModule { get; set; }
+        public int destinationPort { get; set; }
+        public int lastPacket { get; set; }
+        public int overflow { get; set; }
+        public int sourceModule { get; set; }
+        public int sourcePort { get; set; }
     }
 }

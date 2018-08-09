@@ -83,6 +83,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\libs\nuiModule\inc;..\..\..\libs\nuiSystem\inc;..\..\..\libs\3rdParty\json-cpp\include;..\inc;..\..\..\libs\3rdParty\json-rpc\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

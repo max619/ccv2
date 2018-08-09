@@ -38,8 +38,8 @@ namespace Jayrock.JsonRpc
 
     public class JsonRpcClient : HttpWebClientProtocol
     {
-        private int _id;
-        private static readonly object[] _zeroArgs = new object[0];
+        protected int _id;
+        protected static readonly object[] _zeroArgs = new object[0];
 
         public object Invoke(string method)
         {
@@ -110,7 +110,7 @@ namespace Jayrock.JsonRpc
                 return OnResponse(JsonText.CreateReader(reader), returnType);
         }
 
-        private object OnResponse(JsonReader reader, Type returnType)
+        protected object OnResponse(JsonReader reader, Type returnType)
         {
             Debug.Assert(reader != null);
             Debug.Assert(returnType != null);

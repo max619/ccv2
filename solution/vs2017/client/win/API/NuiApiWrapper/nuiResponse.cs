@@ -16,12 +16,12 @@ namespace NuiApiWrapper
         /// <summary>
         /// Do NOT use directly, call GetResponse instead
         /// </summary>
-        public T       descriptor;
+        public T       result;
         
         public T GetResponse()
         {
             if (success)
-                return descriptor;
+                return result;
             else
                 return default(T);
         }
