@@ -43,15 +43,24 @@ typedef enum nuiPropertyType {
 };
 
 class nuiProperty;
+class nuiLinkedProperty;
 
 typedef void (*nuiPropertyCallback)(nuiProperty *property, void *userdata);
 
-typedef struct nuiLinkedProperty
+typedef void(*nuiPropertyUpdatedCallback)(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata);
+
+class nuiLinkedProperty
 {
+public:
 	nuiLinkedProperty();
+	~nuiLinkedProperty();
 
 	void* prop;
 	int type;
+	char* name;
+	bool needCallback;
+	nuiPropertyUpdatedCallback propUpdtCallback;
+	void* userData;
 };
 
 void __execLinkedPropertyCallback(nuiProperty* prop, void* userdata);

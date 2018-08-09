@@ -78,7 +78,7 @@ void nuiRealSenseModule::initAnchorPoints()
 	factory.platformName = this->hasProperty("platformName") ? this->property("platformName").asString() : "Intel";
 }
 
-void nuiRealSenseModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty& linkedProp)
+void nuiRealSenseModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
 {
 	if (name == "min")
 	{

@@ -237,7 +237,7 @@ nuiModule *nuiPipelineModule::getChildModuleAtIndex(int index)
 {
 	return modules[index];
 }
-void nuiPipelineModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty& linkedProp)
+void nuiPipelineModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
 {
 
 }

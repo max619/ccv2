@@ -53,7 +53,7 @@ typedef nuiModule* (*nuiFactoryCreateCallback)();
 	virtual std::string getDescription(); \
 	virtual std::string getAuthor(); \
 protected:\
-	virtual void propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty& linkedProp);\
+	virtual void propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata);\
 
 #define LinkProperty(propName, propType) this->linkProperty("##propName##", propType, &(##propName##));
 
@@ -62,6 +62,9 @@ protected:\
 #define LinkProperty(propName, propType, prop, description) this->linkProperty(std::string(##propName##), propType, &(##prop##), std::string(##description##));
 
 class nuiEndpointDescriptor;
+
+void __execPropertyUpdatedCallback(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata);
+
 
 //! holds information about module like children modules, endpoints, properties and so on
 class nuiModuleDescriptor
@@ -133,7 +136,6 @@ public:
 	//! basic constructor, creates module with basic properties
 	nuiModule();
 
-	nuiLinkedProperty &linkedProperty(std::string str);
 
 	//! destructor
 	virtual ~nuiModule();
@@ -170,6 +172,7 @@ public:
 	int getOutputEndpointIndex(nuiEndpoint *stream);
 
 	nuiProperty &property(std::string name);
+	nuiLinkedProperty &linkedProperty(std::string str);
 	bool hasProperty(std::string name);
 	std::map<std::string, nuiProperty*> &getProperties();
 	bool isStarted();
@@ -178,7 +181,7 @@ public:
 	virtual std::string getName() = 0;
 	virtual std::string getDescription() = 0;
 	virtual std::string getAuthor() = 0;
-	void setProperty(std::string name, void* val);
+	virtual void propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata);
 
 private:
 	static void thread_process(nuiThread *thread);
@@ -221,9 +224,8 @@ protected:
 	//! endpoint will have non-zero value when is filled with data.
 	char* inputDataReceived;
 
-	std::map<nuiProperty*, nuiLinkedProperty> linkedProperties;
+	std::map<nuiProperty*, nuiLinkedProperty*> linkedProperties;
 protected:
-	virtual void propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty& linkedProp);
 	void linkProperty(std::string& name, int type, void* data, std::string& description = std::string(""));
 	void readLinkedProperties();
 	void writeLinkedproperties();
