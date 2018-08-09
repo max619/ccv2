@@ -15,12 +15,9 @@ nui##modulename##DataPacket::~nui##modulename##DataPacket()\
 {\
 	if (data != NULL)\
 	{\
-		if(isLocalCopy())\
-		{\
-		BlobVector* vec = (BlobVector*)data; \
-		releaseBlobVector(vec); \
-		data = NULL; \
-		}\
+		BlobVector* vec = (BlobVector*)data;\
+		releaseBlobVector(vec);\
+		data = NULL;\
 	}\
 };\
 \

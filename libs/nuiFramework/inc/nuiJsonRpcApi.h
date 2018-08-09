@@ -56,6 +56,7 @@ public:
 	static Json::Value serialize_module(nuiModuleDescriptor* descriptor);
 	static Json::Value serialize_endpoint(nuiEndpointDescriptor *descriptor);
 	static Json::Value serialize_connection(nuiDataStreamDescriptor *descriptor);
+	static Json::Value serialize_properties(std::map<std::string, nuiProperty*> props);
 protected:
 private:
 	nuiJsonRpcApi();
@@ -92,6 +93,7 @@ private:
 	bool nui_get_current(const Json::Value& root, Json::Value& response);
 	bool nui_get_pipeline(const Json::Value& root, Json::Value& response);
 	bool nui_get_module(const Json::Value& root, Json::Value& response);
+	bool nui_get_module_properties(const Json::Value& root, Json::Value& response);
 	bool nui_get_connection(const Json::Value& root, Json::Value& response);
 	bool nui_navigate_push(const Json::Value& root, Json::Value& response);
 	bool nui_navigate_pop(const Json::Value& root, Json::Value& response);

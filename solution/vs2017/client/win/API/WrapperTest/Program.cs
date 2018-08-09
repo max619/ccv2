@@ -93,7 +93,7 @@ namespace WrapperTest
         {
             NuiState state = NuiState.Instance;
 
-            state.Connect("http://127.0.0.1:7500");
+            state.Connect("tcp://127.0.0.1:7500");
             state.GetPipeline("root");
         }
     }

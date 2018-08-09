@@ -416,6 +416,147 @@ bool nuiModule::isSyncedInput()
 	return is_synced_input;
 }
 
+
+
+nuiLinkedProperty &nuiModule::linkedProperty(std::string str)
+{
+	std::map<std::string, nuiProperty*>::iterator it;
+	it = this->properties.find(str);
+
+	nuiProperty* prop = NULL;
+
+	if (it == this->properties.end())
+	{
+		this->properties[str] = new nuiProperty("", "?? auto created ??");
+		prop = this->properties[str];
+	}
+	prop = it->second;
+
+	std::map<nuiProperty*, nuiLinkedProperty>::iterator it1;
+	it1 = this->linkedProperties.find(prop);
+	if (it1 == this->linkedProperties.end())
+	{
+		nuiLinkedProperty linkedProp;
+		this->linkedProperties[prop] = linkedProp;
+		return this->linkedProperties[prop];
+	}
+	return it1->second;
+}
+
+void nuiModule::setProperty(std::string name, void * val)
+{
+	nuiProperty& prop = property(name);
+	nuiLinkedProperty& linkedProp = linkedProperty(name);
+
+	switch (linkedProp.type)
+	{
+	case NUI_PROPERTY_NONE:
+		return;
+	case NUI_PROPERTY_BOOL:
+		prop.set((*(bool*)val));
+		*(bool*)linkedProp.prop = *(bool*)val;
+		break;
+	case NUI_PROPERTY_STRING:
+		prop.set(((char*)val));
+		*(char**)linkedProp.prop = (char*)val;
+		break;
+	case NUI_PROPERTY_INTEGER:
+		prop.set((*(int*)val));
+		*(int*)linkedProp.prop = *(int*)val;
+		break;
+	case NUI_PROPERTY_DOUBLE:
+		prop.set((*(double*)val));
+		*(double*)linkedProp.prop = *(double*)val;
+		break;
+	case NUI_PROPERTY_POINTLIST:
+		prop.set((*(nuiPointList*)val));
+		*(nuiPointList*)linkedProp.prop = *(nuiPointList*)val;
+		break;
+	default:
+		return;
+	}
+
+	propertyUpdated(name, &prop, linkedProp);
+}
+
+void nuiModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty& linkedProp)
+{
+	return;
+}
+
+void nuiModule::linkProperty(std::string & name, int type, void * data, std::string& description)
+{
+	nuiLinkedProperty linkedProp;
+	linkedProp.type = type;
+	linkedProp.prop = data;
+	nuiProperty& prop = property(name);
+	prop.setDescription(description);
+	linkedProperties[&prop] = linkedProp;
+	prop.addCallback(__execLinkedPropertyCallback, &linkedProperties[&prop]);
+}
+
+void nuiModule::readLinkedProperties()
+{
+	for (std::map<nuiProperty*, nuiLinkedProperty>::iterator it = linkedProperties.begin();
+		it != linkedProperties.end(); it++)
+	{
+		nuiProperty* prop = it->first;
+		nuiLinkedProperty linkedProp = it->second;
+
+		switch (linkedProp.type)
+		{
+		case NUI_PROPERTY_BOOL:
+			*(bool*)linkedProp.prop = prop->asBool();
+			break;
+		case NUI_PROPERTY_STRING:
+			*(char**)linkedProp.prop = (char*)(prop->asString().c_str());
+			break;
+		case NUI_PROPERTY_INTEGER:
+			*(int*)linkedProp.prop = prop->asInteger();
+			break;
+		case NUI_PROPERTY_DOUBLE:
+			*(double*)linkedProp.prop = prop->asDouble();
+			break;
+		case NUI_PROPERTY_POINTLIST:
+			*(nuiPointList*)linkedProp.prop = prop->asPointList();
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void nuiModule::writeLinkedproperties()
+{
+	for (std::map<nuiProperty*, nuiLinkedProperty>::iterator it = linkedProperties.begin();
+		it != linkedProperties.end(); it++)
+	{
+		nuiProperty* prop = it->first;
+		nuiLinkedProperty linkedProp = it->second;
+
+		switch (linkedProp.type)
+		{
+		case NUI_PROPERTY_BOOL:
+			prop->set((*(bool*)linkedProp.prop));
+			break;
+		case NUI_PROPERTY_STRING:
+			prop->set(((char*)linkedProp.prop));
+			break;
+		case NUI_PROPERTY_INTEGER:
+			prop->set((*(int*)linkedProp.prop));
+			break;
+		case NUI_PROPERTY_DOUBLE:
+			prop->set((*(double*)linkedProp.prop));
+			break;
+		case NUI_PROPERTY_POINTLIST:
+			prop->set((*(nuiPointList*)linkedProp.prop));
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 //==============================================================================
 // nuiModuleDescriptor methods
 //==============================================================================

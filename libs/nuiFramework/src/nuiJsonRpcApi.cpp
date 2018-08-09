@@ -93,32 +93,7 @@ bool nuiJsonRpcApi::init(std::string address, int port)
 		ADDRPCMETHOD(nui_navigate_push, nui_navigate_push)
 		ADDRPCMETHOD(nui_navigate_pop, nui_navigate_pop)
 		ADDRPCMETHOD(nui_save_workflow, nui_save_workflow)
-
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_save_workflow,std::string("nui_save_workflow")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_list_dynamic,std::string("nui_list_dynamic")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_list_pipelines,std::string("nui_list_pipelines")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_workflow_start,std::string("nui_workflow_start")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_workflow_stop,std::string("nui_workflow_stop")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_workflow_quit,std::string("nui_workflow_quit")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_create_pipeline,std::string("nui_create_pipeline")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_create_module,std::string("nui_create_module")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_create_connection,std::string("nui_create_connection")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_update_pipeline,std::string("nui_update_pipeline")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_update_pipelineProperty,std::string("nui_update_pipelineProperty")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_update_moduleProperty,std::string("nui_update_moduleProperty")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_update_endpoint,std::string("nui_update_endpoint")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_update_connection,std::string("nui_update_connection")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_update_endpointCount,std::string("nui_update_endpointCount")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_delete_pipeline,std::string("nui_delete_pipeline")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_delete_module,std::string("nui_delete_module")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_delete_endpoint,std::string("nui_delete_endpoint")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_delete_connection,std::string("nui_delete_connection")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_get_current,std::string("nui_get_current")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_get_pipeline,std::string("nui_get_pipeline")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_get_module,std::string("nui_get_module")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_get_connection,std::string("nui_get_connection")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_navigate_push,std::string("nui_navigate_push")));
-		//server->AddMethod(new Json::Rpc::RpcMethod<nuiJsonRpcApi>(*this, &nuiJsonRpcApi::nui_navigate_pop,std::string("nui_navigate_pop")));
+		ADDRPCMETHOD(nui_get_module_properties, nui_get_module_properties)
 
 		return true;
 };
@@ -321,7 +296,7 @@ bool nuiJsonRpcApi::nui_update_pipeline(const Json::Value& root, Json::Value& re
 	std::string newDescription = root["params"]["description"].asString();
 	std::string newAuthor = root["params"]["author"].asString();
 
-	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getPipeline(pipeline);
+	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getPipelineDescriptor(pipeline);
 
 	if (descr == NULL)
 	{
@@ -348,7 +323,7 @@ bool nuiJsonRpcApi::nui_update_pipelineProperty(const Json::Value& root, Json::V
 	std::string value = root["params"]["value"].asString();
 	std::string description = root["params"]["description"].asString();
 
-	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getPipeline(pipeline);
+	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getPipelineDescriptor(pipeline);
 
 	std::map<std::string, nuiProperty*> props = descr->getProperties();
 	std::map<std::string, nuiProperty*>::iterator property = props.find(key);
@@ -382,7 +357,7 @@ bool nuiJsonRpcApi::nui_update_moduleProperty(const Json::Value& root, Json::Val
 	std::string description = root["params"]["description"].asString();
 	int moduleIndex = root["params"]["index"].asInt();
 
-	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getModule(pipeline, moduleIndex);
+	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getModuleDescriptor(pipeline, moduleIndex);
 
 	std::map<std::string, nuiProperty*> props = descr->getProperties();
 	std::map<std::string, nuiProperty*>::iterator property = props.find(key);
@@ -418,7 +393,7 @@ bool nuiJsonRpcApi::nui_update_endpoint(const Json::Value& root, Json::Value& re
 	nuiEndpointDescriptor* descriptor = NULL;
 	if (type == "input")
 	{
-		current = nuiFrameworkManager::getInstance().getInputEndpoint(pipeline, index);
+		current = nuiFrameworkManager::getInstance().getInputEndpointDescriptor(pipeline, index);
 		if (current == NULL)
 		{
 			setFailure(response);
@@ -430,7 +405,7 @@ bool nuiJsonRpcApi::nui_update_endpoint(const Json::Value& root, Json::Value& re
 	}
 	else if (type == "output")
 	{
-		current = nuiFrameworkManager::getInstance().getOutputEndpoint(pipeline, index);
+		current = nuiFrameworkManager::getInstance().getOutputEndpointDescriptor(pipeline, index);
 		if (current == NULL)
 		{
 			setFailure(response);
@@ -463,7 +438,7 @@ bool nuiJsonRpcApi::nui_update_connection(const Json::Value& root, Json::Value& 
 	int dstPort = root["params"]["destinationPort"].asInt();
 
 	nuiDataStreamDescriptor *current = nuiFrameworkManager::getInstance().
-		getConnection(pipeline, srcIndex, dstIndex, srcPort, dstPort);
+		getConnectionDescriptor(pipeline, srcIndex, dstIndex, srcPort, dstPort);
 
 	if (current == NULL)
 	{
@@ -505,7 +480,7 @@ bool nuiJsonRpcApi::nui_update_endpointCount(const Json::Value& root, Json::Valu
 	int countUpdated = -1;
 	if (type == "input")
 	{
-		current = nuiFrameworkManager::getInstance().getPipeline(pipeline);
+		current = nuiFrameworkManager::getInstance().getPipelineDescriptor(pipeline);
 		if (current == NULL)
 		{
 			setFailure(response);
@@ -515,7 +490,7 @@ bool nuiJsonRpcApi::nui_update_endpointCount(const Json::Value& root, Json::Valu
 	}
 	else if (type == "output")
 	{
-		current = nuiFrameworkManager::getInstance().getPipeline(pipeline);
+		current = nuiFrameworkManager::getInstance().getPipelineDescriptor(pipeline);
 		if (current == NULL)
 		{
 			setFailure(response);
@@ -633,7 +608,7 @@ bool nuiJsonRpcApi::nui_delete_connection(const Json::Value& root, Json::Value& 
 bool nuiJsonRpcApi::nui_get_current(const Json::Value& root, Json::Value& response)
 {
 	response["id"] = root["id"];
-	nuiModuleDescriptor* descriptor = nuiFrameworkManager::getInstance().getCurrentPipeline();
+	nuiModuleDescriptor* descriptor = nuiFrameworkManager::getInstance().getCurrentPipelineDescriptor();
 	if (descriptor == NULL)
 	{
 		setFailure(response);
@@ -651,7 +626,7 @@ bool nuiJsonRpcApi::nui_get_pipeline(const Json::Value& root, Json::Value& respo
 {
 	response["id"] = root["id"];
 	std::string pipeline = root["params"]["pipeline"].asString();
-	nuiModuleDescriptor* descriptor = nuiFrameworkManager::getInstance().getPipeline(pipeline);
+	nuiModuleDescriptor* descriptor = nuiFrameworkManager::getInstance().getPipelineDescriptor(pipeline);
 	if (descriptor == NULL)
 	{
 		setFailure(response);
@@ -670,7 +645,7 @@ bool nuiJsonRpcApi::nui_get_module(const Json::Value& root, Json::Value& respons
 	response["id"] = root["id"];
 	std::string pipeline = root["params"]["pipeline"].asString();
 	int index = root["params"]["identifier"].asInt();
-	nuiModuleDescriptor* descriptor = nuiFrameworkManager::getInstance().getModule(pipeline, index);
+	nuiModuleDescriptor* descriptor = nuiFrameworkManager::getInstance().getModuleDescriptor(pipeline, index);
 	if (descriptor == NULL)
 	{
 		setFailure(response, "couldn't find module");
@@ -684,6 +659,18 @@ bool nuiJsonRpcApi::nui_get_module(const Json::Value& root, Json::Value& respons
 	}
 }
 
+bool nuiJsonRpcApi::nui_get_module_properties(const Json::Value & root, Json::Value & response)
+{
+	/*response["id"] = root["id"];
+	std::string pipeline = root["params"]["pipeline"].asString();
+	int moduleIndex = root["params"]["index"].asInt();
+
+	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getModuleDescriptor(pipeline, moduleIndex);
+
+	descr->get*/
+	return false;
+}
+
 bool nuiJsonRpcApi::nui_get_connection(const Json::Value& root, Json::Value& response)
 {
 	response["id"] = root["id"];
@@ -694,7 +681,7 @@ bool nuiJsonRpcApi::nui_get_connection(const Json::Value& root, Json::Value& res
 	int dstPort = root["params"]["destinationPort"].asInt();
 
 	nuiDataStreamDescriptor* descriptor = nuiFrameworkManager::getInstance().
-		getConnection(pipeline, srcIndex, dstIndex, srcPort, dstPort);
+		getConnectionDescriptor(pipeline, srcIndex, dstIndex, srcPort, dstPort);
 
 	if (descriptor == NULL)
 	{
@@ -750,7 +737,7 @@ bool nuiJsonRpcApi::nui_navigate_pop(const Json::Value& root, Json::Value& respo
 bool nuiJsonRpcApi::nui_save_workflow(const Json::Value& root, Json::Value& response)
 {
 	response["id"] = root["id"];
-	response = serialize_workflow(nuiFrameworkManager::getInstance().getWorkflowRoot());
+	response = serialize_workflow(nuiFrameworkManager::getInstance().getWorkflowRootDescriptor());
 	setSuccess(response);
 	return true;
 }
@@ -850,6 +837,28 @@ Json::Value nuiJsonRpcApi::serialize_connection(nuiDataStreamDescriptor *descrip
 	jConnection["overflow"] = (int)descriptor->overflow;
 
 	return jConnection;
+}
+
+Json::Value nuiJsonRpcApi::serialize_properties(std::map<std::string, nuiProperty*> props)
+{
+	Json::Value jProps;
+
+	size_t i = 0;
+	for (std::map<std::string, nuiProperty*>::iterator it = props.begin();
+		it != props.end(); it++)
+	{
+		nuiProperty* p = it->second;
+
+		Json::Value prop;
+		prop["type"] = p->getType();
+		prop["name"] = it->first;
+		prop["value"] = p->asString();
+		jProps[i] = prop;
+
+		i++;
+	}
+	
+	return jProps;
 }
 
 void nuiJsonRpcApi::setFailure(Json::Value &response)

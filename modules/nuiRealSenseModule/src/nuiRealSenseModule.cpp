@@ -14,6 +14,22 @@ nuiRealSenseModule::nuiRealSenseModule() : nuiModule() {
 	this->setOutputEndpoint(0, this->output);
 
 	this->outputDataPacket = new nuiRealSenseModuleDataPacket();
+
+	LinkProperty("x0", NUI_PROPERTY_INTEGER, realsenseW.pos[0].x);
+	LinkProperty("y0", NUI_PROPERTY_INTEGER, realsenseW.pos[0].y);
+	LinkProperty("x1", NUI_PROPERTY_INTEGER, realsenseW.pos[1].x);
+	LinkProperty("y1", NUI_PROPERTY_INTEGER, realsenseW.pos[1].y);
+	LinkProperty("x2", NUI_PROPERTY_INTEGER, realsenseW.pos[2].x);
+	LinkProperty("y2", NUI_PROPERTY_INTEGER, realsenseW.pos[2].y);
+
+	LinkProperty("min", NUI_PROPERTY_DOUBLE, min);
+	LinkProperty("max", NUI_PROPERTY_DOUBLE, max);
+
+	LinkProperty("fps", NUI_PROPERTY_INTEGER, realsenseW.fps);
+
+	LinkProperty("frameWidth", NUI_PROPERTY_INTEGER, realsenseW.frameSize.width);
+	LinkProperty("frameHeight", NUI_PROPERTY_INTEGER, realsenseW.frameSize.height);
+
 }
 
 nuiRealSenseModule::~nuiRealSenseModule() {
@@ -55,19 +71,21 @@ void nuiRealSenseModule::start() {
 
 void nuiRealSenseModule::initAnchorPoints()
 {
-	realsenseW.pos[0] = CvPoint(this->hasProperty("x0") ? this->property("x0").asInteger() : 0, this->hasProperty("y0") ? this->property("y0").asInteger() : 0);
-	realsenseW.pos[1] = CvPoint(this->hasProperty("x1") ? this->property("x1").asInteger() : 0, this->hasProperty("y1") ? this->property("y1").asInteger() : 0);
-	realsenseW.pos[2] = CvPoint(this->hasProperty("x2") ? this->property("x2").asInteger() : 0, this->hasProperty("y2") ? this->property("y2").asInteger() : 0);
-
-	realsenseW.thresh.x() = (float)(this->hasProperty("min") ? this->property("min").asDouble() : 0.) / 1000.f;
-	realsenseW.thresh.y() = (float)(this->hasProperty("max") ? this->property("max").asDouble() : 0.) / 1000.f;	
-
-	realsenseW.shouldWarp = this->hasProperty("shouldWarp") ? this->property("shouldWarp").asBool() : false;
-
-	realsenseW.fps = this->hasProperty("fps") ? this->property("fps").asInteger() : 30;
-	realsenseW.frameSize.width = this->hasProperty("frameWidth") ? this->property("frameWidth").asInteger() : 1280;
-	realsenseW.frameSize.height = this->hasProperty("frameHeight") ? this->property("frameHeight").asInteger() : 720;
-
+	//this->readLinkedProperties();
+	realsenseW.thresh.x() = min / 1000.f;
+	realsenseW.thresh.y() = max / 1000.f;
 	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
 	factory.platformName = this->hasProperty("platformName") ? this->property("platformName").asString() : "Intel";
+}
+
+void nuiRealSenseModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty& linkedProp)
+{
+	if (name == "min")
+	{
+		realsenseW.thresh.x() = prop->asDouble() / 1000.f;
+	} else
+	if (name == "max")
+	{
+		realsenseW.thresh.x() = prop->asDouble() / 1000.f;
+	}
 }

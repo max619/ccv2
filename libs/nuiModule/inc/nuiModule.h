@@ -2,7 +2,8 @@
  * \file      nuiModule.h
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
- * \date      2012-2013
+ * \author    Maxim Bagryantsev
+ * \date      2012-2018
  * \copyright Copyright 2011 NUI Group. All rights reserved.
  */
 
@@ -51,6 +52,14 @@ typedef nuiModule* (*nuiFactoryCreateCallback)();
 	virtual std::string getName(); \
 	virtual std::string getDescription(); \
 	virtual std::string getAuthor(); \
+protected:\
+	virtual void propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty& linkedProp);\
+
+#define LinkProperty(propName, propType) this->linkProperty("##propName##", propType, &(##propName##));
+
+#define LinkProperty(propName, propType, prop) this->linkProperty(std::string(##propName##), propType, &(##prop##));
+
+#define LinkProperty(propName, propType, prop, description) this->linkProperty(std::string(##propName##), propType, &(##prop##), std::string(##description##));
 
 class nuiEndpointDescriptor;
 
@@ -124,6 +133,8 @@ public:
 	//! basic constructor, creates module with basic properties
 	nuiModule();
 
+	nuiLinkedProperty &linkedProperty(std::string str);
+
 	//! destructor
 	virtual ~nuiModule();
 
@@ -167,6 +178,7 @@ public:
 	virtual std::string getName() = 0;
 	virtual std::string getDescription() = 0;
 	virtual std::string getAuthor() = 0;
+	void setProperty(std::string name, void* val);
 
 private:
 	static void thread_process(nuiThread *thread);
@@ -208,6 +220,13 @@ protected:
 	//! array, used to check whether all endpoints received data (when using is_synced_input).
 	//! endpoint will have non-zero value when is filled with data.
 	char* inputDataReceived;
+
+	std::map<nuiProperty*, nuiLinkedProperty> linkedProperties;
+protected:
+	virtual void propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty& linkedProp);
+	void linkProperty(std::string& name, int type, void* data, std::string& description = std::string(""));
+	void readLinkedProperties();
+	void writeLinkedproperties();
 };
 
 #endif

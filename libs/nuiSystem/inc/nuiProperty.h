@@ -24,6 +24,8 @@
 
 #include "nuiUtils.h"
 
+
+
 typedef struct nuiPoint {
     double x;
     double y;
@@ -43,6 +45,16 @@ typedef enum nuiPropertyType {
 class nuiProperty;
 
 typedef void (*nuiPropertyCallback)(nuiProperty *property, void *userdata);
+
+typedef struct nuiLinkedProperty
+{
+	nuiLinkedProperty();
+
+	void* prop;
+	int type;
+};
+
+void __execLinkedPropertyCallback(nuiProperty* prop, void* userdata);
 
 class nuiProperty {
 public:

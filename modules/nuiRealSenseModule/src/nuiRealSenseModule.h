@@ -44,6 +44,7 @@ private:
 	IplImage* img;
 
 	ocvRealsenseWrapper realsenseW;
+	double min, max;
 #ifdef ALLOW_BENCHMARKING	
 	nuiBenchmark benchmark;
 #endif

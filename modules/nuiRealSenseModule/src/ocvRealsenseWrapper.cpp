@@ -259,8 +259,8 @@ IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 		benchmark.stopBenchmarking("ocvRealsenseWrapper::queryWorldCoordinates processor->getTouchedPointsCpu");
 #endif
 	}
-	if(shouldWarp)
-		cvWarpPerspective(procres, procres, perspectiveTransformMatrix);
+	/*if(shouldWarp)
+		cvWarpPerspective(procres, procres, perspectiveTransformMatrix);*/
 
 	
 	return procres;

@@ -382,6 +382,31 @@ std::string nuiProperty::getPropertyTypeName(nuiPropertyType type) {
 	return "unknown";
 }
 
+void __execLinkedPropertyCallback(nuiProperty * prop, void * userdata)
+{
+	nuiLinkedProperty* linkedProp = (nuiLinkedProperty*)userdata;
+	switch (linkedProp->type)
+	{
+	case NUI_PROPERTY_BOOL:
+		*(bool*)linkedProp->prop = prop->asBool();
+		break;
+	case NUI_PROPERTY_STRING:
+		*(char**)linkedProp->prop = (char*)(prop->asString().c_str());
+		break;
+	case NUI_PROPERTY_INTEGER:
+		*(int*)linkedProp->prop = prop->asInteger();
+		break;
+	case NUI_PROPERTY_DOUBLE:
+		*(double*)linkedProp->prop = prop->asDouble();
+		break;
+	case NUI_PROPERTY_POINTLIST:
+		*(nuiPointList*)linkedProp->prop = prop->asPointList();
+		break;
+	default:
+		break;
+	}
+}
+
 std::ostream& operator<< (std::ostream& o, const nuiProperty& p) {
 
 	// Bad bad ... :'(
@@ -485,3 +510,8 @@ bool nuiProperty::isText() {
 	return this->is_text;
 }
 
+nuiLinkedProperty::nuiLinkedProperty()
+{
+	prop = NULL;
+	type = NUI_PROPERTY_NONE;
+}

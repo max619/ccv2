@@ -127,21 +127,23 @@ public:
 	//GET METHODS ================================================================
 
 	// ++ reviewed
-	nuiModuleDescriptor *getCurrentPipeline();
+	nuiModuleDescriptor *getCurrentPipelineDescriptor();
 	// ++ reviewed
-	nuiModuleDescriptor *getWorkflowRoot();
+	nuiModuleDescriptor *getWorkflowRootDescriptor();
 	// ++ reviewed
-	nuiModuleDescriptor *getPipeline(std::string &pipelineName);
+	nuiModuleDescriptor *getPipelineDescriptor(std::string &pipelineName);
 	// ++ reviewed
-	nuiModuleDescriptor *getModule(std::string &pipelineName, int index);
+	nuiModuleDescriptor *getModuleDescriptor(std::string &pipelineName, int index);
 	// ++ reviewed
-	nuiModuleDescriptor *getModule(std::string &moduleName);
+	nuiModuleDescriptor *getModuleDescriptor(std::string &moduleName);
+
+	nuiModule* getModule(std::string &pipelineName, int index);
 	// ++ reviewed
-	nuiEndpointDescriptor *getInputEndpoint(std::string &pipelineName, int index);
+	nuiEndpointDescriptor *getInputEndpointDescriptor(std::string &pipelineName, int index);
 	// ++ reviewed
-	nuiEndpointDescriptor *getOutputEndpoint(std::string &pipelineName, int index);
+	nuiEndpointDescriptor *getOutputEndpointDescriptor(std::string &pipelineName, int index);
 	// ++ reviewed
-	nuiDataStreamDescriptor *getConnection(std::string &pipelineName,
+	nuiDataStreamDescriptor *getConnectionDescriptor(std::string &pipelineName,
 		int sourceModuleID, int destinationModuleID, int sourcePort, int destinationPort);
 
 	//DELETE METHODS =============================================================
