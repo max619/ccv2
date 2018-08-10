@@ -34,7 +34,7 @@ namespace NodeGraphControl
     /// <summary>
     /// Represents a base node for use in a NodeGraphView
     /// </summary>
-    public class NodeGraphNode 
+    public class NodeGraphNode
     {
         /// <summary>
         /// Whether the node can be selected
@@ -128,8 +128,8 @@ namespace NodeGraphControl
             UpdateHitRectangle();
 
             this.m_Connectors = new List<NodeGraphConnector>();
-            
-        
+
+
         }
 
         /// <summary>
@@ -149,15 +149,17 @@ namespace NodeGraphControl
             this.Height = 40;
             this.m_bCanBeSelected = true;
             this.m_Connectors = new List<NodeGraphConnector>();
-            foreach (var inputEndpoint in descriptor.inputEndpoints)
-            {
-                this.m_Connectors.Add(new NodeGraphConnector(inputEndpoint, this, ConnectorType.InputConnector));
-            }
+            if (descriptor.inputEndpoints != null)
+                foreach (var inputEndpoint in descriptor.inputEndpoints)
+                {
+                    this.m_Connectors.Add(new NodeGraphConnector(inputEndpoint, this, ConnectorType.InputConnector));
+                }
 
-            foreach (var outputEndpoint in descriptor.outputEndpoints)
-            {
-                this.m_Connectors.Add(new NodeGraphConnector(outputEndpoint, this, ConnectorType.OutputConnector));
-            }
+            if (descriptor.outputEndpoints != null)
+                foreach (var outputEndpoint in descriptor.outputEndpoints)
+                {
+                    this.m_Connectors.Add(new NodeGraphConnector(outputEndpoint, this, ConnectorType.OutputConnector));
+                }
         }
 
         /// <summary>
@@ -203,7 +205,7 @@ namespace NodeGraphControl
         {
             for (int i = 0; i < Connectors.Count; i++)
             {
-                if(Connectors[i].Type == type)
+                if (Connectors[i].Type == type)
                     index--;
                 if (index < 0)
                     return Connectors[i];
@@ -235,7 +237,7 @@ namespace NodeGraphControl
         /// <returns></returns>
         public NodeGraphConnector GetConnectorMouseHit(Point p_ScreenPosition)
         {
-            Rectangle v_HitRectangle = new Rectangle(p_ScreenPosition,Size.Empty);
+            Rectangle v_HitRectangle = new Rectangle(p_ScreenPosition, Size.Empty);
 
             foreach (NodeGraphConnector i_Connector in this.m_Connectors)
             {
@@ -259,8 +261,8 @@ namespace NodeGraphControl
             int ScaledX = CtrlPos.X;
             int ScaledY = CtrlPos.Y;
 
-            Rectangle ViewRectangle =   new Rectangle(
-                                                        CtrlPos.X, 
+            Rectangle ViewRectangle = new Rectangle(
+                                                        CtrlPos.X,
                                                         CtrlPos.Y,
                                                         (int)(this.HitRectangle.Width * m_oView.CurrentViewZoom),
                                                         (int)(this.HitRectangle.Height * m_oView.CurrentViewZoom)
@@ -268,10 +270,10 @@ namespace NodeGraphControl
             // NODE SHADOW
             if (this.ParentView.ParentPanel.DrawShadow)
             {
-                e.Graphics.DrawImage(NodeGraphResources.NodeShadow, ParentView.ParentPanel.ViewToControl(new Rectangle( this.X - (int)(0.1f * this.Width) + 4, 
+                e.Graphics.DrawImage(NodeGraphResources.NodeShadow, ParentView.ParentPanel.ViewToControl(new Rectangle(this.X - (int)(0.1f * this.Width) + 4,
                                                                                                                         this.Y - (int)(0.1f * this.Height) + 4,
-                                                                                                                        this.Width + (int)(0.2f * this.Width)-4,
-                                                                                                                        this.Height + (int)(0.2f * this.Height)-4)
+                                                                                                                        this.Width + (int)(0.2f * this.Width) - 4,
+                                                                                                                        this.Height + (int)(0.2f * this.Height) - 4)
                                                                                                          ));
             }
             // NODE
@@ -304,7 +306,7 @@ namespace NodeGraphControl
                 e.Graphics.DrawImage(NodeGraphResources.NodeInvalid, v_SignalRectangle);
             }
 
-            
+
 
             /// IF SUFFICENT ZOOM LEVEL = DRAW TEXT
             if (m_oView.CurrentViewZoom > m_oView.ParentPanel.NodeTitleZoomThreshold)
@@ -313,14 +315,14 @@ namespace NodeGraphControl
                 e.Graphics.DrawString(this.Name, m_oView.ParentPanel.NodeScaledTitleFont, m_oView.ParentPanel.NodeTextShadow, new Point(ScaledX + (int)(2 * m_oView.CurrentViewZoom) + 1, ScaledY + (int)(2 * m_oView.CurrentViewZoom) + 1));
                 e.Graphics.DrawString(this.Name, m_oView.ParentPanel.NodeScaledTitleFont, m_oView.ParentPanel.NodeText, new Point(ScaledX + (int)(2 * m_oView.CurrentViewZoom), ScaledY + (int)(2 * m_oView.CurrentViewZoom)));
             }
-            
-            
+
+
 
 
             //InputConnectors
             for (int i_ConnectorIndex = 0; i_ConnectorIndex < this.m_Connectors.Count; i_ConnectorIndex++)
             {
-                this.m_Connectors[i_ConnectorIndex].Draw(e, i_ConnectorIndex) ;
+                this.m_Connectors[i_ConnectorIndex].Draw(e, i_ConnectorIndex);
 
             }
 
@@ -332,7 +334,7 @@ namespace NodeGraphControl
 
             // Post-draw event
             if (this.onPostDraw != null) onPostDraw(this, e);
-        
+
         }
 
         /// <summary>
@@ -444,24 +446,10 @@ namespace NodeGraphControl
 
         public bool HitTest(Point p)
         {
-            
+
             return true;
         }
 
-        public static NodeGraphNode FromModuleDescriptor(NuiApiWrapper.ModuleDescriptor module, NodeGraphView p_View)
-        {
-//             string className = typeof(NodeGraphNode).Name;
-// 
-//             object[] arguments = { module, p_View };
-// 
-//             object v_Out = System.Reflection.Assembly.GetEntryAssembly().CreateInstance(className, false,
-//                                                                                     System.Reflection.BindingFlags.CreateInstance,
-//                                                                                     null,
-//                                                                                     arguments, System.Globalization.CultureInfo.GetCultureInfo("fr-fr"),
-//                                                                                     null);
-
-            return new NodeGraphNode(module, p_View);
-        }
     }
 
 

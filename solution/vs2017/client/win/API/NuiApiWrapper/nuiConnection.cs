@@ -34,6 +34,6 @@ namespace NuiApiWrapper
         public int lastPacket { get; set; }
         public int overflow { get; set; }
         public int sourceModule { get; set; }
-        public int sourcePort { get; set; }
+        public int sourcePort { get; set; }        
     }
 }

@@ -583,14 +583,20 @@ int nuiModuleDescriptor::getOutputEndpointsCount()
 
 void nuiModuleDescriptor::addInputEndpointDescriptor(nuiEndpointDescriptor* descriptor, int index)
 {
-	descriptor->setIndex(index);
-	inputDescriptions.push_back(descriptor);
+	if (!inputEndpointDescriptionExists(index))
+	{
+		descriptor->setIndex(index);
+		inputDescriptions.push_back(descriptor);
+	}
 }
 
 void nuiModuleDescriptor::addOutputEndpointDescriptor(nuiEndpointDescriptor* descriptor, int index)
 {
-	descriptor->setIndex(index);
-	outputDescriptions.push_back(descriptor);
+	if (!outputEndpointDescriptionExists(index))
+	{
+		descriptor->setIndex(index);
+		outputDescriptions.push_back(descriptor);
+	}
 }
 
 void nuiModuleDescriptor::removeInputEndpointDescriptor(nuiEndpointDescriptor* descriptor)
@@ -690,6 +696,26 @@ nuiProperty &nuiModuleDescriptor::property(std::string str)
 std::map<std::string, nuiProperty*> &nuiModuleDescriptor::getProperties()
 {
 	return this->properties;
+}
+
+bool nuiModuleDescriptor::inputEndpointDescriptionExists(int index)
+{
+	for (std::vector<nuiEndpointDescriptor*>::iterator it = inputDescriptions.begin(); it != inputDescriptions.end(); it++)
+	{
+		if ((*it)->getIndex() == index)
+			return true;
+	}
+	return false;
+}
+
+bool nuiModuleDescriptor::outputEndpointDescriptionExists(int index)
+{
+	for (std::vector<nuiEndpointDescriptor*>::iterator it = outputDescriptions.begin(); it != outputDescriptions.end(); it++)
+	{
+		if ((*it)->getIndex() == index)
+			return true;
+	}
+	return false;
 }
 
 void nuiModuleDescriptor::addDataStreamDescriptor(nuiDataStreamDescriptor* connection)

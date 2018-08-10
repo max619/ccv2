@@ -145,7 +145,7 @@ namespace NodeGraphControl
 
             foreach (var module in p_Pipeline.modules)
             {
-                this.m_NodeCollection.Add(NodeGraphNode.FromModuleDescriptor(module, this));
+                this.m_NodeCollection.Add(new ModuleNode(module, this));
             }
 
             m_NodeConnectorCollection = new List<NodeGraphConnector>();

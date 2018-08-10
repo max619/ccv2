@@ -43,10 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editors\PropertyCollectionEditor.cs" />
     <Compile Include="Links\NodeGraphConnector.cs" />
     <Compile Include="Data\NodeGraphData.cs" />
     <Compile Include="Links\NodeGraphLink.cs" />
     <Compile Include="Data\NodeGraphListData.cs" />
+    <Compile Include="ModuleNode.cs" />
     <Compile Include="NodeGraphNode.cs" />
     <Compile Include="Forms\NodeGraphPanel.cs">
       <SubType>UserControl</SubType>

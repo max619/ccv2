@@ -14,6 +14,7 @@ nuiEndpoint::nuiEndpoint(nuiModule *hostModule)
 	mtx = new pt::mutex();
 	moduleHoster = hostModule;
 	dataPacket = NULL;
+	descriptor = NULL;
 }
 
 nuiEndpoint::~nuiEndpoint()
@@ -61,6 +62,16 @@ void nuiEndpoint::transmitData()
 		iter->second->sendData(dataPacket);
 	}
 	mtx->unlock();
+}
+
+nuiEndpointDescriptor* nuiEndpoint::getEndpointDescriptor()
+{
+	if (descriptor == NULL)
+	{
+		descriptor = new nuiEndpointDescriptor(getTypeDescriptor());
+		descriptor->setDescriptor(this->getTypeDescriptor());
+	}
+	return descriptor;
 }
 
 nuiDataStream* nuiEndpoint::addConnection(nuiEndpoint *endpoint)

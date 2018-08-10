@@ -50,6 +50,7 @@ public:
 	//! lock data and send it to all outgoing streams
 	void transmitData();
 
+	nuiEndpointDescriptor* getEndpointDescriptor();
 	nuiDataStream* addConnection(nuiEndpoint *endpoint);
 	nuiDatastreamError::err removeConnection(nuiEndpoint *endpoint);
 
@@ -91,6 +92,7 @@ private:
 	std::string typeDescriptor;
 	nuiDataPacket *dataPacket;
 	nuiModule* moduleHoster;
+	nuiEndpointDescriptor* descriptor;
 
 	//friend class nuiDataStream;
 };

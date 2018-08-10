@@ -131,6 +131,7 @@ nuiModule* nuiFactory::createPipeline(nuiModuleDescriptor* descriptor)
 			descriptor->removeDataStreamDescriptor(descriptor->getDataStreamDescriptor(i));
 			continue;
 		}
+
 		// if endpoint_module descriptors not found
 
 		nuiModule* sourceModule = (sourceModuleDescriptor == descriptor) ?
@@ -159,6 +160,9 @@ nuiModule* nuiFactory::createPipeline(nuiModuleDescriptor* descriptor)
 			destinationEndpoint = pipeline->inputInternalEndpoints[dataStreamDescriptor->destinationPort];
 		}
 
+		
+
+
 		printf("Source module %s is%s pipeline\nDestination module %s is%s pipeline\n",
 			sourceModule->getName().c_str(), (sourceModule != pipeline) ? " not" : "",
 			destinationModule->getName().c_str(), (destinationModule != pipeline) ? " not" : "");
@@ -185,6 +189,40 @@ nuiModule* nuiFactory::createPipeline(nuiModuleDescriptor* descriptor)
 				dataStream->setDeepCopy(dataStreamDescriptor->deepCopy);
 				dataStream->setIsOverflow(dataStreamDescriptor->overflow);
 				dataStream->setLastPacketPriority(dataStreamDescriptor->lastPacket);
+
+				sourceModuleDescriptor->addDataStreamDescriptor(dataStreamDescriptor);				
+			}
+
+			for (int i = 0; i < destinationModule->getInputEndpointCount(); i++)
+			{
+				nuiEndpointDescriptor* desc = destinationModule->getInputEndpoint(i)->getEndpointDescriptor();
+				desc->setIndex(i);
+				desc->setParentModuleDescriptor(destinationModuleDescriptor);
+				destinationModuleDescriptor->addInputEndpointDescriptor(desc, i);
+			}
+
+			for (int i = 0; i < destinationModule->getOutputEndpointCount(); i++)
+			{
+				nuiEndpointDescriptor* desc = destinationModule->getOutputEndpoint(i)->getEndpointDescriptor();
+				desc->setIndex(i);
+				desc->setParentModuleDescriptor(destinationModuleDescriptor);
+				destinationModuleDescriptor->addOutputEndpointDescriptor(desc, i);
+			}
+
+			for (int i = 0; i < sourceModule->getInputEndpointCount(); i++)
+			{
+				nuiEndpointDescriptor* desc = sourceModule->getInputEndpoint(i)->getEndpointDescriptor();
+				desc->setIndex(i);
+				desc->setParentModuleDescriptor(sourceModuleDescriptor);
+				sourceModuleDescriptor->addInputEndpointDescriptor(desc, i);
+			}
+
+			for (int i = 0; i < sourceModule->getOutputEndpointCount(); i++)
+			{
+				nuiEndpointDescriptor* desc = sourceModule->getOutputEndpoint(i)->getEndpointDescriptor();
+				desc->setIndex(i);
+				desc->setParentModuleDescriptor(sourceModuleDescriptor);
+				sourceModuleDescriptor->addOutputEndpointDescriptor(desc, i);
 			}
 		}
 		else
@@ -209,6 +247,24 @@ void nuiFactory::applyDescriptorProps(nuiModule* module, nuiModuleDescriptor* de
 		std::string val = iter->second->asString();
 		module->property(iter->first).set(val);
 	}
+
+	for (std::map<std::string, nuiProperty*>::iterator miter = module->getProperties().begin(); miter != module->getProperties().end(); miter++)
+	{
+		bool found = false;
+		for (std::map<std::string, nuiProperty*>::iterator diter = descriptor->getProperties().begin(); diter != descriptor->getProperties().end() && !found; diter++)
+		{
+			if (diter->first == miter->first)
+			{
+				diter->second = miter->second;
+				found = true;
+			}
+		}
+		if (!found)
+		{
+			descriptor->getProperties().emplace(miter->first, miter->second);
+		}
+	}
+
 };
 
 nuiModule* nuiFactory::create(const std::string& moduleName)

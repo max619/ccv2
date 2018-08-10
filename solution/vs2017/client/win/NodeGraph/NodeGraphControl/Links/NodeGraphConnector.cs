@@ -35,6 +35,7 @@ namespace NodeGraphControl
     /// </summary>
     public class NodeGraphConnector
     {
+        public EndpointDescriptor Descriptor { get; private set; }
         /// <summary>
         /// The parent node that contains the connector
         /// </summary>
@@ -70,6 +71,7 @@ namespace NodeGraphControl
             this.m_oView = p_parent.ParentView;
             this.m_oConnectorType = type;
             this.m_iConnectorIndex = descriptor.index;
+            this.Descriptor = descriptor;
         }
 
         public NodeGraphConnector(EndpointDescriptor descriptor, NodeGraphView p_view, ConnectorType type)
@@ -80,6 +82,7 @@ namespace NodeGraphControl
             this.m_oView = p_view;
             this.m_oConnectorType = type;
             this.m_iConnectorIndex = descriptor.index;
+            this.Descriptor = descriptor;
         }
 
         /// <summary>

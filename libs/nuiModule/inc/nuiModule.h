@@ -128,6 +128,8 @@ private:
 	std::vector<nuiEndpointDescriptor*> outputDescriptions;
 	std::vector<nuiModuleDescriptor*> childrenModuleDescriptions;
 	std::vector<nuiDataStreamDescriptor*> connectionDescriptors;
+	bool inputEndpointDescriptionExists(int index);
+	bool outputEndpointDescriptionExists(int index);
 	std::string name, description, author;
 	std::map<std::string, nuiProperty*> properties;
 	bool isPipeline;

@@ -54,7 +54,7 @@ namespace NodeGraphControl
 
         #region PUBLIC MEMBERS
 
-        
+
         [Category("NodeGraph Panel")]
         public float NodeTitleZoomThreshold { get { return this.m_fNodeTitleZoomThreshold; } set { this.m_fNodeTitleZoomThreshold = value; } }
         [Category("NodeGraph Panel")]
@@ -118,9 +118,11 @@ namespace NodeGraphControl
         public Color NodeTextColor
         {
             get { return this.m_NodeTextColor; }
-            set { this.m_NodeText = new SolidBrush(value);
-                  this.m_NodeTextColor = value;
-                }
+            set
+            {
+                this.m_NodeText = new SolidBrush(value);
+                this.m_NodeTextColor = value;
+            }
         }
         [Category("NodeGraph Panel Colors")]
         public Color NodeTextShadowColor
@@ -327,7 +329,7 @@ namespace NodeGraphControl
         public Pen ConnectorOutlineSelected { get { return this.m_ConnectorOutlineSelected; } }
         [Browsable(false)]
         public SolidBrush ConnectorFillSelected { get { return this.m_ConnectorFillSelected; } }
-        
+
         // Fonts
         [Category("NodeGraph Panel Fonts")]
         public Font NodeTitleFont { get { return this.m_NodeTitleFont; } set { this.m_NodeTitleFont = value; } }
@@ -337,7 +339,7 @@ namespace NodeGraphControl
         public Font NodeScaledTitleFont { get { return this.m_NodeScaledTitleFont; } set { this.m_NodeScaledTitleFont = value; } }
         [Browsable(false)]
         public Font NodeScaledConnectorFont { get { return this.m_NodeScaledConnectorFont; } set { this.m_NodeScaledConnectorFont = value; } }
-        
+
         #endregion
 
         #region Private members
@@ -384,7 +386,7 @@ namespace NodeGraphControl
 
 
         // Brushes and Pens
-        private SolidBrush m_NodeText; 
+        private SolidBrush m_NodeText;
         private SolidBrush m_NodeTextShadow;
 
         // Nodes
@@ -572,7 +574,7 @@ namespace NodeGraphControl
                 Point v_StartPosBezier = new Point(v_StartPos.X + (int)((v_EndPos.X - v_StartPos.X) / LinkHardness), v_StartPos.Y);
                 Point v_EndPosBezier = new Point(v_EndPos.X - (int)((v_EndPos.X - v_StartPos.X) / LinkHardness), v_EndPos.Y);
 
-                
+
 
                 switch (this.m_LinkVisualStyle)
                 {
@@ -633,8 +635,8 @@ namespace NodeGraphControl
                     default: break;
 
                 }
-                
-                
+
+
                 e.Graphics.FillPolygon(this.m_LinkArrow, Arrow);
             }
         }
@@ -646,13 +648,13 @@ namespace NodeGraphControl
         private void NodeGraphPanel_Paint(object sender, PaintEventArgs e)
         {
             if (this.onDrawBackground != null) onDrawBackground(this, e);
-            
+
             // Smooth Behavior
             if (this.m_bSmoothBehavior)
             {
                 // Smooth Zooming
                 this.View.CurrentViewZoom += (this.View.ViewZoom - this.View.CurrentViewZoom) * 0.08f;
-                
+
                 // Smooth pan
                 // TODO : complete so it could be really smooth
                 //int sgn = Math.Sign(this.View.ViewZoom - this.View.CurrentViewZoom);
@@ -670,7 +672,9 @@ namespace NodeGraphControl
                     UpdateFontSize();
                     this.Invalidate();
                 }
-            } else {
+            }
+            else
+            {
 
             }
 
@@ -683,7 +687,7 @@ namespace NodeGraphControl
                 int bgLum = (int)((BackColor.R + BackColor.G + BackColor.B) / 3);
                 if (bgLum < 128) v_GridColor = Color.FromArgb(this.m_iGridAlpha, 255, 255, 255);
                 else v_GridColor = Color.FromArgb(this.m_iGridAlpha, 0, 0, 0);
-                
+
                 Pen v_GridPen = new Pen(v_GridColor);
 
                 int v_minGridX, v_maxGridX, v_minGridY, v_maxGridY;
@@ -706,12 +710,12 @@ namespace NodeGraphControl
                 for (int j = v_minGridY; j < v_maxGridY; j += m_iGridPadding)
                 {
                     v_CurrentGridIn = ViewToControl(new Point(v_ViewTopLeft.X, j));
-                    v_CurrentGridOut = ViewToControl(new Point(v_ViewBottomRight.X,j));
+                    v_CurrentGridOut = ViewToControl(new Point(v_ViewBottomRight.X, j));
                     e.Graphics.DrawLine(v_GridPen, v_CurrentGridIn, v_CurrentGridOut);
                 }
 
             }
-            
+
             foreach (NodeGraphNode i_Node in this.View.NodeCollection)
             {
                 i_Node.Draw(e);
@@ -724,8 +728,8 @@ namespace NodeGraphControl
             DrawAllLinks(e);
             DrawAllDetachedEndpoints(e);
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-            
-            if(this.EnableDrawDebug) this.DrawDebug(e);
+
+            if (this.EnableDrawDebug) this.DrawDebug(e);
         }
 
         private void DrawAllDetachedEndpoints(PaintEventArgs e)
@@ -749,20 +753,20 @@ namespace NodeGraphControl
             e.Graphics.DrawString("Alt Key: " + this.m_bAltPressed.ToString(), this.m_oDebugFont, this.m_NodeText, new PointF(0.0f, 50.0f));
 
             // BELOW: DEBUG ELEMENTS
-            
+
             Pen originPen = new Pen(Color.Gray);
 
-                      
+
             e.Graphics.DrawLine(originPen, this.ViewToControl(new Point(-100, 0)), this.ViewToControl(new Point(100, 0)));
             e.Graphics.DrawLine(originPen, this.ViewToControl(new Point(0, -100)), this.ViewToControl(new Point(0, 100)));
 
-            
+
             //e.Graphics.DrawLine(originPen, this.ViewToControl(new Point(-this.View.ViewX, this.View.ViewY)), this.ViewToControl(new Point(this.View.ViewX, -this.View.ViewY)));
-           
+
             //e.Graphics.DrawLine(originPen, this.ViewToControl(new Point(0, -100)), this.ViewToControl(new Point(., this.View.ViewY)));
 
-           // e.Graphics.DrawBezier(originPen, this.ViewToControl(this.m_SelectBoxOrigin), this.ViewToControl(this.m_SelectBoxOrigin), this.ViewToControl(this.m_SelectBoxCurrent), this.ViewToControl(this.m_SelectBoxCurrent));
-            
+            // e.Graphics.DrawBezier(originPen, this.ViewToControl(this.m_SelectBoxOrigin), this.ViewToControl(this.m_SelectBoxOrigin), this.ViewToControl(this.m_SelectBoxCurrent), this.ViewToControl(this.m_SelectBoxCurrent));
+
         }
 
 
@@ -773,62 +777,64 @@ namespace NodeGraphControl
         /// <param name="e"></param>
         private void NodeGraphPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            switch(this.m_eEditMode) {
-            
+            switch (this.m_eEditMode)
+            {
+
                 case NodeGraphEditMode.Idle:
-                        switch (e.Button)
-                        {
-                            case MouseButtons.Middle:
+                    switch (e.Button)
+                    {
+                        case MouseButtons.Middle:
 
-                                this.m_eEditMode = NodeGraphEditMode.Scrolling;
-                                this.m_iScrollLastX = e.Location.X;
-                                this.m_iScrollLastY = e.Location.Y;
+                            this.m_eEditMode = NodeGraphEditMode.Scrolling;
+                            this.m_iScrollLastX = e.Location.X;
+                            this.m_iScrollLastY = e.Location.Y;
 
-                                break;
-                            case MouseButtons.Left:
+                            break;
+                        case MouseButtons.Left:
 
-                                if (this.HitAll(e.Location) == HitType.Connector)
+                            if (this.HitAll(e.Location) == HitType.Connector)
+                            {
+                                if (!m_bAltPressed)
                                 {
-                                    if (!m_bAltPressed)
-                                    {
-                                        this.m_eEditMode = NodeGraphEditMode.Linking;
-                                        this.m_InputLink = GetHitConnector(e.Location);
-                                        this.m_OutputLink = null;
-                                    }
-                                    else
-                                    {
-                                       NodeGraphConnector v_Connector = GetHitConnector(e.Location);
-                                       this.DeleteLinkConnectors(v_Connector);
-                                    }
+                                    this.m_eEditMode = NodeGraphEditMode.Linking;
+                                    this.m_InputLink = GetHitConnector(e.Location);
+                                    this.m_OutputLink = null;
+                                }
+                                else
+                                {
+                                    NodeGraphConnector v_Connector = GetHitConnector(e.Location);
+                                    this.DeleteLinkConnectors(v_Connector);
+                                }
 
-                                } else if (this.View.SelectedItems.Count > 0 && this.HitSelected(e.Location)== HitType.Node)
+                            }
+                            else if (this.View.SelectedItems.Count > 0 && this.HitSelected(e.Location) == HitType.Node)
+                            {
+                                this.m_eEditMode = NodeGraphEditMode.MovingSelection;
+                                this.m_MoveLastPosition = this.ControlToView(e.Location);
+                            }
+                            else
+                            {
+                                this.m_eEditMode = NodeGraphEditMode.Selecting;
+
+                                this.m_SelectBoxCurrent = this.ControlToView(new Point(e.X, e.Y));
+                                this.m_SelectBoxOrigin = this.ControlToView(new Point(e.X, e.Y));
+                                this.UpdateHighlights();
+                                this.CreateSelection();
+
+                                if (this.View.SelectedItems.Count > 0)
                                 {
                                     this.m_eEditMode = NodeGraphEditMode.MovingSelection;
                                     this.m_MoveLastPosition = this.ControlToView(e.Location);
                                 }
-                                else
-                                {
-                                    this.m_eEditMode = NodeGraphEditMode.Selecting;
-
-                                    this.m_SelectBoxCurrent = this.ControlToView(new Point(e.X, e.Y));
-                                    this.m_SelectBoxOrigin = this.ControlToView(new Point(e.X, e.Y));
-                                    this.UpdateHighlights();
-                                    this.CreateSelection();
-
-                                    if (this.View.SelectedItems.Count > 0)
-                                    {
-                                        this.m_eEditMode = NodeGraphEditMode.MovingSelection;
-                                        this.m_MoveLastPosition = this.ControlToView(e.Location);
-                                    }
 
 
-                                }
-                                break;
-                            default:
+                            }
+                            break;
+                        default:
 
-                                break;
-                        }
-                        break;
+                            break;
+                    }
+                    break;
 
                 default: break;
 
@@ -853,11 +859,11 @@ namespace NodeGraphControl
                 {
                     int sgn = -1 * Math.Sign(e.Delta);
                     int zoomSteps = 80;
-                    
+
                     ///! TODO : consider using zoom value
                     View.ZoomTranslate = this.PointToClient(Control.MousePosition);
-                    View.ZoomTranslate.X -= this.Width / 2 ;
-                    View.ZoomTranslate.Y -= this.Height / 2 ;
+                    View.ZoomTranslate.X -= this.Width / 2;
+                    View.ZoomTranslate.Y -= this.Height / 2;
 
                     View.ZoomTranslate.X /= sgn * zoomSteps;
                     View.ZoomTranslate.Y /= sgn * zoomSteps;
@@ -868,12 +874,12 @@ namespace NodeGraphControl
                 {
                     int hitIndex = HitModules(e.Location);
                     // PUSH
-                    if (newViewZoom > 3.3f && hitIndex > 0 && NuiUtils.IsPipeline(this.View.NodeCollection[hitIndex].Name) ) 
+                    if (newViewZoom > 3.3f && hitIndex > 0 && NuiUtils.IsPipeline(this.View.NodeCollection[hitIndex].Name))
                     {
                         layer++;
-                        
+
                         //! Simply load new pipeline
-                        this.LoadPipeline( NuiState.Instance.NavigatePush(hitIndex) );
+                        this.LoadPipeline(NuiState.Instance.NavigatePush(hitIndex));
 
                         this.View.ViewZoom = 1;
                         return;
@@ -885,13 +891,13 @@ namespace NodeGraphControl
                         layer--;
 
                         //! Simply load previous pipeline
-                        this.LoadPipeline( NuiState.Instance.NavigatePop() );
+                        this.LoadPipeline(NuiState.Instance.NavigatePop());
                         this.View.ViewZoom = 1;
                         return;
                     }
                     this.View.ViewZoom = newViewZoom;
                 }
-                
+
             }
 
             if (this.m_eEditMode == NodeGraphEditMode.SelectingBox)
@@ -1060,8 +1066,8 @@ namespace NodeGraphControl
         public Point ControlToView(Point p_Point)
         {
             return new Point((int)((p_Point.X - (this.Width / 2)) / this.View.CurrentViewZoom) - this.View.ViewX,
-                                 (int)((p_Point.Y - (this.Height / 2)) / this.View.CurrentViewZoom) - this.View.ViewY); 
-        }  
+                                 (int)((p_Point.Y - (this.Height / 2)) / this.View.CurrentViewZoom) - this.View.ViewY);
+        }
         /// <summary>
         /// Converts View Space to Control Space (Point)
         /// </summary>
@@ -1071,7 +1077,7 @@ namespace NodeGraphControl
         {
             return new Point((int)((p_Point.X + this.View.ViewX) * this.View.CurrentViewZoom) + (this.Width / 2),
                               (int)((p_Point.Y + this.View.ViewY) * this.View.CurrentViewZoom) + (this.Height / 2));
-        }     
+        }
         /// <summary>
         /// Converts Control Space to View Space (Rectangle)
         /// </summary>
@@ -1081,7 +1087,7 @@ namespace NodeGraphControl
         {
 
             return new Rectangle(this.ControlToView(new Point(p_Rectangle.X, p_Rectangle.Y)), new Size((int)(p_Rectangle.Width / this.View.CurrentViewZoom), (int)(p_Rectangle.Height / this.View.CurrentViewZoom)));
-            
+
 
         }
         /// <summary>
@@ -1092,7 +1098,7 @@ namespace NodeGraphControl
         public Rectangle ViewToControl(Rectangle p_Rectangle)
         {
             return new Rectangle(this.ViewToControl(new Point(p_Rectangle.X, p_Rectangle.Y)), new Size((int)(p_Rectangle.Width * this.View.CurrentViewZoom), (int)(p_Rectangle.Height * this.View.CurrentViewZoom)));
-            
+
         }
 
         /// <summary>
@@ -1118,11 +1124,11 @@ namespace NodeGraphControl
             {
                 this.View.ViewX += (int)(this.m_ScrollMarginsValue / this.View.CurrentViewZoom);
             }
-            else if (p_CursorLocation.X > this.Width - this.m_ScrollMargins) 
+            else if (p_CursorLocation.X > this.Width - this.m_ScrollMargins)
             {
                 this.View.ViewX -= (int)(this.m_ScrollMarginsValue / this.View.CurrentViewZoom);
             }
-            else if (p_CursorLocation.Y < this.m_ScrollMargins) 
+            else if (p_CursorLocation.Y < this.m_ScrollMargins)
             {
                 this.View.ViewY += (int)(this.m_ScrollMarginsValue / this.View.CurrentViewZoom);
             }
@@ -1276,7 +1282,7 @@ namespace NodeGraphControl
             }
 
 
-             Refresh();
+            Refresh();
         }
         /// <summary>
         /// Gets the connector associated to the mouse hit
@@ -1318,9 +1324,9 @@ namespace NodeGraphControl
                 else
                 {
                     if (IsLinked(m_InputLink)) DeleteLinkConnectors(m_InputLink);
-                    this.View.Links.Add(new NodeGraphLink( m_OutputLink, m_InputLink));
+                    this.View.Links.Add(new NodeGraphLink(m_OutputLink, m_InputLink));
                 }
-                
+
 
             }
             m_InputLink = null;
@@ -1386,10 +1392,12 @@ namespace NodeGraphControl
         /// </summary>
         private void UpdateFontSize()
         {
-            try{
-            this.m_NodeScaledTitleFont = new Font(m_NodeTitleFont.Name, m_NodeTitleFont.Size * this.View.CurrentViewZoom);
-            this.m_NodeScaledConnectorFont = new Font(m_NodeConnectorFont.Name, m_NodeConnectorFont.Size * this.View.CurrentViewZoom);
-            }catch{}
+            try
+            {
+                this.m_NodeScaledTitleFont = new Font(m_NodeTitleFont.Name, m_NodeTitleFont.Size * this.View.CurrentViewZoom);
+                this.m_NodeScaledConnectorFont = new Font(m_NodeConnectorFont.Name, m_NodeConnectorFont.Size * this.View.CurrentViewZoom);
+            }
+            catch { }
         }
         /// <summary>
         /// SERIALIZATION: Saves the current view and all items to XML File
@@ -1397,17 +1405,18 @@ namespace NodeGraphControl
         /// <param name="p_FileName"></param>
         public void SaveCurrentView(string p_FileName)
         {
-           try
-            { Xml.XmlTree v_OutTree = new Xml.XmlTree("NodeGraphControl");
+            try
+            {
+                Xml.XmlTree v_OutTree = new Xml.XmlTree("NodeGraphControl");
 
-            v_OutTree.m_rootNode.AddChild(this.View.SerializeToXML(v_OutTree.m_rootNode));
+                v_OutTree.m_rootNode.AddChild(this.View.SerializeToXML(v_OutTree.m_rootNode));
 
-            v_OutTree.SaveXML(p_FileName);
+                v_OutTree.SaveXML(p_FileName);
             }
-           catch
-           {
-               // ERROR Saving View
-           }
+            catch
+            {
+                // ERROR Saving View
+            }
         }
         /// <summary>
         ///  SERIALIZATION: Loads a serialized XML Copy into the current view
@@ -1422,8 +1431,10 @@ namespace NodeGraphControl
                 this.View = new NodeGraphView(v_InTree.m_rootNode.GetFirstChild(Xml.SerializationUtils.GetFullTypeName(this.View)), this);
                 this.UpdateFontSize();
                 this.Refresh();
-            }catch{
-               // ERROR loading View
+            }
+            catch
+            {
+                // ERROR loading View
             }
         }
 
@@ -1448,7 +1459,7 @@ namespace NodeGraphControl
         Zooming,
         Selecting,
         SelectingBox,
-        MovingSelection, 
+        MovingSelection,
         Linking
     }
     /// <summary>

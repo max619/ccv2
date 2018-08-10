@@ -55,7 +55,7 @@ namespace NodeGraphLayoutEdit
                 this.nodeGraphPanel.EnableDrawDebug = Convert.ToBoolean(iniFile.Section("General").Get("Debug"));      
                 this.nodeGraphPanel.ShowGrid = Convert.ToBoolean(iniFile.Section("View").Get("ShowGrid"));
                 this.nodeGraphPanel.GridPadding = Convert.ToInt16(iniFile.Section("View").Get("GridPadding"));
-
+                NuiState.Instance.Connect(iniFile.Section("Service").Get("APIV1"));
                 this.nodeGraphPanel.LoadPipeline(NuiState.Instance.GetPipeline("root"));
                 //Convert.ToBoolean(value));
             }
@@ -70,6 +70,8 @@ namespace NodeGraphLayoutEdit
         {
             try
             {
+                const string path = "data/config.ini";
+                defaultSettings = !System.IO.File.Exists(path);
 
                 if (defaultSettings) // Generate Settings
                 {
@@ -79,13 +81,16 @@ namespace NodeGraphLayoutEdit
                     iniFile.Section("General").Set("Debug", "True", comment: "Enables debug view.");
                     iniFile.Section("View").Set("ShowGrid", "True");
                     iniFile.Section("View").Set("GridPadding", "400");
-                    iniFile.Section("Service").Set("APIV1", "http://localhost:5555/");
-                    iniFile.Save("data/config.ini");
+                    iniFile.Section("Service").Set("APIV1", "tcp://127.0.0.1:7500");
+                    var dir = System.IO.Path.GetDirectoryName(path);
+                    if (!System.IO.Directory.Exists(dir))
+                        System.IO.Directory.CreateDirectory(dir);
+                    iniFile.Save(path);
                     //toolStripStatusLabel1.Text = "Settings Loaded...";
                 }
                 else
                 { // Use file...
-                    iniFile = new IniFile("data/config.ini");
+                    iniFile = new IniFile(path);
                     // iniFile.Section("General").Get("Theme"); 
                     // iniFile.Section("General").Get("Debug");
                     //foreach (var section in iniFile.Sections())
