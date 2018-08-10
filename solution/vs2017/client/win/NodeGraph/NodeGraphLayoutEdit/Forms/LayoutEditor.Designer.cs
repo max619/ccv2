@@ -53,6 +53,7 @@ namespace NodeGraphLayoutEdit
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutEditor));
+            this.nodeGraphPanel = new NodeGraphControl.NodeGraphPanel();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.integerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.floatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -118,14 +119,10 @@ namespace NodeGraphLayoutEdit
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearConnectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extensionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutCCVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.documentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.examplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.termsTrademarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.nodeGraphPanel = new NodeGraphControl.NodeGraphPanel();
+            this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commitChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.servicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.libraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,11 +137,69 @@ namespace NodeGraphLayoutEdit
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.servicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutCCVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.documentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.examplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.termsTrademarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.workflowManagmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quitWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // nodeGraphPanel
+            // 
+            this.nodeGraphPanel.BackColor = System.Drawing.Color.Black;
+            this.nodeGraphPanel.ConnectorFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.ConnectorFillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.nodeGraphPanel.ConnectorHitZoneBleed = 4;
+            this.nodeGraphPanel.ConnectorOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.nodeGraphPanel.ConnectorOutlineSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.nodeGraphPanel.ConnectorTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.nodeGraphPanel.ContextMenuStrip = this.contextMenuStrip;
+            this.nodeGraphPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nodeGraphPanel.DrawShadow = true;
+            this.nodeGraphPanel.EnableDrawDebug = true;
+            this.nodeGraphPanel.GridAlpha = ((byte)(16));
+            this.nodeGraphPanel.GridPadding = 256;
+            this.nodeGraphPanel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.nodeGraphPanel.LinkEditableColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.LinkHardness = 5F;
+            this.nodeGraphPanel.LinkVisualStyle = NodeGraphControl.LinkVisualStyle.Curve;
+            this.nodeGraphPanel.Location = new System.Drawing.Point(0, 24);
+            this.nodeGraphPanel.Name = "nodeGraphPanel";
+            this.nodeGraphPanel.NodeConnectorFont = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nodeGraphPanel.NodeConnectorTextZoomTreshold = 0.7F;
+            this.nodeGraphPanel.NodeFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.nodeGraphPanel.NodeFillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(128)))), ((int)(((byte)(100)))));
+            this.nodeGraphPanel.NodeHeaderColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.NodeHeaderSize = 26;
+            this.nodeGraphPanel.NodeOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.nodeGraphPanel.NodeOutlineSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(160)))), ((int)(((byte)(128)))));
+            this.nodeGraphPanel.NodeScaledConnectorFont = new System.Drawing.Font("Segoe UI", 6.75F);
+            this.nodeGraphPanel.NodeScaledTitleFont = new System.Drawing.Font("Segoe UI", 8F);
+            this.nodeGraphPanel.NodeSignalInvalidColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.NodeSignalValidColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.NodeTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.nodeGraphPanel.NodeTextShadowColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.NodeTitleFont = new System.Drawing.Font("Segoe UI", 8F);
+            this.nodeGraphPanel.NodeTitleZoomThreshold = 0.5F;
+            this.nodeGraphPanel.SelectionFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(128)))), ((int)(((byte)(90)))), ((int)(((byte)(30)))));
+            this.nodeGraphPanel.SelectionOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(180)))), ((int)(((byte)(60)))));
+            this.nodeGraphPanel.ShowGrid = true;
+            this.nodeGraphPanel.Size = new System.Drawing.Size(1330, 865);
+            this.nodeGraphPanel.SmoothBehavior = true;
+            this.nodeGraphPanel.TabIndex = 4;
+            this.nodeGraphPanel.onSelectionChanged += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionChanged);
+            this.nodeGraphPanel.onSelectionCleared += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionCleared);
+            this.nodeGraphPanel.Load += new System.EventHandler(this.nodeGraphPanel_Load);
+            this.nodeGraphPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.nodeGraphPanel_MouseMove);
             // 
             // contextMenuStrip
             // 
@@ -161,7 +216,7 @@ namespace NodeGraphLayoutEdit
             this.mathOperatorsToolStripMenuItem,
             this.testsToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(135, 198);
+            this.contextMenuStrip.Size = new System.Drawing.Size(134, 198);
             this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
             // 
             // integerToolStripMenuItem
@@ -175,7 +230,7 @@ namespace NodeGraphLayoutEdit
             this.toolStripSeparator13,
             this.devicesToolStripMenuItem1});
             this.integerToolStripMenuItem.Name = "integerToolStripMenuItem";
-            this.integerToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.integerToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.integerToolStripMenuItem.Text = "Input";
             this.integerToolStripMenuItem.Click += new System.EventHandler(this.integerToolStripMenuItem_Click);
             // 
@@ -246,43 +301,43 @@ namespace NodeGraphLayoutEdit
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(131, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(130, 6);
             // 
             // effectsToolStripMenuItem
             // 
             this.effectsToolStripMenuItem.Name = "effectsToolStripMenuItem";
-            this.effectsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.effectsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.effectsToolStripMenuItem.Text = "Effects";
             // 
             // filtersToolStripMenuItem
             // 
             this.filtersToolStripMenuItem.Name = "filtersToolStripMenuItem";
-            this.filtersToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.filtersToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.filtersToolStripMenuItem.Text = "Filters";
             // 
             // transformsToolStripMenuItem
             // 
             this.transformsToolStripMenuItem.Name = "transformsToolStripMenuItem";
-            this.transformsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.transformsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.transformsToolStripMenuItem.Text = "Transforms";
             // 
             // processingToolStripMenuItem
             // 
             this.processingToolStripMenuItem.Name = "processingToolStripMenuItem";
-            this.processingToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.processingToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.processingToolStripMenuItem.Text = "Processing";
             // 
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(131, 6);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(130, 6);
             // 
             // outputToolStripMenuItem
             // 
             this.outputToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.rootRefernceToolStripMenuItem});
             this.outputToolStripMenuItem.Name = "outputToolStripMenuItem";
-            this.outputToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.outputToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.outputToolStripMenuItem.Text = "Output";
             // 
             // rootRefernceToolStripMenuItem
@@ -295,7 +350,7 @@ namespace NodeGraphLayoutEdit
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(131, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(130, 6);
             // 
             // mathOperatorsToolStripMenuItem
             // 
@@ -308,7 +363,7 @@ namespace NodeGraphLayoutEdit
             this.absToolStripMenuItem,
             this.powerToolStripMenuItem});
             this.mathOperatorsToolStripMenuItem.Name = "mathOperatorsToolStripMenuItem";
-            this.mathOperatorsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.mathOperatorsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.mathOperatorsToolStripMenuItem.Text = "Math";
             // 
             // addToolStripMenuItem1
@@ -365,7 +420,7 @@ namespace NodeGraphLayoutEdit
             this.templateToolStripMenuItem2,
             this.conditionalToolStripMenuItem});
             this.testsToolStripMenuItem.Name = "testsToolStripMenuItem";
-            this.testsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.testsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.testsToolStripMenuItem.Text = "Tests";
             // 
             // voidToolStripMenuItem
@@ -405,6 +460,7 @@ namespace NodeGraphLayoutEdit
             this.propertyGrid1.Size = new System.Drawing.Size(242, 865);
             this.propertyGrid1.TabIndex = 2;
             this.propertyGrid1.Visible = false;
+            this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
             // 
             // openFileDialog
             // 
@@ -421,6 +477,7 @@ namespace NodeGraphLayoutEdit
             this.editToolStripMenuItem,
             this.graphToolStripMenuItem,
             this.extensionsToolStripMenuItem,
+            this.networkToolStripMenuItem,
             this.servicesToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -612,26 +669,26 @@ namespace NodeGraphLayoutEdit
             // refreshToolStripMenuItem1
             // 
             this.refreshToolStripMenuItem1.Name = "refreshToolStripMenuItem1";
-            this.refreshToolStripMenuItem1.Size = new System.Drawing.Size(174, 22);
+            this.refreshToolStripMenuItem1.Size = new System.Drawing.Size(173, 22);
             this.refreshToolStripMenuItem1.Text = "Refresh";
             this.refreshToolStripMenuItem1.Click += new System.EventHandler(this.refreshToolStripMenuItem1_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(171, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(170, 6);
             // 
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.testToolStripMenuItem.Text = "Verify Connections";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
             // clearConnectionsToolStripMenuItem
             // 
             this.clearConnectionsToolStripMenuItem.Name = "clearConnectionsToolStripMenuItem";
-            this.clearConnectionsToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.clearConnectionsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.clearConnectionsToolStripMenuItem.Text = "Clear Connections";
             // 
             // extensionsToolStripMenuItem
@@ -640,107 +697,43 @@ namespace NodeGraphLayoutEdit
             this.extensionsToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
             this.extensionsToolStripMenuItem.Text = "Extensions";
             // 
-            // helpToolStripMenuItem
+            // networkToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutCCVToolStripMenuItem,
-            this.documentationToolStripMenuItem,
-            this.examplesToolStripMenuItem,
-            this.termsTrademarksToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
+            this.networkToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.connectToolStripMenuItem,
+            this.commitChangesToolStripMenuItem,
+            this.workflowManagmentToolStripMenuItem});
+            this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
+            this.networkToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.networkToolStripMenuItem.Text = "Network";
             // 
-            // aboutCCVToolStripMenuItem
+            // connectToolStripMenuItem
             // 
-            this.aboutCCVToolStripMenuItem.Name = "aboutCCVToolStripMenuItem";
-            this.aboutCCVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.aboutCCVToolStripMenuItem.Text = "About";
+            this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
+            this.connectToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.connectToolStripMenuItem.Text = "Connect";
+            this.connectToolStripMenuItem.Click += new System.EventHandler(this.connectToolStripMenuItem_Click);
             // 
-            // documentationToolStripMenuItem
+            // commitChangesToolStripMenuItem
             // 
-            this.documentationToolStripMenuItem.Name = "documentationToolStripMenuItem";
-            this.documentationToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.documentationToolStripMenuItem.Text = "Documentation";
+            this.commitChangesToolStripMenuItem.Name = "commitChangesToolStripMenuItem";
+            this.commitChangesToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.commitChangesToolStripMenuItem.Text = "Commit Changes";
             // 
-            // examplesToolStripMenuItem
+            // servicesToolStripMenuItem
             // 
-            this.examplesToolStripMenuItem.Name = "examplesToolStripMenuItem";
-            this.examplesToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.examplesToolStripMenuItem.Text = "Examples";
-            // 
-            // termsTrademarksToolStripMenuItem
-            // 
-            this.termsTrademarksToolStripMenuItem.Name = "termsTrademarksToolStripMenuItem";
-            this.termsTrademarksToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.termsTrademarksToolStripMenuItem.Text = "Licences/Legal";
-            this.termsTrademarksToolStripMenuItem.Click += new System.EventHandler(this.termsTrademarksToolStripMenuItem_Click);
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(92, 17);
-            this.toolStripStatusLabel1.Text = "CCV Preview 1.0";
-            // 
-            // statusStrip
-            // 
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
-            this.statusStrip.Location = new System.Drawing.Point(0, 867);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1330, 22);
-            this.statusStrip.SizingGrip = false;
-            this.statusStrip.TabIndex = 0;
-            this.statusStrip.Text = "statusStrip1";
-            this.statusStrip.Visible = false;
-            // 
-            // nodeGraphPanel
-            // 
-            this.nodeGraphPanel.BackColor = System.Drawing.Color.Black;
-            this.nodeGraphPanel.ConnectorFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.ConnectorFillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.nodeGraphPanel.ConnectorHitZoneBleed = 4;
-            this.nodeGraphPanel.ConnectorOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.nodeGraphPanel.ConnectorOutlineSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.nodeGraphPanel.ConnectorTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.nodeGraphPanel.ContextMenuStrip = this.contextMenuStrip;
-            this.nodeGraphPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nodeGraphPanel.DrawShadow = true;
-            this.nodeGraphPanel.EnableDrawDebug = true;
-            this.nodeGraphPanel.GridAlpha = ((byte)(16));
-            this.nodeGraphPanel.GridPadding = 256;
-            this.nodeGraphPanel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.nodeGraphPanel.LinkEditableColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.LinkHardness = 5F;
-            this.nodeGraphPanel.LinkVisualStyle = NodeGraphControl.LinkVisualStyle.Curve;
-            this.nodeGraphPanel.Location = new System.Drawing.Point(0, 24);
-            this.nodeGraphPanel.Name = "nodeGraphPanel";
-            this.nodeGraphPanel.NodeConnectorFont = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nodeGraphPanel.NodeConnectorTextZoomTreshold = 0.7F;
-            this.nodeGraphPanel.NodeFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.nodeGraphPanel.NodeFillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(128)))), ((int)(((byte)(100)))));
-            this.nodeGraphPanel.NodeHeaderColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.NodeHeaderSize = 26;
-            this.nodeGraphPanel.NodeOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.nodeGraphPanel.NodeOutlineSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(160)))), ((int)(((byte)(128)))));
-            this.nodeGraphPanel.NodeScaledConnectorFont = new System.Drawing.Font("Segoe UI", 6.75F);
-            this.nodeGraphPanel.NodeScaledTitleFont = new System.Drawing.Font("Segoe UI", 8F);
-            this.nodeGraphPanel.NodeSignalInvalidColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.NodeSignalValidColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.NodeTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.nodeGraphPanel.NodeTextShadowColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.NodeTitleFont = new System.Drawing.Font("Segoe UI", 8F);
-            this.nodeGraphPanel.NodeTitleZoomThreshold = 0.5F;
-            this.nodeGraphPanel.SelectionFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(128)))), ((int)(((byte)(90)))), ((int)(((byte)(30)))));
-            this.nodeGraphPanel.SelectionOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(180)))), ((int)(((byte)(60)))));
-            this.nodeGraphPanel.ShowGrid = true;
-            this.nodeGraphPanel.Size = new System.Drawing.Size(1330, 865);
-            this.nodeGraphPanel.SmoothBehavior = true;
-            this.nodeGraphPanel.TabIndex = 4;
-            this.nodeGraphPanel.onSelectionChanged += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionChanged);
-            this.nodeGraphPanel.onSelectionCleared += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionCleared);
-            this.nodeGraphPanel.Load += new System.EventHandler(this.nodeGraphPanel_Load);
-            this.nodeGraphPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.nodeGraphPanel_MouseMove);
+            this.servicesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gridToolStripMenuItem,
+            this.libraryToolStripMenuItem,
+            this.menuToolStripMenuItem,
+            this.parametersToolStripMenuItem,
+            this.statusToolStripMenuItem,
+            this.toolStripSeparator9,
+            this.layoutToolStripMenuItem,
+            this.toolStripMenuItem2});
+            this.servicesToolStripMenuItem.Name = "servicesToolStripMenuItem";
+            this.servicesToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.servicesToolStripMenuItem.Text = "View";
             // 
             // gridToolStripMenuItem
             // 
@@ -858,20 +851,90 @@ namespace NodeGraphLayoutEdit
             this.toolStripMenuItem6.Size = new System.Drawing.Size(103, 22);
             this.toolStripMenuItem6.Text = "Neon";
             // 
-            // servicesToolStripMenuItem
+            // helpToolStripMenuItem
             // 
-            this.servicesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gridToolStripMenuItem,
-            this.libraryToolStripMenuItem,
-            this.menuToolStripMenuItem,
-            this.parametersToolStripMenuItem,
-            this.statusToolStripMenuItem,
-            this.toolStripSeparator9,
-            this.layoutToolStripMenuItem,
-            this.toolStripMenuItem2});
-            this.servicesToolStripMenuItem.Name = "servicesToolStripMenuItem";
-            this.servicesToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.servicesToolStripMenuItem.Text = "View";
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutCCVToolStripMenuItem,
+            this.documentationToolStripMenuItem,
+            this.examplesToolStripMenuItem,
+            this.termsTrademarksToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutCCVToolStripMenuItem
+            // 
+            this.aboutCCVToolStripMenuItem.Name = "aboutCCVToolStripMenuItem";
+            this.aboutCCVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.aboutCCVToolStripMenuItem.Text = "About";
+            // 
+            // documentationToolStripMenuItem
+            // 
+            this.documentationToolStripMenuItem.Name = "documentationToolStripMenuItem";
+            this.documentationToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.documentationToolStripMenuItem.Text = "Documentation";
+            // 
+            // examplesToolStripMenuItem
+            // 
+            this.examplesToolStripMenuItem.Name = "examplesToolStripMenuItem";
+            this.examplesToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.examplesToolStripMenuItem.Text = "Examples";
+            // 
+            // termsTrademarksToolStripMenuItem
+            // 
+            this.termsTrademarksToolStripMenuItem.Name = "termsTrademarksToolStripMenuItem";
+            this.termsTrademarksToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.termsTrademarksToolStripMenuItem.Text = "Licences/Legal";
+            this.termsTrademarksToolStripMenuItem.Click += new System.EventHandler(this.termsTrademarksToolStripMenuItem_Click);
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(92, 17);
+            this.toolStripStatusLabel1.Text = "CCV Preview 1.0";
+            // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1});
+            this.statusStrip.Location = new System.Drawing.Point(0, 867);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(1330, 22);
+            this.statusStrip.SizingGrip = false;
+            this.statusStrip.TabIndex = 0;
+            this.statusStrip.Text = "statusStrip1";
+            this.statusStrip.Visible = false;
+            // 
+            // workflowManagmentToolStripMenuItem
+            // 
+            this.workflowManagmentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.startWorkflowToolStripMenuItem,
+            this.stopWorkflowToolStripMenuItem,
+            this.quitWorkflowToolStripMenuItem});
+            this.workflowManagmentToolStripMenuItem.Name = "workflowManagmentToolStripMenuItem";
+            this.workflowManagmentToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.workflowManagmentToolStripMenuItem.Text = "Workflow managment";
+            // 
+            // startWorkflowToolStripMenuItem
+            // 
+            this.startWorkflowToolStripMenuItem.Name = "startWorkflowToolStripMenuItem";
+            this.startWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startWorkflowToolStripMenuItem.Text = "Start workflow";
+            this.startWorkflowToolStripMenuItem.Click += new System.EventHandler(this.startWorkflowToolStripMenuItem_Click);
+            // 
+            // stopWorkflowToolStripMenuItem
+            // 
+            this.stopWorkflowToolStripMenuItem.Name = "stopWorkflowToolStripMenuItem";
+            this.stopWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stopWorkflowToolStripMenuItem.Text = "Stop workflow";
+            this.stopWorkflowToolStripMenuItem.Click += new System.EventHandler(this.stopWorkflowToolStripMenuItem_Click);
+            // 
+            // quitWorkflowToolStripMenuItem
+            // 
+            this.quitWorkflowToolStripMenuItem.Name = "quitWorkflowToolStripMenuItem";
+            this.quitWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quitWorkflowToolStripMenuItem.Text = "Quit workflow";
+            this.quitWorkflowToolStripMenuItem.Click += new System.EventHandler(this.quitWorkflowToolStripMenuItem_Click);
             // 
             // LayoutEditor
             // 
@@ -986,6 +1049,13 @@ namespace NodeGraphLayoutEdit
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
+        private System.Windows.Forms.ToolStripMenuItem networkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem commitChangesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem workflowManagmentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem startWorkflowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stopWorkflowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quitWorkflowToolStripMenuItem;
     }
 }
 

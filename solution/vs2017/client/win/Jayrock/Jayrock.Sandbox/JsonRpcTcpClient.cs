@@ -27,6 +27,25 @@ namespace Jayrock.JsonRpc
             mtx = new Mutex();
         }
 
+        ~JsonRpcTcpClient()
+        {
+            try
+            {
+                socket.Dispose();
+                mtx.Dispose();
+            }
+            catch (Exception)
+            {
+                
+            }
+        }
+
+        public override void Connect()
+        {
+            var endpoint = GetEndpointFromUrl(Url);
+            socket.Connect(endpoint);
+        }
+
 
         public override object Invoke(Type returnType, string method, object args)
         {
@@ -54,11 +73,7 @@ namespace Jayrock.JsonRpc
                     //var netstring = NetstringWriter.Encode(sb.ToString());
 
                     var buffer = Encoding.UTF8.GetBytes(sb.ToString());
-                    
-
-                    var endpoint = GetEndpointFromUrl(Url);
                     socket.Blocking = true;
-                    socket.Connect(endpoint);
 
                     socket.Send(buffer);
 
@@ -91,7 +106,6 @@ namespace Jayrock.JsonRpc
                 }
                 finally
                 {
-                    socket.Close();
                     mtx.ReleaseMutex();
                 }
             }

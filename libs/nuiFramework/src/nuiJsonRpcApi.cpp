@@ -327,14 +327,12 @@ bool nuiJsonRpcApi::nui_update_pipelineProperty(const Json::Value& root, Json::V
 	std::string pipeline = root["params"]["pipeline"].asString();
 	std::string key = root["params"]["key"].asString();
 	std::string value = root["params"]["value"].asString();
-	std::string description = root["params"]["description"].asString();
 
 	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getPipelineDescriptor(pipeline);
 
 	std::map<std::string, nuiProperty*> props = descr->getProperties();
 	std::map<std::string, nuiProperty*>::iterator property = props.find(key);
 	property->second->set(value);
-	property->second->setDescription(description);
 
 	nuiModuleDescriptor* descriptor =
 		nuiFrameworkManager::getInstance().updatePipeline(pipeline, descr);
@@ -358,10 +356,7 @@ bool nuiJsonRpcApi::nui_update_moduleProperty(const Json::Value& root, Json::Val
 	response["id"] = root["id"];
 	std::string pipeline = root["params"]["pipeline"].asString();
 	std::string key = root["params"]["key"].asString();
-	std::string value;
-	if (root["params"]["value"].isInt()) value = value = t_to_string(root["params"]["value"].asInt());
-	else value = root["params"]["value"].asString();
-	std::string description = root["params"]["description"].asString();
+	std::string value = root["params"]["value"].asString();
 	int moduleIndex = root["params"]["index"].asInt();
 
 	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getModuleDescriptor(pipeline, moduleIndex);
@@ -369,23 +364,14 @@ bool nuiJsonRpcApi::nui_update_moduleProperty(const Json::Value& root, Json::Val
 	std::map<std::string, nuiProperty*> props = descr->getProperties();
 	std::map<std::string, nuiProperty*>::iterator property = props.find(key);
 	property->second->set(value);
-	property->second->setDescription(description);
 
 	nuiModuleDescriptor* descriptor =
 		nuiFrameworkManager::getInstance().updateModule(pipeline, moduleIndex, descr);
 
-	if (descriptor == NULL)
-	{
-		setFailure(response);
-		return false;
-	}
-	else
-	{
-		setSuccess(response);
-		response["result"] = serialize_module(descriptor);
-		response["data_type"] = "nuiModuleDescriptor";
-		return true;
-	}
+	setSuccess(response);
+	response["result"] = serialize_module(descriptor);
+	response["data_type"] = "nuiModuleDescriptor";
+	return true;
 }
 
 bool nuiJsonRpcApi::nui_update_endpoint(const Json::Value& root, Json::Value& response)
@@ -885,7 +871,7 @@ Json::Value nuiJsonRpcApi::serialize_properties(std::map<std::string, nuiPropert
 
 void nuiJsonRpcApi::setFailure(Json::Value &response)
 {
-	response["result"] = "failure";
+	response["status"] = "failure";
 }
 
 void nuiJsonRpcApi::setFailure(Json::Value &response, std::string message)
@@ -896,5 +882,5 @@ void nuiJsonRpcApi::setFailure(Json::Value &response, std::string message)
 
 void nuiJsonRpcApi::setSuccess(Json::Value &response)
 {
-	response["result"] = "success";
+	response["status"] = "success";
 }

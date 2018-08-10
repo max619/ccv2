@@ -18,7 +18,7 @@ namespace NodeGraphControl
         public ModuleDescriptor Descriptor { get; private set; }
 
         [Category("Properties")]
-        public  List<nuiProperty> Properties => Descriptor.properties.ToList();
+        public nuiProperty[] Properties => Descriptor.properties.ToArray();
 
         public ModuleNode(ModuleDescriptor descriptor, NodeGraphView p_View) : base(descriptor, p_View)
         {

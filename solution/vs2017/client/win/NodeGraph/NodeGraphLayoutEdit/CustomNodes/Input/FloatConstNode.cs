@@ -31,7 +31,7 @@ using NodeGraphLayoutEdit.DataTypes;
 
 namespace NodeGraphLayoutEdit.CustomNodes
 {
-    public class FloatConstNode:NodeGraphNode
+    public class FloatConstNode : NodeGraphNode
     {
         [Category("Float Const Node")]
         public float Value { get { return this.m_fValue; } set { this.m_fValue = value; } }
@@ -46,7 +46,7 @@ namespace NodeGraphLayoutEdit.CustomNodes
             this.Width = 80;
             this.Height = 45;
             this.Value = 0.0f;
-           
+
         }
 
 
@@ -58,8 +58,8 @@ namespace NodeGraphLayoutEdit.CustomNodes
             this.Width = 80;
             this.Height = 45;
             this.Value = 0.0f;
-            
-            
+
+
         }
 
         protected override string GetName()

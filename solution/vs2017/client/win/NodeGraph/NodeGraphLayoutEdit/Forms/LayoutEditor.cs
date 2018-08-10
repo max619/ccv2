@@ -31,6 +31,7 @@ using System.Windows.Forms;
 using NodeGraphControl;
 using Utilities;
 using NuiApiWrapper;
+using NodeGraphLayoutEdit.Dialogs;
 
 namespace NodeGraphLayoutEdit
 {
@@ -64,6 +65,10 @@ namespace NodeGraphLayoutEdit
             catch (FormatException)
             {
                 MessageBox.Show("Error Parsing Settings...");
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
             }
 
         }
@@ -524,5 +529,90 @@ namespace NodeGraphLayoutEdit
             }
         }
 
+        private void connectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string endpoint;
+                if (DialogsHeleper.ShowConnectDialog(out endpoint))
+                {
+                    NuiState.Instance.Connect(endpoint);
+                    this.nodeGraphPanel.LoadPipeline(NuiState.Instance.GetPipeline("root"));
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            try
+            {
+                var inst = TryGetInstance(e.ChangedItem);
+                if (inst != null && inst is nuiProperty && propertyGrid1.SelectedObject is ModuleNode)
+                {
+                    var prop = (nuiProperty)inst;
+                    var node = propertyGrid1.SelectedObject as ModuleNode;
+                    var module = node.Descriptor;
+                    var pipeline = this.nodeGraphPanel.View.PipelineDescriptor;
+
+                    NuiState.Instance.UpdateModuleProperty(pipeline.name, module.GetId(), prop.name, prop.value);
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        private object TryGetInstance(GridItem item)
+        {
+            var type = item.GetType();
+            var propinfo = type.GetProperty("Instance");
+            if (propinfo != null)
+            {
+                return propinfo.GetValue(item, null);
+            }
+            else
+                return null;
+        }
+
+        private void startWorkflowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                NuiState.Instance.WorkflowStart();
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        private void stopWorkflowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                NuiState.Instance.WorkflowStop();
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        private void quitWorkflowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                NuiState.Instance.WorkflowQuit();
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
     }
 }

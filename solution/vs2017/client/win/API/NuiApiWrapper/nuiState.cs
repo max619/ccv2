@@ -52,6 +52,7 @@ namespace NuiApiWrapper
             else
                 throw new ArgumentException("Defined unknown protocol", nameof(url));
             client.Url = url;
+            client.Connect();
         }
 
 #if TEST
@@ -298,6 +299,19 @@ namespace NuiApiWrapper
             return listPipelines;
         }
 #endif
+        public bool UpdateProperty(string pipeline, string key, string value, int moduleIndex)
+        {
+            var val = new
+            {
+                pipeline = pipeline,
+                key = key,
+                value = value,
+                index = moduleIndex.ToString()
+            };
+            return (bool)NuiState.Instance.client.Invoke(
+                    typeof(bool),
+                    "nui_update_moduleProperty", val);
+        }
 
 
         /************************************************************************/
@@ -386,15 +400,22 @@ namespace NuiApiWrapper
             return pipeline;
         }
 
-        public PipelineDescriptor UpdateModuleProperty(string pipelineName,
+        public bool UpdateModuleProperty(string pipelineName,
             int moduleIdx, string key, object value)
         {
-            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
-                typeof(PipelineDescriptor),
+            var args = new
+            {
+                pipeline = pipelineName,
+                key = key,
+                value = value.ToString(),
+                index = moduleIdx
+            };
+            Response<ModuleDescriptor> pipeline = (Response<ModuleDescriptor>)NuiState.Instance.client.Invoke(
+                typeof(Response<ModuleDescriptor>),
                 "nui_update_moduleProperty",
-                pipelineName, moduleIdx, key, value);
+                args);
 
-            return pipeline;
+            return pipeline.Success;
         }
 
         public EndpointDescriptor UpdateEndpoint(string type, int endpointIdx, string descriptor, int newIndex = -1)

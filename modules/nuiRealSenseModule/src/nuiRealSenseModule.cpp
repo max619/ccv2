@@ -86,6 +86,6 @@ void nuiRealSenseModule::propertyUpdated(std::string& name, nuiProperty* prop, n
 	} else
 	if (name == "max")
 	{
-		realsenseW.thresh.x() = prop->asDouble() / 1000.f;
+		realsenseW.thresh.y() = prop->asDouble() / 1000.f;
 	}
 }

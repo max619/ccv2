@@ -18,6 +18,7 @@ namespace NuiApiWrapper
         NUI_PROPERTY_POINTLIST,
     }
 
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public class nuiProperty
     {
         [XmlAttribute]

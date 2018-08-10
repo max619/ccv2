@@ -32,6 +32,7 @@ using System.Xml.Serialization;
 using System.Xml.Schema;
 using NodeGraphControl.Utils;
 using System.Linq;
+using System.ComponentModel;
 
 namespace NodeGraphControl
 {
@@ -44,6 +45,7 @@ namespace NodeGraphControl
         /// <summary>
         /// The node Collection contained in this view
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<NodeGraphNode> NodeCollection
         {
             get { return m_NodeCollection; }
@@ -53,6 +55,7 @@ namespace NodeGraphControl
         /// <summary>
         /// The collection of input and output endpoint of pipeline contained in this view
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<NodeGraphConnector> NodeConnectorCollection
         {
             get { return m_NodeConnectorCollection; }
@@ -62,6 +65,7 @@ namespace NodeGraphControl
         /// <summary>
         /// The collection of currently Selected nodes in this view
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<NodeGraphNode> SelectedItems
         {
             get { return m_SelectedItems; }
@@ -70,6 +74,7 @@ namespace NodeGraphControl
         /// <summary>
         /// The collection of Links created in this view
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<NodeGraphLink> Links
         {
             get { return m_Links; }

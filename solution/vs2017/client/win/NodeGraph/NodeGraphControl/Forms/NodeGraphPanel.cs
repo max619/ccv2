@@ -41,6 +41,7 @@ namespace NodeGraphControl
     public partial class NodeGraphPanel : UserControl
     {
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public NodeGraphView View
         {
             get { return m_oView; }

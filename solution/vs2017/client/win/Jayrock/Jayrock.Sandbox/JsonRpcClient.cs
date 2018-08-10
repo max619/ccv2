@@ -41,6 +41,11 @@ namespace Jayrock.JsonRpc
         protected int _id;
         protected static readonly object[] _zeroArgs = new object[0];
 
+        public virtual void Connect()
+        {
+
+        }
+
         public object Invoke(string method)
         {
             return Invoke(AnyType.Value, method);

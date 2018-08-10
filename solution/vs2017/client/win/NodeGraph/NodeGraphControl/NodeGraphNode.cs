@@ -103,6 +103,7 @@ namespace NodeGraphControl
         [Browsable(false)]
         protected String m_sName;
         protected List<NodeGraphConnector> m_Connectors;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         protected NodeGraphView m_oView;
 
         public event PaintEventHandler onPostDraw;
