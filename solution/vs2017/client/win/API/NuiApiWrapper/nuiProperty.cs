@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace NuiApiWrapper
 {
@@ -19,13 +20,16 @@ namespace NuiApiWrapper
 
     public class nuiProperty
     {
+        [XmlAttribute]
         [Category("Info"), DisplayName("Name")]
         [ReadOnly(true)]
         public string name { get; set; }
 
+        [XmlAttribute]
         [Browsable(false)]
         public int type { get; set; }
 
+        [XmlAttribute]
         [Category("Value"), DisplayName("Value")]
         public string value { get; set; }
 

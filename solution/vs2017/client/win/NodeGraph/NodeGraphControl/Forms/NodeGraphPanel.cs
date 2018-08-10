@@ -30,6 +30,7 @@ using System.Text;
 using System.Windows.Forms;
 using NodeGraphControl;
 using NuiApiWrapper;
+using NodeGraphControl.Utils;
 
 namespace NodeGraphControl
 {
@@ -341,6 +342,8 @@ namespace NodeGraphControl
         public Font NodeScaledConnectorFont { get { return this.m_NodeScaledConnectorFont; } set { this.m_NodeScaledConnectorFont = value; } }
 
         #endregion
+
+        public Point ViewSpaceMousePosition => m_ViewSpaceCursorLocation;
 
         #region Private members
 
@@ -1405,18 +1408,8 @@ namespace NodeGraphControl
         /// <param name="p_FileName"></param>
         public void SaveCurrentView(string p_FileName)
         {
-            try
-            {
-                Xml.XmlTree v_OutTree = new Xml.XmlTree("NodeGraphControl");
 
-                v_OutTree.m_rootNode.AddChild(this.View.SerializeToXML(v_OutTree.m_rootNode));
-
-                v_OutTree.SaveXML(p_FileName);
-            }
-            catch
-            {
-                // ERROR Saving View
-            }
+            SerializationUtils.Serialize(p_FileName, this.View);
         }
         /// <summary>
         ///  SERIALIZATION: Loads a serialized XML Copy into the current view
@@ -1424,17 +1417,13 @@ namespace NodeGraphControl
         /// <param name="p_FileName"></param>
         public void LoadCurrentView(string p_FileName)
         {
-            try
+            using (var str = System.IO.File.OpenRead(p_FileName))
+            using (var reader = System.Xml.XmlReader.Create(str))
             {
-                Xml.XmlTree v_InTree = new Xml.XmlTree("NodeGraphControl");
-                v_InTree.LoadXML(p_FileName);
-                this.View = new NodeGraphView(v_InTree.m_rootNode.GetFirstChild(Xml.SerializationUtils.GetFullTypeName(this.View)), this);
+                this.View = new NodeGraphView(reader, this);
+                this.View.SelectedItems.Clear();
                 this.UpdateFontSize();
                 this.Refresh();
-            }
-            catch
-            {
-                // ERROR loading View
             }
         }
 

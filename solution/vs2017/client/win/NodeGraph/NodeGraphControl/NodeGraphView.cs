@@ -26,16 +26,21 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using NodeGraphControl.Xml;
 using NuiApiWrapper;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Xml.Schema;
+using NodeGraphControl.Utils;
+using System.Linq;
 
 namespace NodeGraphControl
 {
     /// <summary>
     /// Encapsulates a node view (nodes & links)
     /// </summary>
-    public class NodeGraphView
+    public class NodeGraphView : XmlSerializibleBase
     {
+        public PipelineDescriptor PipelineDescriptor { get; private set; }
         /// <summary>
         /// The node Collection contained in this view
         /// </summary>
@@ -52,7 +57,7 @@ namespace NodeGraphControl
         {
             get { return m_NodeConnectorCollection; }
             set { m_NodeConnectorCollection = value; }
-        } 
+        }
 
         /// <summary>
         /// The collection of currently Selected nodes in this view
@@ -110,6 +115,11 @@ namespace NodeGraphControl
 
         private NodeGraphPanel m_oPanel;
 
+        public NodeGraphView() : this(null)
+        {
+
+        }
+
         /// <summary>
         /// Creates a new NodeGraphView in a NodeGraphpanel
         /// </summary>
@@ -136,6 +146,7 @@ namespace NodeGraphControl
         public NodeGraphView(PipelineDescriptor p_Pipeline, NodeGraphPanel p_Panel)
         {
             //System.Globalization.CultureInfo v_IntlCultureInfo = new System.Globalization.CultureInfo("en-us");
+            PipelineDescriptor = p_Pipeline;
             this.m_oPanel = p_Panel;
             this.ViewX = 0;
             this.ViewY = 0;
@@ -167,7 +178,7 @@ namespace NodeGraphControl
                 this.m_Links.Add(NodeGraphLink.FromConnectionDescriptor(connection, this));
             }
 
-            for(int i = 0 ; i<this.m_NodeCollection.Count ; i++)
+            for (int i = 0; i < this.m_NodeCollection.Count; i++)
             {
                 //! TODO : normal algorythm for module placement
                 this.m_NodeCollection[i].X = i * 100;
@@ -184,34 +195,14 @@ namespace NodeGraphControl
         /// </summary>
         /// <param name="p_XmlTreeNode">the parent XmlTreeNode used in serialization</param>
         /// <param name="p_Panel">the panel that will contain this NodeGraphView</param>
-        public NodeGraphView(XmlTreeNode p_XmlTreeNode, NodeGraphPanel p_Panel)
+        public NodeGraphView(XmlReader p_XmlTreeNode, NodeGraphPanel p_Panel)
         {
-            System.Globalization.CultureInfo v_IntlCultureInfo = new System.Globalization.CultureInfo("en-us");
             this.m_oPanel = p_Panel;
-            this.ViewX = int.Parse(p_XmlTreeNode.m_attributes["ViewX"]);
-            this.ViewY = int.Parse(p_XmlTreeNode.m_attributes["ViewY"]);
-            this.ViewZoom = float.Parse(p_XmlTreeNode.m_attributes["ViewZoom"], v_IntlCultureInfo);
-
-
-            this.m_NodeCollection = new List<NodeGraphNode>();
-
-            XmlTreeNode v_NodesXml = p_XmlTreeNode.GetFirstChild("NodeGraphNodeCollection");
-            foreach (XmlTreeNode i_ChildNode in v_NodesXml.m_childNodes)
-            {
-                    this.m_NodeCollection.Add(NodeGraphNode.DeserializeFromXML(i_ChildNode, this));
-            }
-
-
-            this.m_Links = new List<NodeGraphLink>();
-
-            XmlTreeNode v_LinksXml = p_XmlTreeNode.GetFirstChild("NodeGraphLinkCollection");
-            foreach (XmlTreeNode i_ChildLink in v_LinksXml.m_childNodes)
-            {
-                    this.m_Links.Add(NodeGraphLink.DeserializeFromXML(i_ChildLink, this));
-            }
-
-            this.m_SelectedItems = new List<NodeGraphNode>();
-
+            this.ViewX = 0;
+            this.ViewY = 0;
+            this.ViewZoom = 1.0f;
+            ReadXml(p_XmlTreeNode);
+            m_SelectedItems = new List<NodeGraphNode>();
         }
 
         /// <summary>
@@ -242,34 +233,70 @@ namespace NodeGraphControl
             return -1;
         }
 
-        /// <summary>
-        /// SERIALIZATION: Serializes current object and all of its children to an XML Node
-        /// </summary>
-        /// <param name="p_Parent">Parent XML Node used in serialization</param>
-        /// <returns>the XML serialized copy of the object</returns>
-        public XmlTreeNode SerializeToXML(XmlTreeNode p_Parent)
+        public override void ReadXml(XmlReader reader)
         {
-            XmlTreeNode v_Out = new XmlTreeNode(Xml.SerializationUtils.GetFullTypeName(this),p_Parent);
-            v_Out.AddParameter("ViewX", ViewX.ToString());
-            v_Out.AddParameter("ViewY", ViewY.ToString());
-            v_Out.AddParameter("ViewZoom", ViewZoom.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-us")));
+            System.Globalization.CultureInfo v_IntlCultureInfo = new System.Globalization.CultureInfo("en-us");
+            ReadTill("NodeGraphView", reader);
+            this.ViewX = int.Parse(reader.GetAttribute("ViewX"));
+            this.ViewY = int.Parse(reader.GetAttribute("ViewY"));
+            this.ViewZoom = float.Parse(reader.GetAttribute("ViewZoom"));
 
-            // Process Nodes
-            XmlTreeNode v_NodeCollection = v_Out.AddChild("NodeGraphNodeCollection");
+            ReadTill("PipelineDescriptor", reader);
+            PipelineDescriptor = DeserializeObject<PipelineDescriptor>(reader);
+
+            this.m_NodeConnectorCollection = new List<NodeGraphConnector>();
+            foreach (var endpoint in PipelineDescriptor.inputEndpoints)
+            {
+                this.m_NodeConnectorCollection.Add(new NodeGraphConnector(endpoint, this, ConnectorType.InputConnector));
+            }
+
+            foreach (var endpoint in PipelineDescriptor.outputEndpoints)
+            {
+                this.m_NodeConnectorCollection.Add(new NodeGraphConnector(endpoint, this, ConnectorType.OutputConnector));
+            }
+
+            ReadTill("NodeGraphNodeCollection", reader);
+
+            this.m_NodeCollection = new List<NodeGraphNode>();
+
+            while (TryReadTill("NodeGraphNode", reader))
+            {
+                var type = ReadType(reader);
+                m_NodeCollection.Add((NodeGraphNode)Activator.CreateInstance(type, reader, this));
+            }
+
+            this.m_Links = new List<NodeGraphLink>();
+
+            foreach (var connection in PipelineDescriptor.connections)
+            {
+                this.m_Links.Add(NodeGraphLink.FromConnectionDescriptor(connection, this));
+            }
+            //while (TryReadTill("NodeGraphLink", reader))
+            //{
+            //    m_Links.Add((NodeGraphLink)Activator.CreateInstance(typeof(NodeGraphLink), reader, this));
+            //}
+            for (int i = 0; i < this.m_NodeCollection.Count; i++)
+            {
+                this.m_NodeCollection[i].UpdateHitRectangle();
+            }
+            RestorePipeline();
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("ViewX", ViewX.ToString());
+            writer.WriteAttributeString("ViewY", ViewY.ToString());
+            writer.WriteAttributeString("ViewZoom", ViewZoom.ToString());
+            writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+
+            SerializeObject(PipelineDescriptor, writer);
+
+            writer.WriteStartElement("NodeGraphNodeCollection");
             foreach (NodeGraphNode i_Node in this.NodeCollection)
             {
-                v_NodeCollection.AddChild(i_Node.SerializeToXML(v_NodeCollection));
+                SerializeObject(i_Node, writer);
             }
-
-            // Process Links
-
-            XmlTreeNode v_LinksCollection = v_Out.AddChild("NodeGraphLinkCollection");
-            foreach (NodeGraphLink i_Link in this.Links)
-            {
-                v_LinksCollection.AddChild(i_Link.SerializeToXML(v_LinksCollection));
-            }
-
-            return v_Out;
+            writer.WriteEndElement();
 
         }
 
@@ -279,37 +306,48 @@ namespace NodeGraphControl
         /// </summary>
         public void CopySelectionToClipboard()
         {
-            XmlTree v_ClipboardCopy = new XmlTree("NodeGraphCopy");
-            XmlTreeNode v_NodeRoot = v_ClipboardCopy.m_rootNode.AddChild("Nodes");
-            XmlTreeNode v_LinksRoot = v_ClipboardCopy.m_rootNode.AddChild("Links");
-            // Nodes
-            foreach (NodeGraphNode i_Node in this.m_SelectedItems)
-            {
-                v_NodeRoot.AddChild(i_Node.SerializeToXML(v_ClipboardCopy.m_rootNode));
-            }
-            // Links
+            string v_TempPath = Path.GetTempPath() + "NodeGraphClipboard.xml";
 
-            XmlTreeNode v_CurrentLink;
-
-            foreach (NodeGraphLink i_Link in this.m_Links)
+            using (var str = File.Create(v_TempPath))
+            using (var writer = XmlWriter.Create(str))
             {
-                // if the node is connecting copied nodes
-                if (this.m_SelectedItems.Contains(i_Link.Input.Parent) && this.m_SelectedItems.Contains(i_Link.Output.Parent))
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Clipboard");
+                writer.WriteAttributeString("X", ParentPanel.ViewSpaceMousePosition.X.ToString());
+                writer.WriteAttributeString("Y", ParentPanel.ViewSpaceMousePosition.Y.ToString());
+
+                writer.WriteStartElement("SelectedNodes");
+                foreach (NodeGraphNode i_Node in this.m_SelectedItems)
                 {
-                    v_CurrentLink = new XmlTreeNode("ToBeRelinked", v_LinksRoot);
-                    v_CurrentLink.AddParameter("InputNodeId", this.GetSelectionNodeIndex(i_Link.Input.Parent).ToString());
-                    v_CurrentLink.AddParameter("InputNodeConnectorIdx", i_Link.Input.Parent.GetConnectorIndex(i_Link.Input).ToString());
-                    v_CurrentLink.AddParameter("OutputNodeId", this.GetSelectionNodeIndex(i_Link.Output.Parent).ToString());
-                    v_CurrentLink.AddParameter("OutputNodeConnectorIdx", i_Link.Output.Parent.GetConnectorIndex(i_Link.Output).ToString());
-                    v_LinksRoot.AddChild(v_CurrentLink);
+                    SerializeObject(i_Node, writer);
                 }
+                writer.WriteEndElement();
 
+                writer.WriteStartElement("Links");
+                foreach (NodeGraphLink i_Link in this.m_Links)
+                {
+                    // if the node is connecting copied nodes
+                    if (this.m_SelectedItems.Contains(i_Link.Input.Parent) && this.m_SelectedItems.Contains(i_Link.Output.Parent))
+                    {
+                        writer.WriteStartElement("ToBeRelinked");
+
+                        writer.WriteAttributeString("InputNodeId", this.GetSelectionNodeIndex(i_Link.Input.Parent).ToString());
+                        writer.WriteAttributeString("InputNodeConnectorIdx", i_Link.Input.Parent.GetConnectorIndex(i_Link.Input).ToString());
+                        writer.WriteAttributeString("OutputNodeId", this.GetSelectionNodeIndex(i_Link.Output.Parent).ToString());
+                        writer.WriteAttributeString("OutputNodeConnectorIdx", i_Link.Output.Parent.GetConnectorIndex(i_Link.Output).ToString());
+
+                        SerializeObject(i_Link.ConnectionDescriptor, writer);
+
+                        writer.WriteEndElement();
+                    }
+                }
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
             }
-
 
             Clipboard.Clear();
-            string v_TempPath = Path.GetTempPath() + "NodeGraphClipboard.xml";
-            v_ClipboardCopy.SaveXML(v_TempPath);
             System.Collections.Specialized.StringCollection v_ClipBoardContent = new System.Collections.Specialized.StringCollection();
             v_ClipBoardContent.Add(v_TempPath);
             Clipboard.SetFileDropList(v_ClipBoardContent);
@@ -324,55 +362,84 @@ namespace NodeGraphControl
             {
                 if (Clipboard.GetFileDropList().Contains(Path.GetTempPath() + "NodeGraphClipboard.xml"))
                 {
-                    XmlTree v_Contents = XmlTree.FromFile(Path.GetTempPath() + "NodeGraphClipboard.xml");
-                    XmlTreeNode v_ContentsRoot = v_Contents.m_rootNode;
-                    XmlTreeNode v_NodesRoot = v_ContentsRoot.GetFirstChild("Nodes");
-                    XmlTreeNode v_LinksRoot = v_ContentsRoot.GetFirstChild("Links");
-
+                    string v_TempPath = Path.GetTempPath() + "NodeGraphClipboard.xml";
                     int PreviousNodeCount = this.m_NodeCollection.Count;
-
-                    NodeGraphNode v_CurrentNode;
-
-                    foreach (XmlTreeNode i_Node in v_NodesRoot.m_childNodes)
+                    using (var reader = XmlReader.Create(v_TempPath))
                     {
-                        v_CurrentNode = NodeGraphNode.DeserializeFromXML(i_Node, this);
-                        v_CurrentNode.X += 10;
-                        v_CurrentNode.Y += 10;
-                        v_CurrentNode.UpdateHitRectangle();
-                        this.NodeCollection.Add(v_CurrentNode);
+                        ReadTill("Clipboard", reader);
+                        int old_x = int.Parse(reader.GetAttribute("X"));
+                        int old_y = int.Parse(reader.GetAttribute("Y"));
+                        int dx = ParentPanel.ViewSpaceMousePosition.X - old_x;
+                        int dy = ParentPanel.ViewSpaceMousePosition.Y - old_y;
+                        ReadTill("SelectedNodes", reader);                        
+                        while (TryReadTill("NodeGraphNode", reader))
+                        {
+                            var type = ReadType(reader);
+                            var node = (NodeGraphNode)Activator.CreateInstance(type, reader, this);
+                            node.X += dx;
+                            node.Y += dy;
+                            if(node is ModuleNode)
+                            {
+                                var m = (ModuleNode)node;
+                                m.Descriptor.SetId(PipelineDescriptor.GetNextIndex());
+                            }
+                            node.UpdateHitRectangle();
+                            this.NodeCollection.Add(node);
+                        }
+
+
+                        int v_InId, n_In, n_Ou, v_InConnectorIdx, v_OutId, v_OutConnectorIdx;
+                        ReadTill("Links", reader);
+                        while (TryReadTill("ToBeRelinked", reader))
+                        {
+                            v_InId = int.Parse(reader.GetAttribute("InputNodeId"));
+                            n_In = v_InId + PreviousNodeCount;
+                            v_InConnectorIdx = int.Parse(reader.GetAttribute("InputNodeConnectorIdx"));
+                            v_OutId = int.Parse(reader.GetAttribute("OutputNodeId"));
+                            n_Ou = v_OutId + PreviousNodeCount;
+                            v_OutConnectorIdx = int.Parse(reader.GetAttribute("OutputNodeConnectorIdx"));
+
+                            ReadTill("ConnectionDescriptor", reader);
+
+                            var descriptor = DeserializeObject<ConnectionDescriptor>(reader);
+                            descriptor.destinationModule = n_Ou;
+                            descriptor.sourceModule = n_In;
+
+                            this.m_Links.Add(new NodeGraphLink(descriptor, this));
+                            PipelineDescriptor.connections.Add(descriptor);
+
+                            reader.Read();
+                        }
                     }
-
-
-                    int v_InId, v_InConnectorIdx, v_OutId, v_OutConnectorIdx;
-
-                    foreach (XmlTreeNode i_Link in v_LinksRoot.m_childNodes)
-                    {
-                        v_InId = int.Parse(i_Link.m_attributes["InputNodeId"]);
-                        v_InConnectorIdx = int.Parse(i_Link.m_attributes["InputNodeConnectorIdx"]);
-                        v_OutId = int.Parse(i_Link.m_attributes["OutputNodeId"]);
-                        v_OutConnectorIdx = int.Parse(i_Link.m_attributes["OutputNodeConnectorIdx"]);
-
-
-                        // Relinking
-                        this.m_Links.Add(new NodeGraphLink(
-                            // P_INPUT
-                            this.m_NodeCollection[PreviousNodeCount + v_InId].Connectors[v_InConnectorIdx],
-                            // P_OUTPUT
-                            this.m_NodeCollection[PreviousNodeCount + v_OutId].Connectors[v_OutConnectorIdx]
-                            ));
-                            
-                        
-                    }
-
-
                 }
-                ParentPanel.Refresh();
-
-
             }
+            ParentPanel.Refresh();
+        }
 
+        private void RestorePipeline()
+        {
+            PipelineDescriptor.modules = m_NodeCollection.Where((x) => x is ModuleNode).Cast<ModuleNode>().Select((x) => x.Descriptor).ToList();
+        }
 
+        public NodeGraphConnector CreateConnectorByModuleDescriptors(int NodeId, int NodeConnector, ConnectorType type)
+        {
+            EndpointDescriptor descriptor = null;
+            var module = m_NodeCollection.Where((x) => x is ModuleNode).Cast<ModuleNode>()
+                .FirstOrDefault((x) => int.Parse(x.Descriptor.properties.First((y) => y.name == "id").value) == NodeId);
+            if (module != null)
+            {
+                if (type == ConnectorType.OutputConnector && module.Descriptor.outputEndpoints != null)
+                    descriptor = module.Descriptor.outputEndpoints.Where(x => x.index == NodeConnector).FirstOrDefault();
+                else if (type == ConnectorType.InputConnector && module.Descriptor.inputEndpoints != null)
+                    descriptor = module.Descriptor.inputEndpoints.Where(x => x.index == NodeConnector).FirstOrDefault();
+
+                var connector = new NodeGraphConnector(descriptor, module, type);
+                m_NodeConnectorCollection.Add(connector);
+                return connector;
+            }
+            throw new ArgumentException("Module with id=" + NodeId + " not found");
         }
 
     }
 }
+

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 using NodeGraphControl;
-using NodeGraphControl.Xml;
 
 namespace NodeGraphLayoutEdit.CustomNodes
 {
@@ -20,8 +20,8 @@ namespace NodeGraphLayoutEdit.CustomNodes
 
         }
 
-        public TemplateModule(XmlTreeNode p_TreeNode, NodeGraphView p_View)
-            : base(p_TreeNode, p_View)
+        public TemplateModule(XmlReader reader, NodeGraphView p_View)
+            : base(reader, p_View)
         {
             this.m_sName = "TemplateModule";
             this.m_Connectors.Add(new NodeGraphConnector("Input 0", this, ConnectorType.InputConnector, 0));

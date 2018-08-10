@@ -28,13 +28,15 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using NuiApiWrapper;
+using System.Xml;
+using NodeGraphControl.Utils;
 
 namespace NodeGraphControl
 {
     /// <summary>
     /// Represents a base node for use in a NodeGraphView
     /// </summary>
-    public class NodeGraphNode
+    public class NodeGraphNode : XmlSerializibleBase
     {
         /// <summary>
         /// Whether the node can be selected
@@ -105,7 +107,10 @@ namespace NodeGraphControl
 
         public event PaintEventHandler onPostDraw;
 
-
+        public NodeGraphNode() : this(0,0,null, true)
+        {
+           
+        }
         /// <summary>
         /// Creates a new NodeGraphNode into the NodeGraphView, given coordinates and ability to be selected
         /// </summary>
@@ -138,6 +143,11 @@ namespace NodeGraphControl
         /// <param name="p_Input"></param>
         /// <param name="p_View"></param>
         public NodeGraphNode(ModuleDescriptor descriptor, NodeGraphView p_View)
+        {            
+            InitNodeFromDescriptor(descriptor, p_View);
+        }
+
+        protected void InitNodeFromDescriptor(ModuleDescriptor descriptor, NodeGraphView p_View)
         {
             this.m_oView = p_View;
             this.m_sName = descriptor.name;
@@ -167,16 +177,10 @@ namespace NodeGraphControl
         /// </summary>
         /// <param name="p_Input"></param>
         /// <param name="p_View"></param>
-        public NodeGraphNode(Xml.XmlTreeNode p_Input, NodeGraphView p_View)
+        public NodeGraphNode(XmlReader p_Input, NodeGraphView p_View)
         {
             this.m_oView = p_View;
-            this.m_sName = p_Input.m_attributes["Name"];
-            this.m_sComment = p_Input.m_attributes["Comment"];
-            this.X = int.Parse(p_Input.m_attributes["X"]);
-            this.Y = int.Parse(p_Input.m_attributes["Y"]);
-            this.Width = int.Parse(p_Input.m_attributes["Width"]);
-            this.Height = int.Parse(p_Input.m_attributes["Height"]);
-            this.m_bCanBeSelected = bool.Parse(p_Input.m_attributes["CanBeSelected"]);
+            ReadXml(p_Input);
             this.m_Connectors = new List<NodeGraphConnector>();
         }
 
@@ -388,46 +392,6 @@ namespace NodeGraphControl
         }
 
         /// <summary>
-        /// VIRTUAL: Serializes the current Node to XML Serialized copy. Must be overriden to implement custom members.
-        /// </summary>
-        /// <param name="p_Parent"></param>
-        /// <returns></returns>
-        public virtual Xml.XmlTreeNode SerializeToXML(Xml.XmlTreeNode p_Parent)
-        {
-            Xml.XmlTreeNode v_Out = new Xml.XmlTreeNode(Xml.SerializationUtils.GetFullTypeName(this), p_Parent);
-
-            v_Out.AddParameter("Name", this.Name);
-            v_Out.AddParameter("X", this.X.ToString());
-            v_Out.AddParameter("Y", this.Y.ToString());
-            v_Out.AddParameter("Width", this.Width.ToString());
-            v_Out.AddParameter("Height", this.Height.ToString());
-            v_Out.AddParameter("Comment", this.Comment.ToString());
-            v_Out.AddParameter("CanBeSelected", this.CanBeSelected.ToString());
-            return v_Out;
-        }
-
-        /// <summary>
-        /// STATIC: Deserializes a new NodeGraphNode given a XML Serialized Copy
-        /// </summary>
-        /// <param name="p_Node"></param>
-        /// <param name="p_View"></param>
-        /// <returns></returns>
-        public static NodeGraphNode DeserializeFromXML(Xml.XmlTreeNode p_Node, NodeGraphView p_View)
-        {
-            string className = p_Node.m_nodeName;
-
-            object[] arguments = { p_Node, p_View };
-
-            object v_Out = System.Reflection.Assembly.GetEntryAssembly().CreateInstance(className, false,
-                                                                                    System.Reflection.BindingFlags.CreateInstance,
-                                                                                    null,
-                                                                                    arguments, System.Globalization.CultureInfo.GetCultureInfo("fr-fr"),
-                                                                                    null);
-
-            return v_Out as NodeGraphNode;
-        }
-
-        /// <summary>
         /// STATIC: Returns a new instance from Assembly, name and a list of arguments
         /// </summary>
         /// <param name="p_TypeName"></param>
@@ -450,6 +414,28 @@ namespace NodeGraphControl
             return true;
         }
 
+        public override void ReadXml(XmlReader reader)
+        {
+            this.m_sName = reader.GetAttribute("Name");
+            this.m_sComment = reader.GetAttribute("Comment");
+            this.X = int.Parse(reader.GetAttribute("X"));
+            this.Y = int.Parse(reader.GetAttribute("Y"));
+            this.Width = int.Parse(reader.GetAttribute("Width"));
+            this.Height = int.Parse(reader.GetAttribute("Height"));
+            this.m_bCanBeSelected = bool.Parse(reader.GetAttribute("CanBeSelected"));
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            WriteType(writer, GetType());
+            writer.WriteAttributeString("Name", this.Name);
+            writer.WriteAttributeString("X", this.X.ToString());
+            writer.WriteAttributeString("Y", this.Y.ToString());
+            writer.WriteAttributeString("Width", this.Width.ToString());
+            writer.WriteAttributeString("Height", this.Height.ToString());
+            writer.WriteAttributeString("Comment", this.Comment.ToString());
+            writer.WriteAttributeString("CanBeSelected", this.CanBeSelected.ToString());
+        }
     }
 
 

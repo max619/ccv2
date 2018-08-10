@@ -25,10 +25,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Xml;
 
 // Needed for the object to run
 using NodeGraphControl;
-using NodeGraphControl.Xml;
 
 // We will be using data types
 using NodeGraphLayoutEdit.DataTypes;
@@ -89,10 +89,10 @@ namespace NodeGraphLayoutEdit.CustomNodes
         /// <summary>
         /// XML CONSTRUCTOR: Should not be called by API Users, used for deserialization
         /// </summary>
-        /// <param name="p_TreeNode">XmlTreeNode used for Deserialization</param>
+        /// <param name="reader">XmlTreeNode used for Deserialization</param>
         /// <param name="p_View">NodeGraphView Object that will contain the node</param>
-        public IfNode(XmlTreeNode p_TreeNode, NodeGraphView p_View)
-            : base(p_TreeNode, p_View)
+        public IfNode(XmlReader reader, NodeGraphView p_View)
+            : base(reader, p_View)
         {
             this.m_sName = "If condition";
             this.m_Connectors.Add(new NodeGraphConnector("A", this, ConnectorType.InputConnector, 0));
@@ -105,31 +105,31 @@ namespace NodeGraphLayoutEdit.CustomNodes
 
             // Parses XML to get back our values.
 
-                    // Since m_eBehavior is an enum, i've stocked it as a string, then use it to compare
-                    if (p_TreeNode.m_attributes["Behavior"] == "ErrorOnMissingInput") this.m_eBehavior = IfNodeBehavior.ErrorOnMissingInput;
-                    else this.m_eBehavior = IfNodeBehavior.ReturnDefaultValue;
+                    //// Since m_eBehavior is an enum, i've stocked it as a string, then use it to compare
+                    //if (reader.Attributes["Behavior"].Value == "ErrorOnMissingInput") this.m_eBehavior = IfNodeBehavior.ErrorOnMissingInput;
+                    //else this.m_eBehavior = IfNodeBehavior.ReturnDefaultValue;
 
-                    // Float values can be a pain because of the type of the dot. It's always encoded as en-us CultureInfo
-                    this.m_fDefaultValue = float.Parse(p_TreeNode.m_attributes["DefaultValue"], System.Globalization.CultureInfo.GetCultureInfo("en-us"));
+                    //// Float values can be a pain because of the type of the dot. It's always encoded as en-us CultureInfo
+                    //this.m_fDefaultValue = float.Parse(reader.Attributes["DefaultValue"].Value, System.Globalization.CultureInfo.GetCultureInfo("en-us"));
 
         }
 
-        /// <summary>
-        /// Overrides XML Serialization by using base then adding our custom members
-        /// </summary>
-        /// <param name="p_Parent">Parent Tree Node used in Serialization</param>
-        /// <returns>a Serialized Copy of our object</returns>
-        public override XmlTreeNode SerializeToXML(XmlTreeNode p_Parent)
-        {
-            // Base SerializeToXML provides initial work for the XMLTreeNode
-            XmlTreeNode v_Out =  base.SerializeToXML(p_Parent);
+        ///// <summary>
+        ///// Overrides XML Serialization by using base then adding our custom members
+        ///// </summary>
+        ///// <param name="p_Parent">Parent Tree Node used in Serialization</param>
+        ///// <returns>a Serialized Copy of our object</returns>
+        //public override XmlNode SerializeToXML(XmlTreeNode p_Parent)
+        //{
+        //    // Base SerializeToXML provides initial work for the XMLTreeNode
+        //    XmlTreeNode v_Out =  base.SerializeToXML(p_Parent);
 
-                // ... then I will encode our custom data
-                v_Out.AddParameter("Behavior", m_eBehavior.ToString());
-                v_Out.AddParameter("DefaultValue", m_fDefaultValue.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-us")));
+        //        // ... then I will encode our custom data
+        //        v_Out.AddParameter("Behavior", m_eBehavior.ToString());
+        //        v_Out.AddParameter("DefaultValue", m_fDefaultValue.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-us")));
 
-            return v_Out;
-        }
+        //    return v_Out;
+        //}
 
 
         /// <summary>

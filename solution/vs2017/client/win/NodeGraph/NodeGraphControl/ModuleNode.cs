@@ -1,12 +1,13 @@
 ﻿using NodeGraphControl;
 using NodeGraphControl.Editors;
-using NodeGraphControl.Xml;
 using NuiApiWrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using System.Xml;
 
 namespace NodeGraphControl
 {
@@ -24,9 +25,9 @@ namespace NodeGraphControl
             Descriptor = descriptor;
         }
 
-        public ModuleNode(ModuleDescriptor descriptor, XmlTreeNode p_Input, NodeGraphView p_View) : base(p_Input, p_View)
+        public ModuleNode(XmlReader p_Input, NodeGraphView p_View) : base(p_Input, p_View)
         {
-            Descriptor = descriptor;
+            InitNodeFromDescriptor(Descriptor, p_View);
         }
 
         public ModuleNode(ModuleDescriptor descriptor, int p_X, int p_Y, NodeGraphView p_View, bool p_CanBeSelected) : base(p_X, p_Y, p_View, p_CanBeSelected)
@@ -39,17 +40,22 @@ namespace NodeGraphControl
             return base.Process();
         }
 
-        public override XmlTreeNode SerializeToXML(XmlTreeNode p_Parent)
-        {
-            var v_out = base.SerializeToXML(p_Parent);
-            var descriptor = v_out.AddChild("ModuleDescriptor");
-
-            return v_out;
-        }
-
         public override string ToString()
         {
             return base.ToString();
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+            SerializeObject(Descriptor, writer);
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            base.ReadXml(reader);
+            if(TryReadTill("ModuleDescriptor",reader))
+                Descriptor = DeserializeObject<ModuleDescriptor>(reader);
         }
     }
 }

@@ -24,8 +24,8 @@ OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 using NodeGraphControl;
-using NodeGraphControl.Xml;
 
 namespace NodeGraphLayoutEdit.CustomNodes
 {
@@ -42,8 +42,8 @@ namespace NodeGraphLayoutEdit.CustomNodes
 
         }
 
-        public SubtractNode(XmlTreeNode p_TreeNode, NodeGraphView p_View)
-            : base(p_TreeNode, p_View)
+        public SubtractNode(XmlReader reader, NodeGraphView p_View)
+            : base(reader, p_View)
         {
             this.m_sName = "A-B";
             this.m_Connectors.Add(new NodeGraphConnector("A", this, ConnectorType.InputConnector, 0));

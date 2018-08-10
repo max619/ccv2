@@ -25,9 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Xml;
 using NodeGraphControl;
 using NodeGraphLayoutEdit.DataTypes;
-using NodeGraphControl.Xml;
 
 namespace NodeGraphLayoutEdit.CustomNodes
 {
@@ -38,8 +38,8 @@ namespace NodeGraphLayoutEdit.CustomNodes
         private float m_fValue;
 
 
-        public FloatConstNode(XmlTreeNode p_TreeNode, NodeGraphView p_View)
-            : base(p_TreeNode, p_View)
+        public FloatConstNode(XmlReader reader, NodeGraphView p_View)
+            : base(reader, p_View)
         {
             this.m_sName = "Float: NAN";
             this.m_Connectors.Add(new NodeGraphConnector("Value", this, ConnectorType.OutputConnector, 0));
@@ -72,11 +72,11 @@ namespace NodeGraphLayoutEdit.CustomNodes
             return new NodeGraphFloatData(this.m_fValue);
         }
 
-        public override NodeGraphControl.Xml.XmlTreeNode SerializeToXML(NodeGraphControl.Xml.XmlTreeNode p_Parent)
-        {
-            NodeGraphControl.Xml.XmlTreeNode v_Out = base.SerializeToXML(p_Parent);
-            v_Out.AddParameter("Value", Value.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-us")));
-            return v_Out;
-        }
+        //public override NodeGraphControl.Xml.XmlTreeNode SerializeToXML(NodeGraphControl.Xml.XmlTreeNode p_Parent)
+        //{
+        //    NodeGraphControl.Xml.XmlTreeNode v_Out = base.SerializeToXML(p_Parent);
+        //    v_Out.AddParameter("Value", Value.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-us")));
+        //    return v_Out;
+        //}
     }
 }

@@ -27,13 +27,15 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using NuiApiWrapper;
+using NodeGraphControl.Utils;
+using System.Xml;
 
 namespace NodeGraphControl
 {
     /// <summary>
     /// Represents a connector on a node
     /// </summary>
-    public class NodeGraphConnector
+    public class NodeGraphConnector : XmlSerializibleBase
     {
         public EndpointDescriptor Descriptor { get; private set; }
         /// <summary>
@@ -59,6 +61,10 @@ namespace NodeGraphControl
         /// Only for separate connectors
         /// </summary>
         private Point position;
+        public NodeGraphConnector()
+        {
+
+        }
 
         public NodeGraphConnector(EndpointDescriptor descriptor, NodeGraphNode p_parent, ConnectorType type)
         {
@@ -261,6 +267,16 @@ namespace NodeGraphControl
                 if (v_Connector == null) return false;
                 else return true;
             }
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 

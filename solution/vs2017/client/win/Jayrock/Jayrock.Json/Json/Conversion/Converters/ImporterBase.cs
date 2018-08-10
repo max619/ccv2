@@ -28,6 +28,7 @@ namespace Jayrock.Json.Conversion.Converters
     using System.Collections;
     using System.Diagnostics;
     using Jayrock.Json.Conversion;
+    using System.Linq;
 
     #endregion
 
@@ -133,7 +134,7 @@ namespace Jayrock.Json.Conversion.Converters
 
             var str = reader.Token.Text.ToLower().Trim();
 
-            if(str.IndexOf(",") >=0 || str.IndexOf(".") >= 0)
+            if (str.IndexOf(",") >= 0 || str.IndexOf(".") >= 0)
             {
                 double res;
                 if (double.TryParse(str, out res))
@@ -176,13 +177,25 @@ namespace Jayrock.Json.Conversion.Converters
 
             reader.Read();
 
-            ArrayList list = new ArrayList();
-            Type elementType = OutputType.GetElementType();
+            IList list = null;
+            Type elementType = null;
+            if (!OutputType.IsGenericType)
+            {
+                list = new ArrayList();
+                elementType = OutputType.GetElementType();
+            }
+            else
+            {
+                list = (IList)Activator.CreateInstance(OutputType);
+                elementType = OutputType.GetGenericArguments()[0];
+            }
+
+            
 
             while (reader.TokenClass != JsonTokenClass.EndArray)
                 list.Add(context.Import(elementType, reader));
-
-            return ReadReturning(reader, list.ToArray(elementType));
+            
+            return ReadReturning(reader, list);
         }
         protected virtual object ImportFromObject(ImportContext context, JsonReader reader) { return ThrowNotSupported(JsonTokenClass.Object); }
 

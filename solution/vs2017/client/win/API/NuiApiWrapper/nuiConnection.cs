@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace NuiApiWrapper
 {
@@ -25,15 +26,42 @@ namespace NuiApiWrapper
 
     public class ConnectionDescriptor
     {
+        [XmlAttribute]
         public int asyncMode { get; set; }
+        [XmlAttribute]
         public int bufferSize { get; set; }
+        [XmlAttribute]
         public int buffered { get; set; }
+        [XmlAttribute]
         public int deepCopy { get; set; }
+        [XmlAttribute]
         public int destinationModule { get; set; }
+        [XmlAttribute]
         public int destinationPort { get; set; }
+        [XmlAttribute]
         public int lastPacket { get; set; }
+        [XmlAttribute]
         public int overflow { get; set; }
+        [XmlAttribute]
         public int sourceModule { get; set; }
+        [XmlAttribute]
         public int sourcePort { get; set; }        
+
+        public ConnectionDescriptor Clone()
+        {
+            return new ConnectionDescriptor
+            {
+                asyncMode = this.asyncMode,
+                bufferSize = this.bufferSize,
+                buffered = this.buffered,
+                deepCopy = this.deepCopy,
+                destinationModule = this.destinationModule,
+                destinationPort = this.destinationPort,
+                lastPacket = this.lastPacket,
+                overflow = this.overflow,
+                sourceModule = this.sourceModule,
+                sourcePort = this.sourcePort
+            };
+        }
     }
 }

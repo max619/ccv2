@@ -36,6 +36,8 @@ namespace NodeGraphLayoutEdit
 {
     public partial class LayoutEditor : Form
     {
+        NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
+
         public static Point m_MouseLoc;
         CustomNodes.ReferenceRoot m_ReferenceRoot;
         private Boolean defaultSettings = true;
@@ -45,14 +47,14 @@ namespace NodeGraphLayoutEdit
         {
             LoadSettings();
 
-           // CreateGraphView();
+            // CreateGraphView();
 
             InitializeComponent();
 
             // LOAD DEFAULT SETTINGS
             try
             {
-                this.nodeGraphPanel.EnableDrawDebug = Convert.ToBoolean(iniFile.Section("General").Get("Debug"));      
+                this.nodeGraphPanel.EnableDrawDebug = Convert.ToBoolean(iniFile.Section("General").Get("Debug"));
                 this.nodeGraphPanel.ShowGrid = Convert.ToBoolean(iniFile.Section("View").Get("ShowGrid"));
                 this.nodeGraphPanel.GridPadding = Convert.ToInt16(iniFile.Section("View").Get("GridPadding"));
                 NuiState.Instance.Connect(iniFile.Section("Service").Get("APIV1"));
@@ -97,7 +99,7 @@ namespace NodeGraphLayoutEdit
                     //  MessageBox.Show(iniFile.Section("General").Get("Debug"));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // ERROR SETTING DEFUALT SETTINGS
                 MessageBox.Show("Error Loading Settings...");
@@ -160,16 +162,14 @@ namespace NodeGraphLayoutEdit
             //this.nodeGraphPanelAlt.MouseMove += new System.Windows.Forms.MouseEventHandler(this.nodeGraphPanel_MouseMove);
         }
 
-
-
         private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            
+
         }
 
         private void dummyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         private void addToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -193,7 +193,7 @@ namespace NodeGraphLayoutEdit
 
         private void integerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void subtractToolStripMenuItem_Click(object sender, EventArgs e)
@@ -201,7 +201,6 @@ namespace NodeGraphLayoutEdit
             Point v_ViewPos = nodeGraphPanel.ControlToView(m_MouseLoc);
             this.nodeGraphPanel.AddNode(new CustomNodes.SubtractNode(v_ViewPos.X, v_ViewPos.Y, nodeGraphPanel.View, true));
         }
-
 
         private void multiplyToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -227,10 +226,6 @@ namespace NodeGraphLayoutEdit
             this.nodeGraphPanel.AddNode(new CustomNodes.PowerNode(v_ViewPos.X, v_ViewPos.Y, nodeGraphPanel.View, true));
         }
 
-        
-        
-      
-
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             nodeGraphPanel.View.CopySelectionToClipboard();
@@ -241,10 +236,9 @@ namespace NodeGraphLayoutEdit
             nodeGraphPanel.View.PasteSelectionFromClipBoard();
         }
 
-       
         private void alignToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void parametersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -253,17 +247,17 @@ namespace NodeGraphLayoutEdit
             {
                 propertyGrid1.Visible = true;
             }
-            else {
+            else
+            {
                 propertyGrid1.Visible = false;
             }
         }
 
         private void ifBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           
+
         }
 
-       
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LoadGraph();
@@ -310,7 +304,7 @@ namespace NodeGraphLayoutEdit
             
             //MessageBox.Show(v_StdOut + v_StdErr);
             toolStripStatusLabel1.Text = v_StdOut + v_StdErr;
-             */ 
+             */
         }
 
         private void termsTrademarksToolStripMenuItem_Click(object sender, EventArgs e)
@@ -342,7 +336,7 @@ namespace NodeGraphLayoutEdit
                 // Error Aligning Nodes
                 toolStripStatusLabel1.Text = "Error Aligning...";
             }
-           
+
         }
 
         private void refreshToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -358,8 +352,8 @@ namespace NodeGraphLayoutEdit
 
         private void nodeGraphPanel_Load(object sender, EventArgs e)
         {
-           //EnableDrawDebug
-          
+            //EnableDrawDebug
+
         }
 
         private void gridToolStripMenuItem_Click(object sender, EventArgs e)
@@ -371,7 +365,7 @@ namespace NodeGraphLayoutEdit
             else
             {
                 nodeGraphPanel.ShowGrid = false;
-            }             
+            }
         }
 
         private void voidToolStripMenuItem_Click(object sender, EventArgs e)
@@ -403,41 +397,33 @@ namespace NodeGraphLayoutEdit
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           SaveGraph();
+            SaveGraph();
         }
+
         private bool LoadGraph()
         {
-
             try
             {
                 if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     this.nodeGraphPanel.LoadCurrentView(openFileDialog.FileName);
                 }
-
-                // Get Back Reference root
-                foreach (NodeGraphNode i_Node in this.nodeGraphPanel.View.NodeCollection)
-                {
-                    /*
-                    if (i_Node is CustomNodes.ReferenceRoot)
-                    {
-                        this.m_ReferenceRoot = i_Node as CustomNodes.ReferenceRoot;
-                    }
-                     */
-                }
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 toolStripStatusLabel1.Visible = true;
                 toolStripStatusLabel1.Text = "Error Loading Graph";
+                HandleError(ex);
                 return false;
             }
         }
-        private bool SaveGraph() {
+
+        private bool SaveGraph()
+        {
 
             try
-            {                
+            {
                 if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     if (System.IO.File.Exists(saveFileDialog.FileName))
@@ -451,10 +437,11 @@ namespace NodeGraphLayoutEdit
                 }
                 return true;
             }
-            catch
-            {                
+            catch (Exception ex)
+            {
                 toolStripStatusLabel1.Visible = true;
                 toolStripStatusLabel1.Text = "Error Saving Graph";
+                HandleError(ex);
                 return false;
             }
         }
@@ -463,10 +450,10 @@ namespace NodeGraphLayoutEdit
         {
             iniFile.Save("data/config.ini");
             if (MessageBox.Show(saveFileDialog.FileName + " Are you sure you want to quit?", "Quiting", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK)
-            {                
-                Application.Exit(); 
+            {
+                Application.Exit();
             }
-           
+
         }
 
         private void openRecentToolStripMenuItem_Click(object sender, EventArgs e)
@@ -476,7 +463,7 @@ namespace NodeGraphLayoutEdit
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           // this.nodeGraphPanel.LoadCurrentView(openFileDialog.FileName);
+            // this.nodeGraphPanel.LoadCurrentView(openFileDialog.FileName);
             //this.nodeGraphPanel.
         }
 
@@ -487,13 +474,13 @@ namespace NodeGraphLayoutEdit
             this.nodeGraphPanel.AddNode(myModule);
 
 
-           
+
         }
 
         private void rootRefernceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-             m_ReferenceRoot = new CustomNodes.ReferenceRoot(200, 1, nodeGraphPanel.View);
-             this.nodeGraphPanel.AddNode(m_ReferenceRoot);
+            m_ReferenceRoot = new CustomNodes.ReferenceRoot(200, 1, nodeGraphPanel.View);
+            this.nodeGraphPanel.AddNode(m_ReferenceRoot);
         }
 
         private void nodeGraphPanel_MouseMove(object sender, MouseEventArgs e)
@@ -513,8 +500,6 @@ namespace NodeGraphLayoutEdit
             }
         }
 
-
-
         private void curvedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.nodeGraphPanel.LinkVisualStyle = NodeGraphControl.LinkVisualStyle.Curve;
@@ -530,6 +515,14 @@ namespace NodeGraphLayoutEdit
             this.nodeGraphPanel.LinkVisualStyle = NodeGraphControl.LinkVisualStyle.Rectangle;
         }
 
+        private void HandleError(Exception ex)
+        {
+            _log.Error(ex);
+            if (MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+            {
+                MessageBox.Show(ex.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }
-        

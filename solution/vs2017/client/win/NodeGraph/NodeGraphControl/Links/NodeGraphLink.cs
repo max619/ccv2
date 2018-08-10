@@ -24,7 +24,10 @@ OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NodeGraphControl.Xml;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+using NodeGraphControl.Utils;
 using NuiApiWrapper;
 
 namespace NodeGraphControl
@@ -32,8 +35,9 @@ namespace NodeGraphControl
     /// <summary>
     /// Represents a link between two NodeGraphConnectors
     /// </summary>
-    public class NodeGraphLink
+    public class NodeGraphLink : XmlSerializibleBase
     {
+        public ConnectionDescriptor ConnectionDescriptor { get; set; }
         /// <summary>
         /// The first end of the link, that's connected to an Output Connector
         /// </summary>
@@ -50,6 +54,15 @@ namespace NodeGraphControl
         }
         private NodeGraphConnector m_InputConnector;
         private NodeGraphConnector m_OutputConnector;
+        private int v_InputNodeId;
+        private int v_OutputNodeId;
+        private int v_InputNodeConnectorIdx;
+        private int v_OutputNodeConnectorIdx;
+
+        public NodeGraphLink()
+        {
+
+        }
 
         /// <summary>
         /// Creates a new NodeGraphLink, given input and output Connectors
@@ -65,18 +78,70 @@ namespace NodeGraphControl
         /// <summary>
         /// CONVERSION: Creates a NodeGraphLink, given an XML Serialized copy of the link and a view
         /// </summary>
-        /// <param name="p_TreeNode"></param>
+        /// <param name="reader"></param>
         /// <param name="p_View"></param>
         public NodeGraphLink(ConnectionDescriptor connection, NodeGraphView p_View)
         {
-            int v_InputNodeId = connection.sourceModule;
-            int v_OutputNodeId = connection.destinationModule;
-            int v_InputNodeConnectorIdx = connection.sourcePort;
-            int v_OutputNodeConnectorIdx = connection.destinationPort;
+            CreateFromConnectionDescriptor(connection, p_View);
+        }
+
+        /// <summary>
+        /// SERIALIZATION: Creates a NodeGraphLink, given an XML Serialized copy of the link and a view
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="p_View"></param>
+        public NodeGraphLink(XmlReader reader, NodeGraphView p_View)
+        {
+            ReadXml(reader);
+
+            if (ConnectionDescriptor != null)
+            {
+                CreateFromConnectionDescriptor(ConnectionDescriptor, p_View);
+            }
+        }
+
+        internal static NodeGraphLink FromConnectionDescriptor(ConnectionDescriptor connection, NodeGraphView nodeGraphView)
+        {
+            return new NodeGraphLink(connection, nodeGraphView);
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            v_InputNodeId = int.Parse(reader.GetAttribute("InputNodeId"));
+            v_OutputNodeId = int.Parse(reader.GetAttribute("OutputNodeId"));
+            v_InputNodeConnectorIdx = int.Parse(reader.GetAttribute("InputNodeConnectorIdx"));
+            v_OutputNodeConnectorIdx = int.Parse(reader.GetAttribute("OutputNodeConnectorIdx"));
+
+            if (TryReadTill("ConnectionDescriptor", reader))
+            {
+                ConnectionDescriptor = DeserializeObject<ConnectionDescriptor>(reader);
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            NodeGraphView v_View = Input.Parent.ParentView;
+            NodeGraphNode v_InputNode = Input.Parent;
+            NodeGraphNode v_OutputNode = Output.Parent;
+
+
+            writer.WriteAttributeString("InputNodeId", (v_InputNodeId = v_View.GetNodeIndex(v_InputNode)).ToString());
+            writer.WriteAttributeString("OutputNodeId", (v_OutputNodeId = v_View.GetNodeIndex(v_OutputNode)).ToString());
+            writer.WriteAttributeString("InputNodeConnectorIdx", (v_InputNodeConnectorIdx = v_InputNode.GetConnectorIndex(Input)).ToString());
+            writer.WriteAttributeString("OutputNodeConnectorIdx", (v_OutputNodeConnectorIdx = v_OutputNode.GetConnectorIndex(Output)).ToString());
+
+            SerializeObject(ConnectionDescriptor, writer);
+        }
+
+        protected void CreateFromConnectionDescriptor(ConnectionDescriptor connection, NodeGraphView p_View)
+        {
+            v_InputNodeId = connection.sourceModule;
+            v_OutputNodeId = connection.destinationModule;
+            v_InputNodeConnectorIdx = connection.sourcePort;
+            v_OutputNodeConnectorIdx = connection.destinationPort;
 
             if (v_InputNodeId != 0x0FFFFFFF)
             {
-                //this.m_InputConnector = p_View.NodeCollection[v_InputNodeId].Connectors[v_InputNodeConnectorIdx];
                 this.m_InputConnector = p_View.NodeCollection[v_InputNodeId].GetConnector(v_InputNodeConnectorIdx, ConnectorType.OutputConnector);
             }
             else
@@ -84,88 +149,12 @@ namespace NodeGraphControl
 
             if (v_OutputNodeId != 0x0FFFFFFF)
             {
-                //this.m_OutputConnector = p_View.NodeCollection[v_OutputNodeId].Connectors[v_OutputNodeConnectorIdx];
                 this.m_OutputConnector = p_View.NodeCollection[v_OutputNodeId].GetConnector(v_OutputNodeConnectorIdx, ConnectorType.InputConnector);
             }
             else
                 this.m_OutputConnector = p_View.NodeConnectorCollection[v_OutputNodeConnectorIdx];
-        }
 
-        /// <summary>
-        /// SERIALIZATION: Creates a NodeGraphLink, given an XML Serialized copy of the link and a view
-        /// </summary>
-        /// <param name="p_TreeNode"></param>
-        /// <param name="p_View"></param>
-        public NodeGraphLink(XmlTreeNode p_TreeNode, NodeGraphView p_View)
-        {
-            int v_InputNodeId = int.Parse(p_TreeNode.m_attributes["InputNodeId"]);
-            int v_OutputNodeId = int.Parse(p_TreeNode.m_attributes["OutputNodeId"]);
-            int v_InputNodeConnectorIdx = int.Parse(p_TreeNode.m_attributes["InputNodeConnectorIdx"]);
-            int v_OutputNodeConnectorIdx = int.Parse(p_TreeNode.m_attributes["OutputNodeConnectorIdx"]);
-
-            this.m_InputConnector = p_View.NodeCollection[v_InputNodeId].Connectors[v_InputNodeConnectorIdx];
-            this.m_OutputConnector = p_View.NodeCollection[v_OutputNodeId].Connectors[v_OutputNodeConnectorIdx];
-        }
-
-        /// <summary>
-        /// SERIALIZATION: Creates a NodeGraphLink from XML, used for inherited classes
-        /// </summary>
-        /// <param name="p_ObjectXml"></param>
-        /// <param name="p_View"></param>
-        /// <returns></returns>
-        public static NodeGraphLink DeserializeFromXML(XmlTreeNode p_ObjectXml, NodeGraphView p_View)
-        {
-            string className = p_ObjectXml.m_nodeName;
-
-            object[] arguments = { p_ObjectXml, p_View };
-
-            System.Reflection.Assembly v_Assembly = System.Reflection.Assembly.GetExecutingAssembly();
-
-            object v_Out = v_Assembly.CreateInstance(className, false,
-                                                    System.Reflection.BindingFlags.CreateInstance,
-                                                    null,
-                                                    arguments, System.Globalization.CultureInfo.GetCultureInfo("en-us"),
-                                                    null);
-
-            return v_Out as NodeGraphLink;
-        }
-
-        /// <summary>
-        /// SERIALIZATION: Creates a XML Serialized copy of the link
-        /// </summary>
-        /// <param name="p_XmlParentTreeNode"></param>
-        /// <returns></returns>
-        public XmlTreeNode SerializeToXML(XmlTreeNode p_XmlParentTreeNode)
-        {
-            XmlTreeNode v_Out = new XmlTreeNode(SerializationUtils.GetFullTypeName(this),p_XmlParentTreeNode);
-
-            NodeGraphView v_View = Input.Parent.ParentView;
-            NodeGraphNode v_InputNode = Input.Parent;
-            NodeGraphNode v_OutputNode = Output.Parent;
-
-            v_Out.AddParameter("InputNodeId", v_View.GetNodeIndex(v_InputNode).ToString());
-            v_Out.AddParameter("OutputNodeId", v_View.GetNodeIndex(v_OutputNode).ToString());
-            v_Out.AddParameter("InputNodeConnectorIdx",v_InputNode.GetConnectorIndex(Input).ToString());
-            v_Out.AddParameter("OutputNodeConnectorIdx", v_OutputNode.GetConnectorIndex(Output).ToString());
-
-            return v_Out;
-        }
-
-        internal static NodeGraphLink FromConnectionDescriptor(ConnectionDescriptor connection, NodeGraphView nodeGraphView)
-        {
-//             string className = typeof(NodeGraphLink).Name;
-// 
-//             object[] arguments = { connection, nodeGraphView};
-// 
-//             System.Reflection.Assembly v_Assembly = System.Reflection.Assembly.GetExecutingAssembly();
-// 
-//             object v_Out = v_Assembly.CreateInstance(className, false,
-//                                                     System.Reflection.BindingFlags.CreateInstance,
-//                                                     null,
-//                                                     arguments, System.Globalization.CultureInfo.GetCultureInfo("en-us"),
-//                                                     null);
-//                                                     
-            return new NodeGraphLink(connection, nodeGraphView);
+            ConnectionDescriptor = connection;
         }
     }
 }
