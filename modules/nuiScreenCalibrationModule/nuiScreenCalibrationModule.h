@@ -36,7 +36,8 @@ public:
 protected:
 private:
 	CvSize destsize;
-	CvPoint2D32f* screenpoints;
+	CvPoint2D32f screenpoints[4];
+	CvPoint2D32f dstpoints[4];
 	CvMat* homography;
 
 	nuiDataPacket*	_pOutputDataPacket0;

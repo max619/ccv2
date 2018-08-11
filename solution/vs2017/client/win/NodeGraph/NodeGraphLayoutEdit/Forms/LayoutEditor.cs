@@ -58,8 +58,7 @@ namespace NodeGraphLayoutEdit
                 this.nodeGraphPanel.EnableDrawDebug = Convert.ToBoolean(iniFile.Section("General").Get("Debug"));
                 this.nodeGraphPanel.ShowGrid = Convert.ToBoolean(iniFile.Section("View").Get("ShowGrid"));
                 this.nodeGraphPanel.GridPadding = Convert.ToInt16(iniFile.Section("View").Get("GridPadding"));
-                NuiState.Instance.Connect(iniFile.Section("Service").Get("APIV1"));
-                this.nodeGraphPanel.LoadPipeline(NuiState.Instance.GetPipeline("root"));
+                //NuiState.Instance.Connect(iniFile.Section("Service").Get("APIV1"));
                 //Convert.ToBoolean(value));
             }
             catch (FormatException)
@@ -537,7 +536,6 @@ namespace NodeGraphLayoutEdit
                 if (DialogsHeleper.ShowConnectDialog(out endpoint, iniFile.Section("Service").Get("APIV1")))
                 {
                     NuiState.Instance.Connect(endpoint);
-                    this.nodeGraphPanel.LoadPipeline(NuiState.Instance.GetPipeline("root"));
                 }
             }
             catch (Exception ex)
@@ -608,6 +606,31 @@ namespace NodeGraphLayoutEdit
             try
             {
                 NuiState.Instance.WorkflowQuit();
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        private void restartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                NuiState.Instance.WorkflowStop();
+                NuiState.Instance.WorkflowStart();
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.nodeGraphPanel.LoadPipeline(NuiState.Instance.GetPipeline("root"));
             }
             catch (Exception ex)
             {

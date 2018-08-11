@@ -23,8 +23,18 @@ nuiScreenCalibrationModule::nuiScreenCalibrationModule() : nuiModule()
 	this->_pOutputDataPacket0 = new nuiScreenCalibrationModuleBlobVectorDataPacket();
 	this->_pOutputDataPacket1 = new nuiScreenCalibrationModuleIplImageDataPacket();
 
-	screenpoints = new CvPoint2D32f[4];
 	homography = cvCreateMat(3, 3, CV_32F);
+
+	LinkProperty("screenWidth", NUI_PROPERTY_INTEGER, destsize.width);
+	LinkProperty("screenHeight", NUI_PROPERTY_INTEGER, destsize.height);
+	LinkProperty("sx0", NUI_PROPERTY_FLOAT, screenpoints[0].x);
+	LinkProperty("sy0", NUI_PROPERTY_FLOAT, screenpoints[0].y);
+	LinkProperty("sx1", NUI_PROPERTY_FLOAT, screenpoints[1].x);
+	LinkProperty("sy1", NUI_PROPERTY_FLOAT, screenpoints[1].y);
+	LinkProperty("sx2", NUI_PROPERTY_FLOAT, screenpoints[2].x);
+	LinkProperty("sy2", NUI_PROPERTY_FLOAT, screenpoints[2].y);
+	LinkProperty("sx3", NUI_PROPERTY_FLOAT, screenpoints[3].x);
+	LinkProperty("sy3", NUI_PROPERTY_FLOAT, screenpoints[3].y);
 }
 
 
@@ -94,20 +104,6 @@ void nuiScreenCalibrationModule::update()
 
 void nuiScreenCalibrationModule::start()
 {
-	destsize.width = this->hasProperty("screenWidth") ? this->property("screenWidth").asInteger() : 0;
-	destsize.height = this->hasProperty("screenHeight") ? this->property("screenHeight").asInteger() : 0;
-
-	screenpoints[0] = CvPoint2D32f(this->hasProperty("sx0") ? this->property("sx0").asDouble() : 0., this->hasProperty("sy0") ? this->property("sy0").asDouble() : 0.);
-	screenpoints[1] = CvPoint2D32f(this->hasProperty("sx1") ? this->property("sx1").asDouble() : 0., this->hasProperty("sy1") ? this->property("sy1").asDouble() : 0.);
-	screenpoints[2] = CvPoint2D32f(this->hasProperty("sx2") ? this->property("sx2").asDouble() : 0., this->hasProperty("sy2") ? this->property("sy2").asDouble() : 0.);
-	screenpoints[3] = CvPoint2D32f(this->hasProperty("sx3") ? this->property("sx3").asDouble() : 0., this->hasProperty("sy3") ? this->property("sy3").asDouble() : 0.);
-
-	CvPoint2D32f dstpoints[4];
-	dstpoints[0] = CvPoint2D32f(0, 0);
-	dstpoints[1] = CvPoint2D32f(destsize.width, 0);
-	dstpoints[2] = CvPoint2D32f(destsize.width, destsize.height);
-	dstpoints[3] = CvPoint2D32f(0, destsize.height);
-
 	cvGetPerspectiveTransform(screenpoints, dstpoints, homography);
 
 	nuiModule::start();
@@ -120,5 +116,11 @@ void nuiScreenCalibrationModule::stop()
 
 void nuiScreenCalibrationModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
 {
-
+	if (name == "screenWidth" || name == "screenHeight")
+	{
+		dstpoints[0] = CvPoint2D32f(0, 0);
+		dstpoints[1] = CvPoint2D32f(destsize.width, 0);
+		dstpoints[2] = CvPoint2D32f(destsize.width, destsize.height);
+		dstpoints[3] = CvPoint2D32f(0, destsize.height);
+	}
 }

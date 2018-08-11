@@ -122,6 +122,10 @@ namespace NodeGraphLayoutEdit
             this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commitChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.workflowManagmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quitWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.servicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.libraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -144,10 +148,8 @@ namespace NodeGraphLayoutEdit
             this.termsTrademarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.workflowManagmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stopWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.quitWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -702,7 +704,8 @@ namespace NodeGraphLayoutEdit
             this.networkToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.connectToolStripMenuItem,
             this.commitChangesToolStripMenuItem,
-            this.workflowManagmentToolStripMenuItem});
+            this.workflowManagmentToolStripMenuItem,
+            this.loadSettingsToolStripMenuItem});
             this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
             this.networkToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
             this.networkToolStripMenuItem.Text = "Network";
@@ -719,6 +722,38 @@ namespace NodeGraphLayoutEdit
             this.commitChangesToolStripMenuItem.Name = "commitChangesToolStripMenuItem";
             this.commitChangesToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.commitChangesToolStripMenuItem.Text = "Commit Changes";
+            // 
+            // workflowManagmentToolStripMenuItem
+            // 
+            this.workflowManagmentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.startWorkflowToolStripMenuItem,
+            this.stopWorkflowToolStripMenuItem,
+            this.restartToolStripMenuItem,
+            this.quitWorkflowToolStripMenuItem});
+            this.workflowManagmentToolStripMenuItem.Name = "workflowManagmentToolStripMenuItem";
+            this.workflowManagmentToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.workflowManagmentToolStripMenuItem.Text = "Workflow managment";
+            // 
+            // startWorkflowToolStripMenuItem
+            // 
+            this.startWorkflowToolStripMenuItem.Name = "startWorkflowToolStripMenuItem";
+            this.startWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startWorkflowToolStripMenuItem.Text = "Start";
+            this.startWorkflowToolStripMenuItem.Click += new System.EventHandler(this.startWorkflowToolStripMenuItem_Click);
+            // 
+            // stopWorkflowToolStripMenuItem
+            // 
+            this.stopWorkflowToolStripMenuItem.Name = "stopWorkflowToolStripMenuItem";
+            this.stopWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stopWorkflowToolStripMenuItem.Text = "Stop";
+            this.stopWorkflowToolStripMenuItem.Click += new System.EventHandler(this.stopWorkflowToolStripMenuItem_Click);
+            // 
+            // quitWorkflowToolStripMenuItem
+            // 
+            this.quitWorkflowToolStripMenuItem.Name = "quitWorkflowToolStripMenuItem";
+            this.quitWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quitWorkflowToolStripMenuItem.Text = "Quit";
+            this.quitWorkflowToolStripMenuItem.Click += new System.EventHandler(this.quitWorkflowToolStripMenuItem_Click);
             // 
             // servicesToolStripMenuItem
             // 
@@ -905,36 +940,19 @@ namespace NodeGraphLayoutEdit
             this.statusStrip.Text = "statusStrip1";
             this.statusStrip.Visible = false;
             // 
-            // workflowManagmentToolStripMenuItem
+            // restartToolStripMenuItem
             // 
-            this.workflowManagmentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.startWorkflowToolStripMenuItem,
-            this.stopWorkflowToolStripMenuItem,
-            this.quitWorkflowToolStripMenuItem});
-            this.workflowManagmentToolStripMenuItem.Name = "workflowManagmentToolStripMenuItem";
-            this.workflowManagmentToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.workflowManagmentToolStripMenuItem.Text = "Workflow managment";
+            this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
+            this.restartToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.restartToolStripMenuItem.Text = "Restart";
+            this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
             // 
-            // startWorkflowToolStripMenuItem
+            // loadSettingsToolStripMenuItem
             // 
-            this.startWorkflowToolStripMenuItem.Name = "startWorkflowToolStripMenuItem";
-            this.startWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.startWorkflowToolStripMenuItem.Text = "Start workflow";
-            this.startWorkflowToolStripMenuItem.Click += new System.EventHandler(this.startWorkflowToolStripMenuItem_Click);
-            // 
-            // stopWorkflowToolStripMenuItem
-            // 
-            this.stopWorkflowToolStripMenuItem.Name = "stopWorkflowToolStripMenuItem";
-            this.stopWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.stopWorkflowToolStripMenuItem.Text = "Stop workflow";
-            this.stopWorkflowToolStripMenuItem.Click += new System.EventHandler(this.stopWorkflowToolStripMenuItem_Click);
-            // 
-            // quitWorkflowToolStripMenuItem
-            // 
-            this.quitWorkflowToolStripMenuItem.Name = "quitWorkflowToolStripMenuItem";
-            this.quitWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.quitWorkflowToolStripMenuItem.Text = "Quit workflow";
-            this.quitWorkflowToolStripMenuItem.Click += new System.EventHandler(this.quitWorkflowToolStripMenuItem_Click);
+            this.loadSettingsToolStripMenuItem.Name = "loadSettingsToolStripMenuItem";
+            this.loadSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.loadSettingsToolStripMenuItem.Text = "Load settings";
+            this.loadSettingsToolStripMenuItem.Click += new System.EventHandler(this.loadSettingsToolStripMenuItem_Click);
             // 
             // LayoutEditor
             // 
@@ -1056,6 +1074,8 @@ namespace NodeGraphLayoutEdit
         private System.Windows.Forms.ToolStripMenuItem startWorkflowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopWorkflowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quitWorkflowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadSettingsToolStripMenuItem;
     }
 }
 

@@ -156,7 +156,7 @@ namespace NodeGraphControl
             ///! TODO : X,Y ? set later?
             //this.X = ;
             //this.Y = ;
-            this.Width = 80;
+            this.Width = 150;
             this.Height = 40;
             this.m_bCanBeSelected = true;
             this.m_Connectors = new List<NodeGraphConnector>();

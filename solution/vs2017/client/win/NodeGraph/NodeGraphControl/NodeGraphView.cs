@@ -183,16 +183,59 @@ namespace NodeGraphControl
                 this.m_Links.Add(NodeGraphLink.FromConnectionDescriptor(connection, this));
             }
 
-            for (int i = 0; i < this.m_NodeCollection.Count; i++)
-            {
-                //! TODO : normal algorythm for module placement
-                this.m_NodeCollection[i].X = i * 100;
-                this.m_NodeCollection[i].Y = i * 100;
-                this.m_NodeCollection[i].UpdateHitRectangle();
-            }
+            PlaceNodes();
+            
 
             this.m_SelectedItems = new List<NodeGraphNode>();
 
+        }
+
+        private void PlaceNodes()
+        {
+            var rootNodes = GetRootNodes();
+
+            int y = 0;
+
+            foreach(var n in rootNodes)
+            {
+                int x = 0;
+                SetRootNodesPosition(ref x, ref y, n);
+            }
+
+            //for (int i = 0; i < this.m_NodeCollection.Count; i++)
+            //{
+            //    //! TODO : normal algorythm for module placement
+            //    this.m_NodeCollection[i].X = i * 100;
+            //    this.m_NodeCollection[i].Y = i * 100;
+            //    this.m_NodeCollection[i].UpdateHitRectangle();
+            //}
+        }
+
+        private void SetRootNodesPosition(ref int x, ref int y, NodeGraphNode n)
+        {
+            var outputLinks = m_Links.Where(f => n.Connectors.Contains(f.Input)).ToList();
+            n.X = x;
+            n.Y = y;
+            foreach(var link in outputLinks)
+            {
+                x = n.X + 250;
+                var childNode = link.Output.Parent;
+                SetRootNodesPosition(ref x, ref y, childNode);
+                y += 200;
+            }
+        }
+
+        private IEnumerable<NodeGraphNode> GetRootNodes()
+        {
+            foreach(var n in m_NodeCollection)
+            {
+                //if (n.Connectors.Where(x => x.Type == ConnectorType.InputConnector).FirstOrDefault() == null)
+                //    yield return n;
+                if(!m_Links.Select((x)=>x.Output.Parent).Contains(n))
+                {
+                    yield return n;
+                }
+            }
         }
 
         /// <summary>
