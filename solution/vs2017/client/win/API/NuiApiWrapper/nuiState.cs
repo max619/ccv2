@@ -319,23 +319,23 @@ namespace NuiApiWrapper
         /************************************************************************/
         public bool WorkflowStart()
         {
-            return (bool)NuiState.Instance.client.Invoke(
+            return ((bool)NuiState.Instance.client.Invoke(
                     typeof(bool),
-                    "nui_workflow_start");
+                    "nui_workflow_start"));
         }
 
         public bool WorkflowStop()
         {
-            return (bool)NuiState.Instance.client.Invoke(
+            return ((bool)NuiState.Instance.client.Invoke(
                     typeof(bool),
-                    "nui_workflow_stop");
+                    "nui_workflow_stop"));
         }
 
         public bool WorkflowQuit()
         {
-            return (bool)NuiState.Instance.client.Invoke(
+            return ((bool)NuiState.Instance.client.Invoke(
                     typeof(bool),
-                    "nui_workflow_quit");
+                    "nui_workflow_quit"));
         }
 
         /************************************************************************/

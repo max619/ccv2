@@ -123,11 +123,18 @@ namespace Jayrock.JsonRpc
             NamedJsonBuffer[] members = JsonBuffer.From(reader).GetMembersArray();
             foreach (NamedJsonBuffer member in members)
             {
-                if (string.CompareOrdinal(member.Name, "error") == 0)
+                if (string.CompareOrdinal(member.Name, "status") == 0)
                 {
                     object errorObject = JsonConvert.Import(member.Buffer.CreateReader());
-                    if (errorObject != null)
-                        OnError(errorObject);
+                    if (errorObject is string && errorObject != null)
+                    {
+                        if ((string)errorObject == "failure")
+                            OnError(errorObject);
+
+                        if ((string)errorObject == "success")
+                            if (returnType == typeof(bool))
+                                return true;
+                    }
                 }
                 else if (string.CompareOrdinal(member.Name, "result") == 0)
                 {

@@ -12,6 +12,7 @@ nuiDebugVideoSink::nuiDebugVideoSink() : nuiModule() {
 	this->setInputEndpoint(0, this->input);
 	dispFrame = NULL;
 	cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX | CV_FONT_ITALIC, hScale, vScale, 0, lineWidth);
+	wndInit = false;
 }
 
 nuiDebugVideoSink::~nuiDebugVideoSink()
@@ -43,12 +44,11 @@ void nuiDebugVideoSink::update()
 	{
 		IplImage* frame = (IplImage*)data;
 		if (dispFrame == NULL)
+		{
 			dispFrame = cvCloneImage(frame);
+		}
 		else
 			cvCopy(frame, dispFrame);
-		
-		
-
 	}
 	else if(strcmp(packet->getDataPacketType(), "BlobVector") == 0)
 	{
@@ -96,8 +96,34 @@ void nuiDebugVideoSink::update()
 
 void nuiDebugVideoSink::start()
 {
+	
 	nuiModule::start();
+	
 	LOG(NUI_DEBUG, "starting video sink");
+}
+
+void nuiDebugVideoSink::stop()
+{
+	
+	nuiModule::stop();
+}
+
+void nuiDebugVideoSink::onSetupThread()
+{
+	if (!wndInit)
+	{
+		cvNamedWindow((this->property("id")).asString().c_str(), CV_WINDOW_AUTOSIZE);
+		wndInit = true;
+	}
+}
+
+void nuiDebugVideoSink::onExitThread()
+{
+	if (wndInit)
+	{
+		cvDestroyWindow((this->property("id")).asString().c_str());
+		wndInit = false;
+	}
 }
 
 void nuiDebugVideoSink::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)

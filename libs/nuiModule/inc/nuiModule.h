@@ -231,6 +231,10 @@ protected:
 	char* inputDataReceived;
 
 	std::map<nuiProperty*, nuiLinkedProperty*> linkedProperties;
+
+	virtual void onSetupThread() {};
+	virtual void onExitThread() {};
+
 protected:
 	void linkProperty(std::string& name, int type, void* data, std::string& description = std::string(""));
 	void readLinkedProperties();

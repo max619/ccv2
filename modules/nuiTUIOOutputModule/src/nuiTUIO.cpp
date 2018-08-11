@@ -86,9 +86,9 @@ void nuiTUIOOutputModule::ProcessBlobVector(BlobVector * vector)
 	server->stopUntouchedMovingObjects();
 	server->commitTuioFrame();
 
-	// simulate 50Hz compensating the previous processing time
-	int d = 20 - (TUIO2::TuioTime::getSystemTime().getTotalMilliseconds() - frameTime.getTotalMilliseconds());
-	Sleep(d);
+	//// simulate 50Hz compensating the previous processing time
+	//int d = 20 - (TUIO2::TuioTime::getSystemTime().getTotalMilliseconds() - frameTime.getTotalMilliseconds());
+	//Sleep(d);
 }
 void nuiTUIOOutputModule::trackEvents(BlobVector * vector)
 {
@@ -143,7 +143,10 @@ void nuiTUIOOutputModule::trackEvents(BlobVector * vector)
 		{
 			TUIO2::TuioPointer* pointer = (*it).second;
 			server->removeTuioPointer(pointer);
-			trackedPointers.erase(id);
+			trackedPointers.erase(id); 
+			if (trackedPointers.size() == 0)
+				break;
+			it = trackedPointers.begin();
 		}
 	}
 }

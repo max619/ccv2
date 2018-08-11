@@ -128,6 +128,7 @@ void nuiModule::thread_process(nuiThread *thread)
 	// extract module from thread data
 
 	module->timer->Start();
+	module->onSetupThread();
 	while (!thread->wantQuit())
 	{
 		if (!module->needUpdate(/*true*/))
@@ -136,6 +137,7 @@ void nuiModule::thread_process(nuiThread *thread)
 		module->update();
 		module->timer->Process(); // measure results
 	}
+	module->onExitThread();
 }
 
 void nuiModule::internal_oscillator(nuiThread *thread)
@@ -171,6 +173,16 @@ void nuiModule::start()
 		else
 		{
 			this->thread->start();
+		}
+	}
+	for (int i = 0; i < this->getOutputEndpointCount(); i++)
+	{
+		nuiEndpoint* endpoint = this->getOutputEndpoint(i);
+		for (int j = 0; j < endpoint->getConnectionCount(); j++)
+		{
+			nuiDataStream* stream =
+				endpoint->getDataStreamForEndpoint(endpoint->getConnectedEndpointAtIndex(j));
+			stream->startStream();
 		}
 	}
 	this->is_started = true;

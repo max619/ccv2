@@ -534,7 +534,7 @@ namespace NodeGraphLayoutEdit
             try
             {
                 string endpoint;
-                if (DialogsHeleper.ShowConnectDialog(out endpoint))
+                if (DialogsHeleper.ShowConnectDialog(out endpoint, iniFile.Section("Service").Get("APIV1")))
                 {
                     NuiState.Instance.Connect(endpoint);
                     this.nodeGraphPanel.LoadPipeline(NuiState.Instance.GetPipeline("root"));

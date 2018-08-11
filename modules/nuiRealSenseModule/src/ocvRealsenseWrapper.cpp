@@ -13,9 +13,6 @@ ocvRealsenseWrapper::ocvRealsenseWrapper()
 
 	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
 
-	threshold = new oclThreshold();
-	depthToWorld = new oclDepthToWorld();
-	rotation = new ocl3DPointCloudRotation();
 	processor = new oclRSWorldProcessor();	
 
 	screenpoints = new CvPoint2D32f[4];
@@ -27,6 +24,12 @@ ocvRealsenseWrapper::ocvRealsenseWrapper()
 	dstscreenpoints = new CvPoint2D32f[4];
 
 	isPlaneInit = false;
+	if (factory.isOpenClSupported())
+	{		
+		factory.initProgram(processor);
+	}
+	rs2::context ctx;
+	container.initDevices(ctx);
 }
 
 
@@ -49,23 +52,9 @@ bool ocvRealsenseWrapper::open(int index)
 {
 	try
 	{
-		rs2::context ctx;
-		container.initDevices(ctx);
 		pipe = container.getPipeline(index, frameSize.width, frameSize.height, fps);
 		opened = true;
-
-		nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
-
-		if (factory.isOpenClSupported())
-		{
-			/*factory.initProgram(threshold);
-			factory.initProgram(depthToWorld);
-			factory.initProgram(rotation);*/
-			factory.initProgram(processor);
-		}
-
-		Eigen::Vector3f a(1., 1., 0.);
-		Eigen::Vector3f b(1., 0.5, 3.);
+						
 		rs2_error* error;
 		rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
 		
@@ -95,6 +84,7 @@ bool ocvRealsenseWrapper::close()
 	{
 		pipe.stop();
 		opened = false;
+		isPlaneInit = false;
 	}
 
 	return !opened;

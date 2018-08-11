@@ -32,6 +32,11 @@ public:
 
 	void update();
 	void start();
+	void stop();
+
+protected:
+	void onSetupThread();
+	void onExitThread();
 
 private:
 	nuiEndpoint * input;
@@ -46,7 +51,7 @@ private:
 	double hScale = 0.5;
 	double vScale = 0.5;
 	int lineWidth = 1;
-
+	bool wndInit;
 	MODULE_INTERNALS();
 };
 

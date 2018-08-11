@@ -25,5 +25,10 @@ namespace NodeGraphLayoutEdit.Dialogs
             IsOk = true;
             Close();
         }
+
+        public void SetDefaultUrl(string url)
+        {
+            textBox1.Text = url;
+        }
     }
 }
