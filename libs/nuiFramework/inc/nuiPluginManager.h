@@ -13,6 +13,7 @@
 #include "nuiDynamicLibrary.h"
 #include "nuiModule.h"
 #include "nuiFrameworkManager.h"
+#include "nuiProperty.h"
 
 #include "json\json.h"
 
@@ -181,12 +182,15 @@ public:
 
 	//! loads default configuration (basic modules and sample pipeline)
 	nuiPluginFrameworkErrorCode::err loadDefaultConfiguration();
+	nuiPluginFrameworkErrorCode::err loadConfiguration(std::string path);
 
 	//! loads specified pipelines. Currently only json is supported.
 	nuiPluginFrameworkErrorCode::err loadPipelines(Json::Value* root);
 
 	//! loads specified pipelines from file. Currently only json is supported.
 	nuiModuleDescriptor* loadPipeline(Json::Value* root);
+
+	Json::Value serializePipeline(nuiModuleDescriptor * desc);
 
 	//! unloads specified pipeline from dictionary
 	nuiPluginFrameworkErrorCode::err unloadPipeline(const std::string& name);
@@ -209,6 +213,12 @@ public:
 	//! gets control structure for loaded module
 	nuiModuleLoaded* getLoadedModule(const std::string name);
 
+	int getDynamicLibrariesPathsCount();
+	std::string& getDynamicLibraryPath(int index);
+
+	Json::Value getCurrentConfiguration();
+
+	void writeJsonToFile(Json::Value& value, std::string path);
 private:
 	nuiPluginManager();
 	nuiPluginManager(const nuiPluginManager&);
@@ -228,7 +238,9 @@ private:
 
 	/** loads settings to module Descriptor from json
 	 */
-	void parseDescriptor(nuiModuleDescriptor* descriptor, Json::Value* root);
+	void parseDescriptorProperties(nuiModuleDescriptor* descriptor, Json::Value* root);
+
+	void writeDescriptorProperties(nuiModuleDescriptor * moduleDescriptor, Json::Value & root);
 
 	nuiPluginFrameworkService pluginFrameworkService;
 	//! loaded shared libraries
@@ -237,6 +249,8 @@ private:
 	std::vector<nuiModuleLoaded*> modulesLoaded;
 	//! loaded pipelines
 	std::vector<nuiModuleDescriptor*> pipelinesLoaded;
+
+	std::vector<std::string> dynamicLibrariesPaths;
 
 	//! currently loading plugin
 	nuiPluginLoaded* loadingPlugin;

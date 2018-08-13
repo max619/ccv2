@@ -98,6 +98,7 @@ private:
 	bool nui_navigate_push(const Json::Value& root, Json::Value& response);
 	bool nui_navigate_pop(const Json::Value& root, Json::Value& response);
 	bool nui_save_workflow(const Json::Value& root, Json::Value& response);
+	bool nui_save_configuration(const Json::Value& root, Json::Value& response);
 };
 
 #endif // NUI_JSON_API

@@ -68,6 +68,7 @@ void __execLinkedPropertyCallback(nuiProperty* prop, void* userdata);
 
 class nuiProperty {
 public:
+	nuiProperty(nuiPropertyType type, const std::string &description = "");
     nuiProperty(bool value, const std::string &description = "");
     nuiProperty(const char *value, const std::string &description = "");
     nuiProperty(std::string value, const std::string &description = "");

@@ -35,7 +35,7 @@ nuiBlobTrackerModule::nuiBlobTrackerModule() : nuiModule()
 	LinkPropertyAndSetDefaultVal("filterByInertia", NUI_PROPERTY_BOOL, p.filterByInertia, false);
 	LinkPropertyAndSetDefaultVal("filterByConvexity", NUI_PROPERTY_BOOL, p.filterByConvexity, false);
 
-	LinkPropertyAndSetDefaultVal("maxArea", NUI_PROPERTY_FLOAT, p.maxArea, 5000.);
+	LinkPropertyAndSetDefaultVal("maxArea", NUI_PROPERTY_FLOAT, p.maxArea, 5000.f);
 	LinkPropertyAndSetDefaultVal("maxCircularity", NUI_PROPERTY_FLOAT, p.maxCircularity, 3.4028E+38f);
 	LinkPropertyAndSetDefaultVal("maxConvexity", NUI_PROPERTY_FLOAT, p.maxConvexity, 3.4028E+38f);
 	LinkPropertyAndSetDefaultVal("maxInertiaRatio", NUI_PROPERTY_FLOAT, p.maxInertiaRatio, 3.4028E+38f);
@@ -43,13 +43,13 @@ nuiBlobTrackerModule::nuiBlobTrackerModule() : nuiModule()
 	LinkPropertyAndSetDefaultVal("minArea", NUI_PROPERTY_FLOAT, p.minArea, 25.f);
 	LinkPropertyAndSetDefaultVal("minCircularity", NUI_PROPERTY_FLOAT, p.minCircularity, 0.8f);
 	LinkPropertyAndSetDefaultVal("minConvexity", NUI_PROPERTY_FLOAT, p.minConvexity, 0.949f);
-	LinkPropertyAndSetDefaultVal("minDistBetweenBlobs", NUI_PROPERTY_FLOAT, p.minDistBetweenBlobs, 10.);
-	LinkPropertyAndSetDefaultVal("minInertiaRatio", NUI_PROPERTY_FLOAT, p.minInertiaRatio, 0.1);
-	LinkPropertyAndSetDefaultVal("minRepeatability", NUI_PROPERTY_FLOAT, p.minRepeatability, 2.);
-	LinkPropertyAndSetDefaultVal("minThreshold", NUI_PROPERTY_FLOAT, p.minThreshold, 50.);
-	LinkPropertyAndSetDefaultVal("thresholdStep", NUI_PROPERTY_FLOAT, p.thresholdStep, 10.);
+	LinkPropertyAndSetDefaultVal("minDistBetweenBlobs", NUI_PROPERTY_FLOAT, p.minDistBetweenBlobs, 10.f);
+	LinkPropertyAndSetDefaultVal("minInertiaRatio", NUI_PROPERTY_FLOAT, p.minInertiaRatio, 0.1f);
+	LinkPropertyAndSetDefaultVal("minThreshold", NUI_PROPERTY_FLOAT, p.minThreshold, 50.f);
+	LinkPropertyAndSetDefaultVal("thresholdStep", NUI_PROPERTY_FLOAT, p.thresholdStep, 10.f);
 	
-	LinkPropertyAndSetDefaultVal("maxDistance", NUI_PROPERTY_FLOAT, maxdist, 20.);
+	LinkPropertyAndSetDefaultVal("maxDistance", NUI_PROPERTY_FLOAT, maxdist, 20.f);
+	p.minRepeatability = 2;
 	bDetector = new blobDetector(p);
 
 	bTracker->setMaxDistance(maxdist);

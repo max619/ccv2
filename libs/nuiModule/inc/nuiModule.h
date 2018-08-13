@@ -62,6 +62,7 @@ protected:\
 #define LinkPropertyAndSetDefaultVal(propName, propType, prop, defaultval)\
 	prop = defaultval;\
 	this->linkProperty(std::string(##propName##), propType, &(##prop##));\
+	this->property(##propName##).set(##prop##)\
 
 #define LinkProperty(propName, propType, prop, description) this->linkProperty(std::string(##propName##), propType, &(##prop##), std::string(##description##));
 

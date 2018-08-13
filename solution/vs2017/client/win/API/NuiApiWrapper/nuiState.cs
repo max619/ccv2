@@ -55,157 +55,12 @@ namespace NuiApiWrapper
             client.Connect();
         }
 
-#if TEST
-        #region TestData
-
-        private string test_RootPipelineJSON = @"
-{
-        ""success"" : 1,
-        ""descriptor"" :
-        {
-		""name"" : ""root"",
-		""description"" : ""description"",
-		""author"": ""noname"",
-		""modules"":[
-			{""name"" : ""module1"",
-			""description"" : ""this is module 1"",
-			""author"": ""alushnikov1"",
-			""inputEndpoints"": [],
-			""outputEndpoints"": [
-				{
-					""index"" : 0,
-					""descriptor"" : ""stream""
-				}
-			]},
-			{""name"" : ""pipeline1"",
-			""description"" : ""this is pipeline 1, small pipeline for testing"",
-			""author"": ""alushnikov_pipeline"",
-			""inputEndpoints"": [
-			{
-				""index"" : 0,
-				""descriptor"" : ""stream""
-			}],
-			""outputEndpoints"": [
-				{
-					""index"" : 0,
-					""descriptor"" : ""stream""
-				}
-			]},
-            {""name"" : ""module3"",
-			""description"" : ""this is module 3"",
-			""author"": ""alushnikov3"",
-			""inputEndpoints"": [
-			{
-				""index"" : 0,
-				""descriptor"" : ""stream""
-			}],
-			""outputEndpoints"": []},
-        ],
-		""inputEndpoints"": [],
-		""outputEndpoints"": [],
-		""connections"" : [
-			{
-				""sourceModule"" : 0,
-				""sourcePort"" : 0,
-				""destinationModule"" : 1,
-				""destinationPort"": 0,
-				""deepCopy"": 0,
-				""asyncMode"": 0,
-				""buffered"": 0,
-				""bufferSize"": 100,
-				""lastPacket"": 0,
-				""overflow"": 0,
-			},
-            {
-				""sourceModule"" : 1,
-				""sourcePort"" : 0,
-				""destinationModule"" : 2,
-				""destinationPort"": 0,
-				""deepCopy"": 0,
-				""asyncMode"": 0,
-				""buffered"": 0,
-				""bufferSize"": 100,
-				""lastPacket"": 0,
-				""overflow"": 0,
-			},
-        ]
-        }
-    }
-";
-        private string test_Pipeline1JSON = @"{
-        ""success"" : 1,
-        ""descriptor"" : {
-		""name"" : ""pipeline1"",
-		""description"" : ""this is pipeline 1, small pipeline for testing"",
-		""author"": ""alushnikov_pipeline"",
-		""modules"":
-        [
-			{""name"" : ""module2"",
-			""description"" : ""this is module 2"",
-			""author"": ""alushnikov2"",
-			""inputEndpoints"": 
-            [
-				{
-					""index"" : 0,
-					""descriptor"" : ""stream""
-				}
-            ],
-			""outputEndpoints"" : 
-            [
-				{
-					""index"" : 0,
-					""descriptor"" : ""stream""
-				}
-			]},
-        ],
-		""inputEndpoints"" : 
-        [
-				{
-					""index"" : 0,
-					""descriptor"" : ""stream""
-				}
-        ],
-		""outputEndpoints"": [],
-		""connections"" : [
-            {
-				""sourceModule"" : 0x0FFFFFFF,
-				""sourcePort"" : 0,
-				""destinationModule"" : 0,
-				""destinationPort"": 0,
-				""deepCopy"": 0,
-				""asyncMode"": 0,
-				""buffered"": 0,
-				""bufferSize"": 100,
-				""lastPacket"": 0,
-				""overflow"": 0,
-			},
-        ]
-    }}";
-        #endregion
-#endif
 
         /************************************************************************/
         /* NAVIGATE                                                             */
         /************************************************************************/
         //! move into next pipeline 
-#if TEST
-        public PipelineDescriptor NavigatePush(int moduleIdx)
-        {
-            ImportContext impctx = new ImportContext();
-            impctx.Register(new ListImporter<ModuleDescriptor>());
-            impctx.Register(new ListImporter<ConnectionDescriptor>());
-            impctx.Register(new ListImporter<EndpointDescriptor>());
 
-            PipelineDescriptor newPipeline = ((Response<PipelineDescriptor>)impctx.Import(
-                typeof(Response<PipelineDescriptor>),
-                JsonText.CreateReader(test_Pipeline1JSON))).GetResponse();
-
-            NuiState.Instance.level++;
-            currentPipeline = newPipeline;
-
-            return newPipeline;
-        }
-#else
         //! TODO : discuss
         //! should really be module index and return null if we can navigate into selected module
         public PipelineDescriptor NavigatePush(int moduleIdx)
@@ -219,27 +74,7 @@ namespace NuiApiWrapper
 
             return newPipeline;
         }
-#endif
 
-#if TEST
-        //! move out of current pipeline
-        public PipelineDescriptor NavigatePop()
-        {
-            ImportContext impctx = new ImportContext();
-            impctx.Register(new ListImporter<ModuleDescriptor>());
-            impctx.Register(new ListImporter<ConnectionDescriptor>());
-            impctx.Register(new ListImporter<EndpointDescriptor>());
-
-            PipelineDescriptor newPipeline = ((Response<PipelineDescriptor>)impctx.Import(
-                typeof(Response<PipelineDescriptor>),
-                JsonText.CreateReader(test_RootPipelineJSON))).GetResponse();
-
-            NuiState.Instance.level--;
-            currentPipeline = newPipeline;
-
-            return newPipeline;
-        }
-#else
         //! move out of current pipeline
         public PipelineDescriptor NavigatePop()
         {
@@ -252,20 +87,12 @@ namespace NuiApiWrapper
 
             return newPipeline;
         }
-#endif
+
 
         /************************************************************************/
         /* LIST                                                                 */
         /************************************************************************/
-#if TEST
-        //! lists dynamic modules
-        public string[] ListDynamic()
-        {
-            string[] listDynamic = {"module1", "module2", "module3"};
 
-            return listDynamic;
-        }
-#else
         //! lists dynamic modules
         public string[] ListDynamic()
         {
@@ -276,18 +103,7 @@ namespace NuiApiWrapper
 
             return listDynamic;
         }
-#endif
 
-
-#if TEST
-        //! list pipeline modules
-        public string[] ListPipeline()
-        {
-            string[] listPipelines = {"root", "pipeline1"};
-
-            return listPipelines;
-        }
-#else
         //! list pipeline modules
         public string[] ListPipeline()
         {
@@ -298,7 +114,7 @@ namespace NuiApiWrapper
 
             return listPipelines;
         }
-#endif
+
         public bool UpdateProperty(string pipeline, string key, string value, int moduleIndex)
         {
             var val = new
@@ -375,6 +191,7 @@ namespace NuiApiWrapper
 
             return status;
         }
+
 
         /************************************************************************/
         /* UPDATE                                                               */
@@ -462,6 +279,7 @@ namespace NuiApiWrapper
             return count;
         }
 
+
         /************************************************************************/
         /* DELETE                                                               */
         /************************************************************************/
@@ -497,36 +315,11 @@ namespace NuiApiWrapper
             return pipeline;
         }
 
+
         /************************************************************************/
         /* GET                                                                  */
         /************************************************************************/
-#if TEST
-        public PipelineDescriptor GetPipeline(string pipelineName)
-        {
-            PipelineDescriptor pipeline = null;
-            ImportContext impctx = new ImportContext();
-            impctx.Register(new ListImporter<ModuleDescriptor>());
-            impctx.Register(new ListImporter<EndpointDescriptor>());
-            impctx.Register(new ListImporter<ConnectionDescriptor>());
 
-            switch (pipelineName)
-            {
-                case "root": 
-                    pipeline = ((Response<PipelineDescriptor>)impctx.Import(
-                        typeof(Response<PipelineDescriptor>),
-                        JsonText.CreateReader(test_RootPipelineJSON))).GetResponse();
-                    break;
-
-                case "pipeline1":
-                    pipeline = ((Response<PipelineDescriptor>)impctx.Import(
-                        typeof(Response<PipelineDescriptor>),
-                        JsonText.CreateReader(test_Pipeline1JSON))).GetResponse();
-                    break;
-            }
-
-            return pipeline;
-        }
-#else
         public PipelineDescriptor GetPipeline(string pipelineName)
         {
             var args = new { pipeline = pipelineName };
@@ -537,16 +330,7 @@ namespace NuiApiWrapper
 
             return pipeline;
         }
-#endif
 
-
-#if TEST
-        public ModuleDescriptor GetModule(string pipelineName, int moduleIdx)
-        {
-            //! TODO : test data
-            return null;
-        }
-#else
         public ModuleDescriptor GetModule(string pipelineName, int moduleIdx)
         {
             var module = (ModuleDescriptor)NuiState.Instance.client.InvokeVargs(
@@ -556,16 +340,7 @@ namespace NuiApiWrapper
 
             return module;
         }
-#endif
 
-
-#if TEST
-        public ConnectionDescriptor GetConnection(string pipelineName, int connectionIdx)
-        {
-            //! TODO : test data
-            return null;
-        }
-#else
         public ConnectionDescriptor GetConnection(string pipelineName, int connectionIdx)
         {
             var connection = (ConnectionDescriptor)NuiState.Instance.client.InvokeVargs(
@@ -575,7 +350,7 @@ namespace NuiApiWrapper
 
             return connection;
         }
-#endif
+
 
         /************************************************************************/
         /* SAVE                                                                 */
@@ -586,6 +361,15 @@ namespace NuiApiWrapper
                 typeof(bool),
                 "nui_save_pipeline",
                 pipelineName, fileName);
+
+            return response;
+        }
+
+        public bool SaveConfiguration()
+        {
+            var response = (bool)NuiState.Instance.client.Invoke(
+                typeof(bool),
+                "nui_save_configuration");
 
             return response;
         }

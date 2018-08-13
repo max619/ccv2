@@ -114,6 +114,7 @@ void nuiDebugVideoSink::onSetupThread()
 	{
 		cvNamedWindow((this->property("id")).asString().c_str(), CV_WINDOW_AUTOSIZE);
 		wndInit = true;
+		cvWaitKey(50);
 	}
 }
 
@@ -123,6 +124,7 @@ void nuiDebugVideoSink::onExitThread()
 	{
 		cvDestroyWindow((this->property("id")).asString().c_str());
 		wndInit = false;
+		cvWaitKey(50);
 	}
 }
 

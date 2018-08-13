@@ -223,6 +223,7 @@ namespace NodeGraphControl
                 SetRootNodesPosition(ref x, ref y, childNode);
                 y += 200;
             }
+            n.UpdateHitRectangle();
         }
 
         private IEnumerable<NodeGraphNode> GetRootNodes()

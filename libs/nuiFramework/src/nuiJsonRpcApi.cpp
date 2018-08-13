@@ -94,6 +94,7 @@ bool nuiJsonRpcApi::init(std::string address, int port)
 	ADDRPCMETHOD(nui_navigate_pop);
 	ADDRPCMETHOD(nui_save_workflow);
 	ADDRPCMETHOD(nui_get_module_properties);
+	ADDRPCMETHOD(nui_save_configuration);
 
 	return true;
 };
@@ -744,6 +745,16 @@ bool nuiJsonRpcApi::nui_save_workflow(const Json::Value& root, Json::Value& resp
 {
 	response["id"] = root["id"];
 	response = serialize_workflow(nuiFrameworkManager::getInstance().getWorkflowRootDescriptor());
+	setSuccess(response);
+	return true;
+}
+
+bool nuiJsonRpcApi::nui_save_configuration(const Json::Value & root, Json::Value & response)
+{
+	response["id"] = root["id"];
+
+	nuiFrameworkManager::getInstance().saveSettings(USER_CONFIG_PATH);
+
 	setSuccess(response);
 	return true;
 }

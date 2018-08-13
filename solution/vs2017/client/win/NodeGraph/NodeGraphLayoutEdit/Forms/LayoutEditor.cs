@@ -637,5 +637,17 @@ namespace NodeGraphLayoutEdit
                 HandleError(ex);
             }
         }
+
+        private void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                NuiState.Instance.SaveConfiguration();
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
     }
 }

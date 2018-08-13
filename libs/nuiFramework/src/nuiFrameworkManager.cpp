@@ -1301,12 +1301,23 @@ nuiPluginFrameworkErrorCode::err nuiFrameworkManager::loadDefaultSettings()
 	return nuiPluginManager::getInstance().loadDefaultConfiguration();
 }
 
+nuiPluginFrameworkErrorCode::err nuiFrameworkManager::loadSettings(std::string path)
+{
+	return nuiPluginManager::getInstance().loadConfiguration(path);
+}
+
+nuiPluginFrameworkErrorCode::err nuiFrameworkManager::saveSettings(std::string path)
+{
+	Json::Value& cfg = nuiPluginManager::getInstance().getCurrentConfiguration();
+	nuiPluginManager::getInstance().writeJsonToFile(cfg, path);
+	return nuiPluginFrameworkErrorCode::err();
+}
+
 nuiModuleDescriptor* nuiFrameworkManager::create(const std::string &pipelineName)
 {
 	//! \todo implementation
 	return NULL;
 }
-
 
 void nuiFrameworkManager::setStartupPath(std::string path)
 {

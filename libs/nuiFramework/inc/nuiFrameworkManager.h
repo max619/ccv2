@@ -29,6 +29,8 @@
 #include "nuiDebugLogger.h"
 #include "nuiPlugin.h"
 
+#define USER_CONFIG_PATH "data/user_config.json"
+
 class nuiModule;
 class nuiModuleDescriptor;
 class nuiPipelineModule;
@@ -187,6 +189,8 @@ public:
 	//OTHER ======================================================================
 	//! force nuiPluginManager load default settings and plugins
 	nuiPluginFrameworkErrorCode::err loadDefaultSettings();
+	nuiPluginFrameworkErrorCode::err loadSettings(std::string path);
+	nuiPluginFrameworkErrorCode::err saveSettings(std::string path);
 
 private:
 	nuiFrameworkManager();

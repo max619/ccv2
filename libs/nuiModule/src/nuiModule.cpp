@@ -471,6 +471,8 @@ void nuiModule::linkProperty(std::string & name, int type, void * data, std::str
 	linkedProp->needCallback = true;
 	linkedProp->propUpdtCallback = __execPropertyUpdatedCallback;
 	linkedProp->userData = this;
+	if (!hasProperty(name))
+		properties[name] = new nuiProperty((nuiPropertyType)type, description);
 	nuiProperty& prop = property(name);
 	prop.setDescription(description);
 	linkedProperties[&prop] = linkedProp;

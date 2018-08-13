@@ -94,6 +94,12 @@ int nuiUtils::getRandomNumber()
     return rand();
 }
 
+bool nuiUtils::isFileExists(std::string name)
+{
+	std::ifstream file(name.c_str());
+	return file.good();
+}
+
 // double nuiUtils::radToDeg(double rad) {
 //     return rad * (180 / PI);
 // }

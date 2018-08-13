@@ -19,6 +19,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 #ifdef WIN32
 #include <windows.h>
@@ -36,6 +37,7 @@ public:
   static double time();
   static bool inList(const std::string &pattern, const std::string &str, const std::string &delimiters = ",");
   static int getRandomNumber();
+  static bool isFileExists(std::string name);
 
 #ifdef _MSC_VER
 #	define snprintf	_snprintf

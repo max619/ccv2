@@ -278,6 +278,34 @@ static nuiPointList convertToPointList(nuiPropertyType type, void *val) {
 }
 
 
+nuiProperty::nuiProperty(nuiPropertyType type, const std::string & description)
+{
+	this->init(description);
+	this->type = type;
+	switch (type)
+	{
+	case NUI_PROPERTY_BOOL:
+		this->val = new bool();
+		break;
+	case NUI_PROPERTY_STRING:
+		this->val = new std::string();
+		break;
+	case NUI_PROPERTY_INTEGER:
+		this->val = new int();
+		break;
+	case NUI_PROPERTY_DOUBLE:
+		this->val = new double();
+		break;
+	case NUI_PROPERTY_FLOAT:
+		this->val = new float();
+		break;
+	case NUI_PROPERTY_POINTLIST:
+		this->val = new nuiPointList();
+		break;
+	default:
+		break;
+	}
+}
 
 nuiProperty::nuiProperty(bool value, const std::string &description) {
 	this->init(description);

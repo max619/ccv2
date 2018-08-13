@@ -53,7 +53,6 @@ namespace NodeGraphLayoutEdit
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutEditor));
-            this.nodeGraphPanel = new NodeGraphControl.NodeGraphPanel();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.integerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.floatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -150,58 +149,12 @@ namespace NodeGraphLayoutEdit
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nodeGraphPanel = new NodeGraphControl.NodeGraphPanel();
+            this.saveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // nodeGraphPanel
-            // 
-            this.nodeGraphPanel.BackColor = System.Drawing.Color.Black;
-            this.nodeGraphPanel.ConnectorFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.ConnectorFillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.nodeGraphPanel.ConnectorHitZoneBleed = 4;
-            this.nodeGraphPanel.ConnectorOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.nodeGraphPanel.ConnectorOutlineSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.nodeGraphPanel.ConnectorTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.nodeGraphPanel.ContextMenuStrip = this.contextMenuStrip;
-            this.nodeGraphPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nodeGraphPanel.DrawShadow = true;
-            this.nodeGraphPanel.EnableDrawDebug = true;
-            this.nodeGraphPanel.GridAlpha = ((byte)(16));
-            this.nodeGraphPanel.GridPadding = 256;
-            this.nodeGraphPanel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.nodeGraphPanel.LinkEditableColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.LinkHardness = 5F;
-            this.nodeGraphPanel.LinkVisualStyle = NodeGraphControl.LinkVisualStyle.Curve;
-            this.nodeGraphPanel.Location = new System.Drawing.Point(0, 24);
-            this.nodeGraphPanel.Name = "nodeGraphPanel";
-            this.nodeGraphPanel.NodeConnectorFont = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nodeGraphPanel.NodeConnectorTextZoomTreshold = 0.7F;
-            this.nodeGraphPanel.NodeFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.nodeGraphPanel.NodeFillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(128)))), ((int)(((byte)(100)))));
-            this.nodeGraphPanel.NodeHeaderColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.NodeHeaderSize = 26;
-            this.nodeGraphPanel.NodeOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.nodeGraphPanel.NodeOutlineSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(160)))), ((int)(((byte)(128)))));
-            this.nodeGraphPanel.NodeScaledConnectorFont = new System.Drawing.Font("Segoe UI", 6.75F);
-            this.nodeGraphPanel.NodeScaledTitleFont = new System.Drawing.Font("Segoe UI", 8F);
-            this.nodeGraphPanel.NodeSignalInvalidColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.NodeSignalValidColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.NodeTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.nodeGraphPanel.NodeTextShadowColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeGraphPanel.NodeTitleFont = new System.Drawing.Font("Segoe UI", 8F);
-            this.nodeGraphPanel.NodeTitleZoomThreshold = 0.5F;
-            this.nodeGraphPanel.SelectionFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(128)))), ((int)(((byte)(90)))), ((int)(((byte)(30)))));
-            this.nodeGraphPanel.SelectionOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(180)))), ((int)(((byte)(60)))));
-            this.nodeGraphPanel.ShowGrid = true;
-            this.nodeGraphPanel.Size = new System.Drawing.Size(1330, 865);
-            this.nodeGraphPanel.SmoothBehavior = true;
-            this.nodeGraphPanel.TabIndex = 4;
-            this.nodeGraphPanel.onSelectionChanged += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionChanged);
-            this.nodeGraphPanel.onSelectionCleared += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionCleared);
-            this.nodeGraphPanel.Load += new System.EventHandler(this.nodeGraphPanel_Load);
-            this.nodeGraphPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.nodeGraphPanel_MouseMove);
             // 
             // contextMenuStrip
             // 
@@ -705,7 +658,8 @@ namespace NodeGraphLayoutEdit
             this.connectToolStripMenuItem,
             this.commitChangesToolStripMenuItem,
             this.workflowManagmentToolStripMenuItem,
-            this.loadSettingsToolStripMenuItem});
+            this.loadSettingsToolStripMenuItem,
+            this.saveSettingsToolStripMenuItem});
             this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
             this.networkToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
             this.networkToolStripMenuItem.Text = "Network";
@@ -737,21 +691,21 @@ namespace NodeGraphLayoutEdit
             // startWorkflowToolStripMenuItem
             // 
             this.startWorkflowToolStripMenuItem.Name = "startWorkflowToolStripMenuItem";
-            this.startWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startWorkflowToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.startWorkflowToolStripMenuItem.Text = "Start";
             this.startWorkflowToolStripMenuItem.Click += new System.EventHandler(this.startWorkflowToolStripMenuItem_Click);
             // 
             // stopWorkflowToolStripMenuItem
             // 
             this.stopWorkflowToolStripMenuItem.Name = "stopWorkflowToolStripMenuItem";
-            this.stopWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stopWorkflowToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.stopWorkflowToolStripMenuItem.Text = "Stop";
             this.stopWorkflowToolStripMenuItem.Click += new System.EventHandler(this.stopWorkflowToolStripMenuItem_Click);
             // 
             // quitWorkflowToolStripMenuItem
             // 
             this.quitWorkflowToolStripMenuItem.Name = "quitWorkflowToolStripMenuItem";
-            this.quitWorkflowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quitWorkflowToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.quitWorkflowToolStripMenuItem.Text = "Quit";
             this.quitWorkflowToolStripMenuItem.Click += new System.EventHandler(this.quitWorkflowToolStripMenuItem_Click);
             // 
@@ -943,7 +897,7 @@ namespace NodeGraphLayoutEdit
             // restartToolStripMenuItem
             // 
             this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-            this.restartToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.restartToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.restartToolStripMenuItem.Text = "Restart";
             this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
             // 
@@ -953,6 +907,61 @@ namespace NodeGraphLayoutEdit
             this.loadSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.loadSettingsToolStripMenuItem.Text = "Load settings";
             this.loadSettingsToolStripMenuItem.Click += new System.EventHandler(this.loadSettingsToolStripMenuItem_Click);
+            // 
+            // nodeGraphPanel
+            // 
+            this.nodeGraphPanel.BackColor = System.Drawing.Color.Black;
+            this.nodeGraphPanel.ConnectorFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.ConnectorFillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.nodeGraphPanel.ConnectorHitZoneBleed = 4;
+            this.nodeGraphPanel.ConnectorOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.nodeGraphPanel.ConnectorOutlineSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.nodeGraphPanel.ConnectorTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.nodeGraphPanel.ContextMenuStrip = this.contextMenuStrip;
+            this.nodeGraphPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nodeGraphPanel.DrawShadow = true;
+            this.nodeGraphPanel.EnableDrawDebug = true;
+            this.nodeGraphPanel.GridAlpha = ((byte)(16));
+            this.nodeGraphPanel.GridPadding = 256;
+            this.nodeGraphPanel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.nodeGraphPanel.LinkEditableColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.LinkHardness = 5F;
+            this.nodeGraphPanel.LinkVisualStyle = NodeGraphControl.LinkVisualStyle.Curve;
+            this.nodeGraphPanel.Location = new System.Drawing.Point(0, 24);
+            this.nodeGraphPanel.Name = "nodeGraphPanel";
+            this.nodeGraphPanel.NodeConnectorFont = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nodeGraphPanel.NodeConnectorTextZoomTreshold = 0.7F;
+            this.nodeGraphPanel.NodeFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.nodeGraphPanel.NodeFillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(128)))), ((int)(((byte)(100)))));
+            this.nodeGraphPanel.NodeHeaderColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.NodeHeaderSize = 26;
+            this.nodeGraphPanel.NodeOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.nodeGraphPanel.NodeOutlineSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(160)))), ((int)(((byte)(128)))));
+            this.nodeGraphPanel.NodeScaledConnectorFont = new System.Drawing.Font("Segoe UI", 6.75F);
+            this.nodeGraphPanel.NodeScaledTitleFont = new System.Drawing.Font("Segoe UI", 8F);
+            this.nodeGraphPanel.NodeSignalInvalidColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.NodeSignalValidColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.NodeTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.nodeGraphPanel.NodeTextShadowColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.nodeGraphPanel.NodeTitleFont = new System.Drawing.Font("Segoe UI", 8F);
+            this.nodeGraphPanel.NodeTitleZoomThreshold = 0.5F;
+            this.nodeGraphPanel.SelectionFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(128)))), ((int)(((byte)(90)))), ((int)(((byte)(30)))));
+            this.nodeGraphPanel.SelectionOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(180)))), ((int)(((byte)(60)))));
+            this.nodeGraphPanel.ShowGrid = true;
+            this.nodeGraphPanel.Size = new System.Drawing.Size(1330, 865);
+            this.nodeGraphPanel.SmoothBehavior = true;
+            this.nodeGraphPanel.TabIndex = 4;
+            this.nodeGraphPanel.onSelectionChanged += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionChanged);
+            this.nodeGraphPanel.onSelectionCleared += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionCleared);
+            this.nodeGraphPanel.Load += new System.EventHandler(this.nodeGraphPanel_Load);
+            this.nodeGraphPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.nodeGraphPanel_MouseMove);
+            // 
+            // saveSettingsToolStripMenuItem
+            // 
+            this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
+            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.saveSettingsToolStripMenuItem.Text = "Save settings";
+            this.saveSettingsToolStripMenuItem.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
             // 
             // LayoutEditor
             // 
@@ -1076,6 +1085,7 @@ namespace NodeGraphLayoutEdit
         private System.Windows.Forms.ToolStripMenuItem quitWorkflowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveSettingsToolStripMenuItem;
     }
 }
 
