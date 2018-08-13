@@ -13,6 +13,7 @@
 #include <opencv2\core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <librealsense2\rs.hpp>
+#include <librealsense2\rs_advanced_mode.hpp>
 #include "rs2DeviceContainer.h"
 #include <Windows.h>
 #include "oclThreshold.h"
@@ -33,6 +34,7 @@ public:
 	ocvRealsenseWrapper();
 	~ocvRealsenseWrapper();
 
+	bool isOpen();
 	bool open(int index);
 	bool close();
 
@@ -51,8 +53,13 @@ public:
 	CvSize frameSize;
 	int fps;
 	bool shouldWarp;
-
+	void setOptionValue(rs2_option option, float val);
+	void setOptionsRange(std::map<rs2_option, float>& options);
+	float getOptionValue(rs2_option option);
+	bool advancedModeEnabled;
 private:
+	rs400::advanced_mode* adv;
+	rs2::sensor depth_sensor;
 	/*rs2::video_frame colorFrame;
 	rs2::frame depthFrame;*/
 	rs2::colorizer color_map;
@@ -73,6 +80,8 @@ private:
 	CvPoint2D32f* dstscreenpoints;
 	CvMat* perspectiveTransformMatrix;
 	bool isPlaneInit;
+	std::mutex mtx;
+	int pipeIndex;
 	
 
 	rs2_intrinsics intrisnic;

@@ -42,6 +42,8 @@ private:
 
 	//cv::Mat frame;
 	IplImage* img;
+	void LinkCameraProps();
+	std::map<rs2_option, float> cameraProps;
 
 	ocvRealsenseWrapper realsenseW;
 	double min, max;
@@ -68,5 +70,6 @@ START_EXPORT_MODULES(RealSenseModule)
 setFrameworkPtr(params->frameworkPointer);
 REGISTER_MODULE(nuiRealSenseModule, "nuiRealSenseModule", 1, 0)
 END_EXPORT_MODULES()
+
 
 #endif

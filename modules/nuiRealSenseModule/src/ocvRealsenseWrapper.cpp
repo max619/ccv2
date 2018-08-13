@@ -4,8 +4,11 @@
 
 ocvRealsenseWrapper::ocvRealsenseWrapper()
 {
+	mtx.lock();
+	depth_sensor = NULL;
 	_img = NULL;
 	procres = NULL;
+	opened = false;
 	ctx.set_devices_changed_callback([&](rs2::event_information& info)
 	{
 		container.updateDevices(info);
@@ -24,14 +27,15 @@ ocvRealsenseWrapper::ocvRealsenseWrapper()
 	dstscreenpoints = new CvPoint2D32f[4];
 
 	isPlaneInit = false;
-	if (factory.isOpenClSupported())
-	{		
-		factory.initProgram(processor);
-	}
 	rs2::context ctx;
 	container.initDevices(ctx);
-}
 
+	if (factory.isOpenClSupported())
+	{
+		factory.initProgram(processor);
+	}
+	mtx.unlock();
+}
 
 ocvRealsenseWrapper::~ocvRealsenseWrapper()
 {
@@ -48,44 +52,61 @@ ocvRealsenseWrapper::~ocvRealsenseWrapper()
 	cvReleaseImage(&_img);
 }
 
+bool ocvRealsenseWrapper::isOpen()
+{
+	return opened;
+}
+
 bool ocvRealsenseWrapper::open(int index)
 {
+	mtx.lock();
 	try
 	{
 		pipe = container.getPipeline(index, frameSize.width, frameSize.height, fps);
-		opened = true;
+		pipeIndex = index;
 						
 		rs2_error* error;
-		rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
+		rs2::depth_sensor _depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
 		
 		intrisnic = pipe.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
-		depth_scale = depth_sensor.get_depth_scale();
-
-		/*dstscreenpoints[0] = CvPoint2D32f(0, 0);
-		dstscreenpoints[1] = CvPoint2D32f(destsize.width, 0);
-		dstscreenpoints[2] = CvPoint2D32f(destsize.width, destsize.height);
-		dstscreenpoints[3] = CvPoint2D32f(0, destsize.height);
-		cvGetPerspectiveTransform(screenpoints, dstscreenpoints, perspectiveTransformMatrix);
-		
-
-		q = Eigen::Quaternionf::FromTwoVectors(a, b);*/
+		if (container.getPipelineProfile(container.getDeviceAt(0)).get_device().is<rs400::advanced_mode>())
+		{
+			adv = &(container.getPipelineProfile(container.getDeviceAt(0)).get_device().as<rs400::advanced_mode>());
+			// Check if advanced-mode is enabled
+			if (!adv->is_enabled())
+			{
+				// Enable advanced-mode
+				adv->toggle_advanced_mode(true);
+			}
+			advancedModeEnabled = true;
+		}
+		else
+		{
+			advancedModeEnabled = false;
+		}
+		depth_scale = _depth_sensor.get_depth_scale();
+		depth_sensor = _depth_sensor;
+		opened = true;
 	}
 	catch (_exception& ex)
 	{
 
 	}
+	mtx.unlock();
 
 	return opened;
 }
 
 bool ocvRealsenseWrapper::close()
 {
+	mtx.lock();
 	if (opened)
 	{
 		pipe.stop();
 		opened = false;
 		isPlaneInit = false;
 	}
+	mtx.unlock();
 
 	return !opened;
 }
@@ -192,6 +213,7 @@ IplImage* ocvRealsenseWrapper::thresholdDepthImage(float min, float max)
 
 IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 {
+	mtx.lock();
 #ifdef ALLOW_BENCHMARKING	
 	benchmark.startBencmarking();
 #endif
@@ -252,6 +274,39 @@ IplImage* ocvRealsenseWrapper::queryWorldCoordinates()
 	/*if(shouldWarp)
 		cvWarpPerspective(procres, procres, perspectiveTransformMatrix);*/
 
-	
+
+	mtx.unlock();
 	return procres;
+}
+
+void ocvRealsenseWrapper::setOptionValue(rs2_option option, float val)
+{
+	mtx.lock();
+	//pipe.stop();
+	if(depth_sensor.supports(option) && !depth_sensor.is_option_read_only(option))
+		depth_sensor.set_option(option, val);
+	//pipe.start();
+	mtx.unlock();
+}
+
+void ocvRealsenseWrapper::setOptionsRange(std::map<rs2_option, float>& options)
+{
+	mtx.lock();
+	//pipe.stop();
+	for (std::map<rs2_option, float>::iterator it = options.begin(); it != options.end(); it++)
+	{
+	
+		if (depth_sensor.supports(it->first) && !depth_sensor.is_option_read_only(it->first))
+			depth_sensor.set_option(it->first, it->second);
+	}
+	//pipe = container.getPipeline(pipeIndex, frameSize.width, frameSize.height, fps);
+	mtx.unlock();
+}
+
+float ocvRealsenseWrapper::getOptionValue(rs2_option option)
+{
+	if (depth_sensor.supports(option))
+		return depth_sensor.get_option(option);
+	else
+		return -10000.f;
 }

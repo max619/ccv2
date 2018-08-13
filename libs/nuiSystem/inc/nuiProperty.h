@@ -93,13 +93,13 @@ public:
     int asInteger();
     nuiPointList asPointList();
 
-    void set(bool value);
-    void set(std::string value);
-    void set(const char* value);
-    void set(int value);
-    void set(double value);
-	void set(float value);
-    void set(nuiPointList value);
+    void set(bool value, bool trigger = true);
+    void set(std::string value, bool trigger = true);
+    void set(const char* value, bool trigger = true);
+    void set(int value, bool trigger = true);
+    void set(double value, bool trigger = true);
+	void set(float value, bool trigger = true);
+    void set(nuiPointList value, bool trigger = true);
 
     bool haveMin();
     bool haveMax();

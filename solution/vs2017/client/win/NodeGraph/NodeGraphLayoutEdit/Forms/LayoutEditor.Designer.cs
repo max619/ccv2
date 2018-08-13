@@ -149,8 +149,8 @@ namespace NodeGraphLayoutEdit
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nodeGraphPanel = new NodeGraphControl.NodeGraphPanel();
             this.saveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nodeGraphPanel = new NodeGraphControl.NodeGraphPanel();
             this.contextMenuStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -410,9 +410,9 @@ namespace NodeGraphLayoutEdit
             // propertyGrid1
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.propertyGrid1.Location = new System.Drawing.Point(1330, 24);
+            this.propertyGrid1.Location = new System.Drawing.Point(1098, 24);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(242, 865);
+            this.propertyGrid1.Size = new System.Drawing.Size(474, 865);
             this.propertyGrid1.TabIndex = 2;
             this.propertyGrid1.Visible = false;
             this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
@@ -908,6 +908,13 @@ namespace NodeGraphLayoutEdit
             this.loadSettingsToolStripMenuItem.Text = "Load settings";
             this.loadSettingsToolStripMenuItem.Click += new System.EventHandler(this.loadSettingsToolStripMenuItem_Click);
             // 
+            // saveSettingsToolStripMenuItem
+            // 
+            this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
+            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.saveSettingsToolStripMenuItem.Text = "Save settings";
+            this.saveSettingsToolStripMenuItem.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
+            // 
             // nodeGraphPanel
             // 
             this.nodeGraphPanel.BackColor = System.Drawing.Color.Black;
@@ -948,20 +955,13 @@ namespace NodeGraphLayoutEdit
             this.nodeGraphPanel.SelectionFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(128)))), ((int)(((byte)(90)))), ((int)(((byte)(30)))));
             this.nodeGraphPanel.SelectionOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(180)))), ((int)(((byte)(60)))));
             this.nodeGraphPanel.ShowGrid = true;
-            this.nodeGraphPanel.Size = new System.Drawing.Size(1330, 865);
+            this.nodeGraphPanel.Size = new System.Drawing.Size(1098, 865);
             this.nodeGraphPanel.SmoothBehavior = true;
             this.nodeGraphPanel.TabIndex = 4;
             this.nodeGraphPanel.onSelectionChanged += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionChanged);
             this.nodeGraphPanel.onSelectionCleared += new NodeGraphControl.NodeGraphPanelSelectionEventHandler(this.nodeGraphPanel_onSelectionCleared);
             this.nodeGraphPanel.Load += new System.EventHandler(this.nodeGraphPanel_Load);
             this.nodeGraphPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.nodeGraphPanel_MouseMove);
-            // 
-            // saveSettingsToolStripMenuItem
-            // 
-            this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
-            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.saveSettingsToolStripMenuItem.Text = "Save settings";
-            this.saveSettingsToolStripMenuItem.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
             // 
             // LayoutEditor
             // 

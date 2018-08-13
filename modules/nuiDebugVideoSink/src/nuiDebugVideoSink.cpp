@@ -110,6 +110,8 @@ void nuiDebugVideoSink::stop()
 
 void nuiDebugVideoSink::onSetupThread()
 {
+	//TODO: fix strange behaviour when restarting workflow  
+	//(when breakpoint is set everything works fine, when not window doesn't appear)
 	if (!wndInit)
 	{
 		cvNamedWindow((this->property("id")).asString().c_str(), CV_WINDOW_AUTOSIZE);
