@@ -6,16 +6,7 @@
     <ClCompile Include="src\static.cpp" />
     <ClCompile Include="src\helpers.cpp" />
     <ClCompile Include="src\nuiRealSenseModule.cpp" />
-    <ClCompile Include="src\ocl3DPointCloudRotation.cpp">
-      <Filter>ocl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oclDepthToWorld.cpp">
-      <Filter>ocl</Filter>
-    </ClCompile>
     <ClCompile Include="src\oclRSWorldProcessor.cpp">
-      <Filter>ocl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oclThreshold.cpp">
       <Filter>ocl</Filter>
     </ClCompile>
   </ItemGroup>
@@ -25,16 +16,7 @@
     <ClInclude Include="src\rs2DeviceContainer.h" />
     <ClInclude Include="src\static.h" />
     <ClInclude Include="src\helpers.h" />
-    <ClInclude Include="src\ocl3DPointCloudRotation.h">
-      <Filter>ocl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\oclDepthToWorld.h">
-      <Filter>ocl</Filter>
-    </ClInclude>
     <ClInclude Include="src\oclRSWorldProcessor.h">
-      <Filter>ocl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\oclThreshold.h">
       <Filter>ocl</Filter>
     </ClInclude>
   </ItemGroup>

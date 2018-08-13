@@ -25,9 +25,6 @@ void oclRSWorldProcessor::processWorld(uint16_t * data, float& scale, rs2_intrin
 {
 	if (!mutex.try_lock())
 		return;
-#ifdef ALLOW_BENCHMARKING	
-	benchmark.startBencmarking();
-#endif
 
 	int width = intrisnic.width;
 	int height = intrisnic.height;
@@ -77,14 +74,6 @@ void oclRSWorldProcessor::processWorld(uint16_t * data, float& scale, rs2_intrin
 	err = clSetKernelArg(container->kernel, 1, sizeof(cl_mem), &inputMem);
 	err = clSetKernelArg(container->kernel, 2, sizeof(cl_mem), &outputMem);
 
-
-#ifdef ALLOW_BENCHMARKING	
-	benchmark.stopBenchmarking("oclRSWorldProcessor::processWorld kernel initializing");
-#endif
-
-#ifdef ALLOW_BENCHMARKING	
-	benchmark.startBencmarking();
-#endif
 	err = ExecKernel(container, width, height);
 
 	if (CL_SUCCESS != err)
@@ -93,9 +82,6 @@ void oclRSWorldProcessor::processWorld(uint16_t * data, float& scale, rs2_intrin
 		mutex.unlock();
 		return;
 	}
-#ifdef ALLOW_BENCHMARKING	
-	benchmark.stopBenchmarking("oclRSWorldProcessor::processWorld kernel processing");
-#endif
 
 	cl_int *resultPtr = (cl_int *)clEnqueueMapBuffer(container->commandQueue, outputMem, true, CL_MAP_READ, 0, width * height * sizeof(float) * 4, 0, NULL, NULL, &err);
 	if (CL_SUCCESS != err)
@@ -167,9 +153,6 @@ void oclRSWorldProcessor::getTouchedPoints(uint16_t * data, float & scale, rs2_i
 {
 	if (!mutex.try_lock())
 		return;
-#ifdef ALLOW_BENCHMARKING	
-	benchmark.startBencmarking();
-#endif
 
 	int width = intrisnic.width;
 	int height = intrisnic.height;
@@ -236,13 +219,6 @@ void oclRSWorldProcessor::getTouchedPoints(uint16_t * data, float & scale, rs2_i
 	err = clSetKernelArg(container->kernel, 2, sizeof(cl_mem), &getTouchedPoints_output);
 
 
-#ifdef ALLOW_BENCHMARKING	
-	benchmark.stopBenchmarking("oclRSWorldProcessor::processWorld kernel initializing");
-#endif
-
-#ifdef ALLOW_BENCHMARKING	
-	benchmark.startBencmarking();
-#endif
 	err = ExecKernel(container, width, height);
 
 	if (CL_SUCCESS != err)
@@ -251,9 +227,6 @@ void oclRSWorldProcessor::getTouchedPoints(uint16_t * data, float & scale, rs2_i
 		mutex.unlock();
 		return;
 	}
-#ifdef ALLOW_BENCHMARKING	
-	benchmark.stopBenchmarking("oclRSWorldProcessor::processWorld kernel processing");
-#endif
 
 	cl_int *resultPtr = (cl_int *)clEnqueueMapImage(container->commandQueue, getTouchedPoints_output, true, CL_MAP_READ, origin, region, &image_row_pitch, &image_slice_pitch, 0, NULL, NULL, &err);
 	if (CL_SUCCESS != err)

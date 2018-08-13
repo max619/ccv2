@@ -1298,6 +1298,7 @@ nuiPipelineModule *nuiFrameworkManager::getCurrent()
 
 nuiPluginFrameworkErrorCode::err nuiFrameworkManager::loadDefaultSettings()
 {
+	nuiFrameworkManager::getInstance().systemConfiguration = nuiSystemConfiguration::loadConfiguration(getRelativeToStartupPath(SYSTEM_CONFIG_PATH));
 	return nuiPluginManager::getInstance().loadDefaultConfiguration();
 }
 
@@ -1311,6 +1312,11 @@ nuiPluginFrameworkErrorCode::err nuiFrameworkManager::saveSettings(std::string p
 	Json::Value& cfg = nuiPluginManager::getInstance().getCurrentConfiguration();
 	nuiPluginManager::getInstance().writeJsonToFile(cfg, path);
 	return nuiPluginFrameworkErrorCode::err();
+}
+
+nuiSystemConfiguration * nuiFrameworkManager::getSystemConfiguration()
+{
+	return systemConfiguration;
 }
 
 nuiModuleDescriptor* nuiFrameworkManager::create(const std::string &pipelineName)

@@ -16,85 +16,85 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * \file jsonrpc_server.cpp
- * \brief JSON-RPC server.
- * \author Sebastien Vincent
- */
+ /**
+  * \file jsonrpc_server.cpp
+  * \brief JSON-RPC server.
+  * \author Sebastien Vincent
+  */
 
 #include "jsonrpc_server.h"
 
-namespace Json 
+namespace Json
 {
 
-  namespace Rpc
-  {
+	namespace Rpc
+	{
 
-    Server::Server(const std::string& address, uint16_t port)
-    {
-      m_sock = -1;
-      m_address = address;
-      m_port = port;
-      SetEncapsulatedFormat(Json::Rpc::RAW);
-    }
+		Server::Server(const std::string& address, uint16_t port)
+		{
+			m_sock = -1;
+			m_address = address;
+			m_port = port;
+			SetEncapsulatedFormat(Json::Rpc::RAW);
+		}
 
-    Server::~Server()
-    {
-      if(m_sock != -1)
-      {
-        Close();
-      }
-    }
+		Server::~Server()
+		{
+			if (m_sock != -1)
+			{
+				Close();
+			}
+		}
 
-    void Server::SetEncapsulatedFormat(enum EncapsulatedFormat format)
-    {
-      m_format = format;
-    }
+		void Server::SetEncapsulatedFormat(enum EncapsulatedFormat format)
+		{
+			m_format = format;
+		}
 
-    enum EncapsulatedFormat Server::GetEncapsulatedFormat() const
-    {
-      return m_format;
-    }
+		enum EncapsulatedFormat Server::GetEncapsulatedFormat() const
+		{
+			return m_format;
+		}
 
-    int Server::GetSocket() const
-    {
-      return m_sock;
-    }
+		int Server::GetSocket() const
+		{
+			return m_sock;
+		}
 
-    std::string Server::GetAddress() const
-    {
-      return m_address;
-    }
+		std::string Server::GetAddress() const
+		{
+			return m_address;
+		}
 
-    uint16_t Server::GetPort() const
-    {
-      return m_port;
-    }
+		uint16_t Server::GetPort() const
+		{
+			return m_port;
+		}
 
-    bool Server::Bind()
-    {
-      m_sock = networking::bind(m_protocol, m_address, m_port, NULL, NULL);
+		bool Server::Bind()
+		{
+			m_sock = networking::bind(m_protocol, m_address, m_port, NULL, NULL);
 
-      return (m_sock != -1) ? true : false;
-    }
-    
-    void Server::Close()
-    {
-      ::close(m_sock);
-      m_sock = -1;
-    }
+			return (m_sock != -1) ? true : false;
+		}
 
-    void Server::AddMethod(CallbackMethod* method)
-    {
-      m_jsonHandler.AddMethod(method);
-    }
+		void Server::Close()
+		{
+			::close(m_sock);
+			m_sock = -1;
+		}
 
-    void Server::DeleteMethod(const std::string& method)
-    {
-      m_jsonHandler.DeleteMethod(method);
-    }
+		void Server::AddMethod(CallbackMethod* method)
+		{
+			m_jsonHandler.AddMethod(method);
+		}
 
-  } /* namespace Rpc */
+		void Server::DeleteMethod(const std::string& method)
+		{
+			m_jsonHandler.DeleteMethod(method);
+		}
+
+	} /* namespace Rpc */
 
 } /* namespace Json */
 

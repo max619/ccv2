@@ -35,6 +35,7 @@ struct nuiModuleLoaded;
 //! Facade. Holds information about loaded plugins
 struct nuiPluginLoaded
 {
+
 	//! \todo Move to separate file and split with realization
 	//! string plugin location. As 2 plugins can't have the same address we can 
 	//! consider pluginAddress as unique id.
@@ -43,6 +44,7 @@ struct nuiPluginLoaded
 	void* handle;
 	//! guids of modules, loaded from plugin
 	std::vector<nuiModuleLoaded*> loadedModules;
+	
 
 	void loadModule(nuiModuleLoaded* module)
 	{
@@ -160,6 +162,7 @@ struct nuiModuleLoaded
 class nuiPluginManager
 {
 public:
+	static void deserializePropertiesToMap(std::map<std::string, nuiProperty*>& props, Json::Value value);
 	//! gets instance of nuiPluginManager
 	static nuiPluginManager& getInstance();
 
@@ -250,7 +253,7 @@ private:
 	//! loaded pipelines
 	std::vector<nuiModuleDescriptor*> pipelinesLoaded;
 
-	std::vector<std::string> dynamicLibrariesPaths;
+	//std::vector<std::string> dynamicLibrariesPaths;
 
 	//! currently loading plugin
 	nuiPluginLoaded* loadingPlugin;

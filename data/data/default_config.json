@@ -1,21 +1,4 @@
 {
-    "module_library": [
-        {
-            "path": "modules\\nuiDebugVideoSink.dll"
-        },
-        {
-            "path": "modules\\nuiRealSenseModule.dll"
-        },
-        {
-            "path": "modules\\nuiBlobTrackerModule.dll"
-        },
-        {
-            "path": "modules\\nuiTUIOOutputModule.dll"
-        },
-        {
-            "path": "modules\\nuiScreenCalibrationModule.dll"
-        }
-    ],
     "pipelines": [
         {
             "type": "root",

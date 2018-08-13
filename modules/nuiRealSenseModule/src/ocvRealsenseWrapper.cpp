@@ -1,7 +1,5 @@
 #include "ocvRealsenseWrapper.h"
 
-
-
 ocvRealsenseWrapper::ocvRealsenseWrapper()
 {
 	mtx.lock();
@@ -40,11 +38,7 @@ ocvRealsenseWrapper::ocvRealsenseWrapper()
 ocvRealsenseWrapper::~ocvRealsenseWrapper()
 {
 	close();
-	if (threshold != NULL)
-	{
-		delete threshold;
-		threshold = NULL;
-	}
+	delete processor;
 	cvReleaseMat(&perspectiveTransformMatrix);
 	delete screenpoints;
 	delete dstscreenpoints;
@@ -163,52 +157,6 @@ bool ocvRealsenseWrapper::queryDepthFrame(IplImage ** img)
 	}
 
 	return true;
-}
-
-IplImage* ocvRealsenseWrapper::thresholdDepthImage(float min, float max)
-{
-	frameset = pipe.wait_for_frames();
-	auto depthFrame = frameset.get_depth_frame().as<rs2::depth_frame>();
-	void* data_ptr = (void*)depthFrame.get_data();
-
-	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
-	rs2::depth_sensor depth_sensor = container.getPipelineProfile(container.getDeviceAt(0)).get_device().first<rs2::depth_sensor>();
-	float depth_scale = depth_sensor.get_depth_scale();
-	if (factory.isOpenClSupported())
-	{
-		return threshold->calcThreshold((uint16_t*)data_ptr, depthFrame.get_width(), depthFrame.get_height(), min / depth_scale, max / depth_scale);
-	}
-	else
-	{
-		IplImage* res = cvCreateImage(CvSize(depthFrame.get_width(), depthFrame.get_height()), IPL_DEPTH_8U, 1);
-
-		uint16_t umin = min / depth_scale;
-		uint16_t umax = max / depth_scale;
-#ifdef _OPENMP
-#pragma omp parallel for
-#endif		
-		for (int y = 0; y < depthFrame.get_height(); y++)
-		{
-			unsigned char* res_ptr = reinterpret_cast<unsigned char*>(res->imageData + (y * depthFrame.get_width() * sizeof(unsigned char)));
-			uint16_t* src_ptr = reinterpret_cast<uint16_t*>((uint16_t*)data_ptr + (y * depthFrame.get_width() * sizeof(unsigned char)));
-			for (int x = 0; x < depthFrame.get_width(); x++, res_ptr++, src_ptr++)
-			{
-				uint16_t f_px = *src_ptr;
-				if (f_px > umin && f_px < umax)
-				{
-					(*res_ptr) = 255;
-				}
-				else
-				{
-					(*res_ptr) = 0;
-				}
-			}
-		}
-
-
-		return res;
-	}
-
 }
 
 IplImage* ocvRealsenseWrapper::queryWorldCoordinates()

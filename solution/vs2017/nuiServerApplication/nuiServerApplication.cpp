@@ -54,8 +54,10 @@ int main(int argc, char **argv)
 		return loadCode;
 	}
 
+	nuiSystemConfiguration* conf =  manager.getSystemConfiguration();
+
 	/// Initialize API
-	if (!nuiJsonRpcApi::getInstance()->init("127.0.0.1", 7500))
+	if (!nuiJsonRpcApi::getInstance()->init(conf->property("host").asString(), conf->property("port").asInteger()))
 	{
 		LOG(NUI_CRITICAL, "Failed to Initialize JSON RPC");
 		goto exit_critical;

@@ -28,12 +28,15 @@
 #include "nuiTree.h"
 #include "nuiDebugLogger.h"
 #include "nuiPlugin.h"
+#include "nuiSystemConfiguration.h"
 
 #define USER_CONFIG_PATH "data/user_config.json"
+#define SYSTEM_CONFIG_PATH "data/system.json"
 
 class nuiModule;
 class nuiModuleDescriptor;
 class nuiPipelineModule;
+class nuiSystemConfiguration;
 
 //! namespaced enum
 struct nuiFrameworkManagerErrorCode
@@ -192,10 +195,13 @@ public:
 	nuiPluginFrameworkErrorCode::err loadSettings(std::string path);
 	nuiPluginFrameworkErrorCode::err saveSettings(std::string path);
 
+	nuiSystemConfiguration *getSystemConfiguration();
+
 private:
 	nuiFrameworkManager();
 	nuiFrameworkManager(const nuiFrameworkManager&);
 	~nuiFrameworkManager();
+
 
 	//! gets currently selected pipeline
 	nuiPipelineModule *getCurrent();
@@ -205,6 +211,7 @@ private:
 	nuiModule* currentModule;
 	nuiPipelineModule *rootPipeline;
 	nuiTree<int, nuiModule*> *dataObjectTree;
+	nuiSystemConfiguration *systemConfiguration;
 
 public:
 	void setStartupPath(std::string path);

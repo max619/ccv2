@@ -18,6 +18,7 @@
     <ClInclude Include="..\inc\nuiJsonRpcApi.h" />
     <ClInclude Include="..\inc\nuiPipeline.h" />
     <ClInclude Include="..\inc\nuiPluginManager.h" />
+    <ClInclude Include="..\inc\nuiSystemConfiguration.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\nuiDynamicLibrary.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="..\src\nuiJsonRpcApi.cpp" />
     <ClCompile Include="..\src\nuiPipeline.cpp" />
     <ClCompile Include="..\src\nuiPluginManager.cpp" />
+    <ClCompile Include="..\src\nuiSystemConfiguration.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DB34BFFE-533F-4FFA-A784-46508142E2CA}</ProjectGuid>

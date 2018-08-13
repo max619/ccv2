@@ -1,0 +1,23 @@
+{
+	 "module_library": [
+        {
+            "path": "modules\\nuiDebugVideoSink.dll"
+        },
+        {
+            "path": "modules\\nuiRealSenseModule.dll"
+        },
+        {
+            "path": "modules\\nuiBlobTrackerModule.dll"
+        },
+        {
+            "path": "modules\\nuiTUIOOutputModule.dll"
+        },
+        {
+            "path": "modules\\nuiScreenCalibrationModule.dll"
+        }
+    ],
+	"properties":{
+		"host": "127.0.0.1",
+		"port": 7500
+	}
+}

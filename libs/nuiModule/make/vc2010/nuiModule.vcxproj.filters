@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\inc\nuiBenchmark.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\nuiPreview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\nuiDataStream.cpp">
@@ -44,10 +47,13 @@
     <ClCompile Include="..\..\src\nuiEndpoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="nuiDataPacket.cpp">
+    <ClCompile Include="..\..\src\nuiBenchmark.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\nuiBenchmark.cpp">
+    <ClCompile Include="..\..\src\nuiDataPacket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nuiPreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

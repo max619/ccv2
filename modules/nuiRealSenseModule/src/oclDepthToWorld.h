@@ -16,9 +16,7 @@
 #include <nuiFrameworkManager.h>
 //#include "nuiRealSenseModule.h"
 #include "static.h"
-#ifdef ALLOW_BENCHMARKING
 #include "nuiBenchmark.h"
-#endif
 
 class oclDepthToWorld : public nuiOpenClAlgorithm
 {
@@ -32,9 +30,6 @@ public:
 
 	DEFAULT_OPENCL_PROGRAM_INTERFACE_DECLARATION()
 private:
-#ifdef ALLOW_BENCHMARKING
-	nuiBenchmark benchmark;
-#endif
 	std::mutex mutex;
 	bool clmeminit;
 	cl_mem inputMem;

@@ -12,9 +12,7 @@
 #include <CL/cl.hpp>
 #include <mutex>
 
-#ifdef ALLOW_BENCHMARKING	
 #include "nuiBenchmark.h"
-#endif
 
 class oclThreshold : public nuiOpenClAlgorithm
 {

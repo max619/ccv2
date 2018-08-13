@@ -199,13 +199,12 @@ nuiPluginFrameworkErrorCode::err nuiPluginManager::loadConfiguration(std::string
 	Json::Reader reader;
 	bool parsingSuccessful = reader.parse(settingsFile, root);
 	if (!parsingSuccessful)
-		return nuiPluginFrameworkErrorCode::DefaultSettingsCorrupted;
+		return nuiPluginFrameworkErrorCode::DefaultSettingsCorrupted;	
 
-	Json::Value modules = root.get("module_library", NULL);
-	for (Json::Value::iterator i = modules.begin(); i != modules.end(); i++)
+	nuiSystemConfiguration* sysCfg = frameworkManager.getSystemConfiguration();
+	for (int i = 0; i < sysCfg->getDynamicLibrariesPathsCount(); i++)
 	{
-		dynamicLibrariesPaths.push_back((*i).get("path", NULL).asString());
-		std::string path = frameworkManager.getRelativeToStartupPath((*i).get("path", NULL).asString());
+		std::string path = frameworkManager.getRelativeToStartupPath(sysCfg->getDynamicLibraryPath(i));
 		this->loadLibrary(path);
 	}
 
@@ -415,63 +414,9 @@ nuiPluginFrameworkErrorCode::err nuiPluginManager::unloadPipeline(const std::str
 
 void nuiPluginManager::parseDescriptorProperties(nuiModuleDescriptor* moduleDescriptor, Json::Value* root)
 {
-	Json::Value properties = root->get("properties", new Json::Value);
-	// extracting props from "properties" json value
-
-	Json::Value::Members propertyNames = properties.getMemberNames();
-	// get list of properties' names
-
-	for (Json::Value::Members::iterator i = propertyNames.begin(); i != propertyNames.end(); i++)
-	{
-		std::string propertyID = *i;
-		// get single property name
-		Json::Value value = properties.get(*i, "none");
-		// get property value
-
-		std::map<std::string, nuiProperty*>& props = moduleDescriptor->getProperties();
-
-		if ((value != "none") && (propertyID != "none")) // if both are present
-		{
-			if (moduleDescriptor->getProperties().find(propertyID) ==
-				moduleDescriptor->getProperties().end()) // if not found property
-			{
-				/*if (value.isInt())
-					moduleDescriptor->property(propertyID).set(value.asInt());
-				else
-				{
-					if (value.isString())
-					{
-						std::string val = value.asString();
-						moduleDescriptor->property(propertyID).set(val);
-					}
-				}*/
-				switch (value.type())
-				{
-				case Json::ValueType::intValue:
-				case Json::ValueType::uintValue:
-					props[propertyID] = new nuiProperty(NUI_PROPERTY_INTEGER);
-					props[propertyID]->set(value.asInt());
-					moduleDescriptor->property(propertyID).set(value.asInt());
-					break;     ///< unsigned integer value
-				case Json::ValueType::realValue:
-					props[propertyID] = new nuiProperty(NUI_PROPERTY_DOUBLE);
-					props[propertyID]->set(value.asDouble());
-					break;     ///< double value
-				case Json::ValueType::stringValue:
-					props[propertyID] = new nuiProperty(NUI_PROPERTY_STRING);
-					props[propertyID]->set(value.asString());
-					break;   ///< UTF-8 string value
-				case Json::ValueType::booleanValue:
-					props[propertyID] = new nuiProperty(NUI_PROPERTY_BOOL);
-					props[propertyID]->set(value.asBool());
-					break;  ///< bool value				
-				default:
-					break;
-				}
-				// save the property to descriptor's property list
-			}
-		}
-	}
+	std::map<std::string, nuiProperty*>& props = moduleDescriptor->getProperties();
+	Json::Value pValue = root->get("properties", Json::Value());
+	nuiPluginManager::deserializePropertiesToMap(props, pValue);
 };
 
 void nuiPluginManager::writeDescriptorProperties(nuiModuleDescriptor* moduleDescriptor, Json::Value& root)
@@ -565,15 +510,15 @@ nuiModuleLoaded* nuiPluginManager::getLoadedModule(const std::string name)
 	return NULL;
 }
 
-int nuiPluginManager::getDynamicLibrariesPathsCount()
-{
-	return dynamicLibrariesPaths.size();;
-}
+//int nuiPluginManager::getDynamicLibrariesPathsCount()
+//{
+//	return dynamicLibrariesPaths.size();;
+//}
 
-std::string& nuiPluginManager::getDynamicLibraryPath(int index)
-{
-	return dynamicLibrariesPaths.at(index);
-}
+//std::string& nuiPluginManager::getDynamicLibraryPath(int index)
+//{
+//	return dynamicLibrariesPaths.at(index);
+//}
 
 std::vector<nuiModuleDescriptor*>* nuiPluginManager::getPipelineDescriptors()
 {
@@ -585,7 +530,7 @@ Json::Value nuiPluginManager::getCurrentConfiguration()
 	Json::Value cfgRoot;
 	std::vector<std::string>* pipelines = nuiFrameworkManager::getInstance().listPipelines();
 
-	Json::Value modules;
+	/*Json::Value modules;
 
 	for (int i = 0; i < nuiPluginManager::getInstance().getDynamicLibrariesPathsCount(); i++)
 	{
@@ -594,7 +539,7 @@ Json::Value nuiPluginManager::getCurrentConfiguration()
 		module["path"] = path;
 		modules.append(module);
 	}
-	cfgRoot["module_library"] = modules;
+	cfgRoot["module_library"] = modules;*/
 
 	nuiPluginManager::getInstance().listLoadedModules();
 
@@ -617,4 +562,49 @@ void nuiPluginManager::writeJsonToFile(Json::Value & value, std::string path)
 	std::ofstream settingsFile(nuiFrameworkManager::getInstance().getRelativeToStartupPath(path));
 	Json::StyledStreamWriter writer;
 	writer.write(settingsFile, value);
+}
+
+void nuiPluginManager::deserializePropertiesToMap(std::map<std::string, nuiProperty*>& props, Json::Value root)
+{
+
+	Json::Value::Members propertyNames = root.getMemberNames();
+	// get list of properties' names
+
+	Json::Value defaultval;
+
+	for (Json::Value::Members::iterator i = propertyNames.begin(); i != propertyNames.end(); i++)
+	{
+		std::string propertyID = *i;
+		// get single property name
+		Json::Value value = root.get(*i, defaultval);
+		// get property value
+
+
+		if ((value != defaultval) && (propertyID != "none")) // if both are present
+		{
+			switch (value.type())
+			{
+			case Json::ValueType::intValue:
+			case Json::ValueType::uintValue:
+				props[propertyID] = new nuiProperty(NUI_PROPERTY_INTEGER);
+				props[propertyID]->set(value.asInt());
+				break;     ///< unsigned integer value
+			case Json::ValueType::realValue:
+				props[propertyID] = new nuiProperty(NUI_PROPERTY_DOUBLE);
+				props[propertyID]->set(value.asDouble());
+				break;     ///< double value
+			case Json::ValueType::stringValue:
+				props[propertyID] = new nuiProperty(NUI_PROPERTY_STRING);
+				props[propertyID]->set(value.asString());
+				break;   ///< UTF-8 string value
+			case Json::ValueType::booleanValue:
+				props[propertyID] = new nuiProperty(NUI_PROPERTY_BOOL);
+				props[propertyID]->set(value.asBool());
+				break;  ///< bool value				
+			default:
+				break;
+			}
+			// save the property to descriptor's property list
+		}
+	}
 }

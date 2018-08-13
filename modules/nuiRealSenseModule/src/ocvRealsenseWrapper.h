@@ -40,9 +40,7 @@ public:
 
 	bool queryColorFrame(IplImage ** img);
 	bool queryDepthFrame(IplImage ** img);
-
-	IplImage * thresholdDepthImage(float min, float max);
-
+	
 	IplImage * queryWorldCoordinates();
 	CvPoint2D32f* screenpoints;
 	CvSize2D32f destsize; 
@@ -72,9 +70,6 @@ private:
 	cv::Mat colorImage;
 	cv::Mat colorImageBgr;
 	IplImage* _img;
-	oclThreshold* threshold;
-	oclDepthToWorld* depthToWorld;
-	ocl3DPointCloudRotation* rotation;
 	oclRSWorldProcessor* processor;
 	IplImage* procres;
 	CvPoint2D32f* dstscreenpoints;

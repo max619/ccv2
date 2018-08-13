@@ -19,9 +19,6 @@
 #include <Windows.h>
 #include "helpers.h"
 
-#ifdef ALLOW_BENCHMARKING
-#include "nuiBenchmark.h"
-#endif
 
 
 class oclRSWorldProcessor : public nuiOpenClAlgorithm
@@ -35,9 +32,6 @@ public:
 	void processWorldCpu(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Quaternionf& quaterninon, IplImage* res);
 	void getTouchedPointsCpu(uint16_t* data, float& scale, rs2_intrinsics& intrisnic, Eigen::Vector3f& normal, Eigen::Vector3f& basept, Eigen::Vector2f& threshold, IplImage* res);
 
-#ifdef BENCHMARK_OCL_RS_WORLD_PROCESSOR
-	nuiBenchmark benchmark;
-#endif
 private:
 	std::mutex mutex;
 	bool clmeminit;

@@ -13,10 +13,7 @@
   <ItemGroup>
     <ClInclude Include="src\helpers.h" />
     <ClInclude Include="src\nuiRealSenseModule.h" />
-    <ClInclude Include="src\ocl3DPointCloudRotation.h" />
-    <ClInclude Include="src\oclDepthToWorld.h" />
     <ClInclude Include="src\oclRSWorldProcessor.h" />
-    <ClInclude Include="src\oclThreshold.h" />
     <ClInclude Include="src\ocvRealsenseWrapper.h" />
     <ClInclude Include="src\rs2DeviceContainer.h" />
     <ClInclude Include="src\static.h" />
@@ -24,10 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\helpers.cpp" />
     <ClCompile Include="src\nuiRealSenseModule.cpp" />
-    <ClCompile Include="src\ocl3DPointCloudRotation.cpp" />
-    <ClCompile Include="src\oclDepthToWorld.cpp" />
     <ClCompile Include="src\oclRSWorldProcessor.cpp" />
-    <ClCompile Include="src\oclThreshold.cpp" />
     <ClCompile Include="src\ocvRealsenseWrapper.cpp" />
     <ClCompile Include="src\rs2DeviceContainer.cpp" />
     <ClCompile Include="src\static.cpp" />
