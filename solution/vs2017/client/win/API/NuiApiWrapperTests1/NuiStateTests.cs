@@ -171,5 +171,13 @@ namespace NuiApiWrapper.Tests
         {
             var res = NuiState.Instance.GetLoadedModules();
         }
+
+        [TestMethod()]
+        public void CommitPipelineTest()
+        {
+            NuiState.Instance.WorkflowStop();
+            var pipeline = NuiState.Instance.GetPipeline("root");
+            NuiState.Instance.CommitPipeline(pipeline);
+        }
     }
 }

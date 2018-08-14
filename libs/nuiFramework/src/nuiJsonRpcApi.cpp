@@ -96,6 +96,7 @@ bool nuiJsonRpcApi::init(std::string address, int port)
 	ADDRPCMETHOD(nui_get_module_properties);
 	ADDRPCMETHOD(nui_save_configuration);
 	ADDRPCMETHOD(nui_get_availible_modules);
+	ADDRPCMETHOD(nui_commit_pipeline);
 
 	return true;
 };
@@ -363,16 +364,23 @@ bool nuiJsonRpcApi::nui_update_moduleProperty(const Json::Value& root, Json::Val
 
 	nuiModuleDescriptor* descr = nuiFrameworkManager::getInstance().getModuleDescriptor(pipeline, moduleIndex);
 
-	std::map<std::string, nuiProperty*> props = descr->getProperties();
-	std::map<std::string, nuiProperty*>::iterator property = props.find(key);
-	property->second->set(value);
+	if (descr != NULL)
+	{
+		std::map<std::string, nuiProperty*> props = descr->getProperties();
+		std::map<std::string, nuiProperty*>::iterator property = props.find(key);
+		property->second->set(value);
 
-	nuiModuleDescriptor* descriptor =
-		nuiFrameworkManager::getInstance().updateModule(pipeline, moduleIndex, descr);
+		nuiModuleDescriptor* descriptor =
+			nuiFrameworkManager::getInstance().updateModule(pipeline, moduleIndex, descr);
 
-	setSuccess(response);
-	response["result"] = serialize_module(descriptor);
-	response["data_type"] = "nuiModuleDescriptor";
+		setSuccess(response);
+		response["result"] = serialize_module(descriptor);
+		response["data_type"] = "nuiModuleDescriptor";
+	}
+	else
+	{
+		setFailure(response);
+	}
 	return true;
 }
 
@@ -778,6 +786,20 @@ bool nuiJsonRpcApi::nui_save_configuration(const Json::Value & root, Json::Value
 	return true;
 }
 
+bool nuiJsonRpcApi::nui_commit_pipeline(const Json::Value & root, Json::Value & response)
+{
+	response["id"] = root["id"];
+
+	Json::Value params = root.get("params", Json::Value());
+	nuiModuleDescriptor* newPipeline = deserialize_pipeline(params);
+
+	nuiFrameworkManager::getInstance().closePipeline(newPipeline->getName());
+	nuiFrameworkManager::getInstance().init(newPipeline);
+
+	setSuccess(response);
+	return true;
+}
+
 Json::Value nuiJsonRpcApi::serialize_workflow(nuiModuleDescriptor* descriptor)
 {
 	Json::Value jWorkflow;
@@ -846,7 +868,7 @@ Json::Value nuiJsonRpcApi::serialize_module(nuiModuleDescriptor* descriptor)
 	jModule["connections"] = *connections;
 
 	jModule["properties"] = serialize_properties(descriptor->getProperties());
-	
+
 
 	return jModule;
 }
@@ -892,11 +914,155 @@ Json::Value nuiJsonRpcApi::serialize_properties(std::map<std::string, nuiPropert
 		prop["type"] = p->getType();
 		prop["name"] = it->first;
 		prop["value"] = p->asString();
+		prop["description"] = p->getDescription();
 		jProps.append(prop);
-
 	}
 
 	return jProps;
+}
+
+nuiModuleDescriptor * nuiJsonRpcApi::deserialize_workflow(Json::Value & value)
+{
+	nuiModuleDescriptor* workflow = new nuiModuleDescriptor();
+
+	workflow->setName(value.get("name", "").asString());
+	workflow->setAuthor(value.get("author", "").asString());
+	workflow->setDescription(value.get("description", "").asString());
+
+	Json::Value& jPipelines = value.get("pipeline", Json::Value());
+
+	if (jPipelines.isArray())
+		for (Json::Value::iterator it = jPipelines.begin(); it != jPipelines.end(); it++)
+		{
+			workflow->addChildModuleDescriptor(deserialize_pipeline(*it));
+		}
+
+	return workflow;
+}
+
+nuiModuleDescriptor * nuiJsonRpcApi::deserialize_pipeline(Json::Value & value)
+{
+	nuiModuleDescriptor* pipeline = new nuiModuleDescriptor();
+
+	pipeline->setName(value.get("name", "").asString());
+	pipeline->setAuthor(value.get("author", "").asString());
+	pipeline->setDescription(value.get("description", "").asString());
+
+	Json::Value& jModules = value.get("modules", Json::Value());
+	if (jModules.isArray())
+		for (Json::Value::iterator it = jModules.begin(); it != jModules.end(); it++)
+		{
+			pipeline->addChildModuleDescriptor(deserialize_module(*it));
+		}
+
+	Json::Value& jInputEndpoints = value.get("inputEndpoints", Json::Value());
+	if (jInputEndpoints.isArray())
+		for (Json::Value::iterator it = jInputEndpoints.begin(); it != jInputEndpoints.end(); it++)
+		{
+			int index = 0;
+			pipeline->addInputEndpointDescriptor(deserialize_endpoint(*it, index), index);
+		}	
+
+	Json::Value& jOutputEndpoints = value.get("outputEndpoints", Json::Value());
+	if (jOutputEndpoints.isArray())
+		for (Json::Value::iterator it = jOutputEndpoints.begin(); it != jOutputEndpoints.end(); it++)
+		{
+			int index = 0;
+			pipeline->addOutputEndpointDescriptor(deserialize_endpoint(*it, index), index);
+		}	
+
+	Json::Value& connections = value.get("connections", Json::Value());
+	if (connections.isArray())
+		for (Json::Value::iterator it = connections.begin(); it != connections.end(); it++)
+		{
+			pipeline->addDataStreamDescriptor(deserialize_connection(*it));
+		}	
+
+	return pipeline;
+}
+
+nuiModuleDescriptor * nuiJsonRpcApi::deserialize_module(Json::Value & value)
+{
+	nuiModuleDescriptor* module = new nuiModuleDescriptor();
+
+	module->setName(value.get("name", "").asString());
+	module->setAuthor(value.get("author", "").asString());
+	module->setDescription(value.get("description", "").asString());
+
+	Json::Value& jInputEndpoints = value.get("inputEndpoints", Json::Value());
+	if (jInputEndpoints.isArray())
+		for (Json::Value::iterator it = jInputEndpoints.begin(); it != jInputEndpoints.end(); it++)
+		{
+			int index = 0;
+			module->addInputEndpointDescriptor(deserialize_endpoint(*it, index), index);
+		}
+
+	Json::Value& jOutputEndpoints = value.get("outputEndpoints", Json::Value());
+	if (jOutputEndpoints.isArray())
+		for (Json::Value::iterator it = jOutputEndpoints.begin(); it != jOutputEndpoints.end(); it++)
+		{
+			int index = 0;
+			module->addInputEndpointDescriptor(deserialize_endpoint(*it, index), index);
+		}
+
+	Json::Value& connections = value.get("connections", Json::Value());
+	if (connections.isArray())
+		for (Json::Value::iterator it = connections.begin(); it != connections.end(); it++)
+		{
+			module->addDataStreamDescriptor(deserialize_connection(*it));
+		}
+
+	deserialize_properties(value.get("properties", Json::Value()), module->getProperties());
+
+	return module;
+}
+
+nuiEndpointDescriptor * nuiJsonRpcApi::deserialize_endpoint(Json::Value & value, int& index)
+{
+	std::string descriptor = value.get("descriptor", "").asString();
+	nuiEndpointDescriptor* endpoint = new nuiEndpointDescriptor(descriptor);
+	index = value.get("index", "").asInt();
+
+	return endpoint;
+}
+
+nuiDataStreamDescriptor * nuiJsonRpcApi::deserialize_connection(Json::Value & value)
+{
+	nuiDataStreamDescriptor* dataStream = new nuiDataStreamDescriptor();
+
+	dataStream->sourceModuleID = value.get("sourceModule", 0).asInt();
+	dataStream->sourcePort = value.get("sourcePort", 0).asInt();
+	dataStream->destinationModuleID = value.get("destinationModule", 0).asInt();
+	dataStream->destinationPort = value.get("destinationPort", 0).asInt();
+
+	dataStream->buffered = value.get("buffered", 0).asInt();
+	dataStream->bufferSize = value.get("bufferSize", 0).asInt();
+	dataStream->deepCopy = value.get("deepCopy", 0).asInt();
+	dataStream->asyncMode = value.get("asyncMode", 0).asInt();
+	dataStream->lastPacket = value.get("lastPacket", 0).asInt();
+	dataStream->overflow = value.get("overflow", 0).asInt();
+
+	return dataStream;
+}
+
+void nuiJsonRpcApi::deserialize_properties(Json::Value& value, std::map<std::string, nuiProperty*>& props)
+{
+	if (value.isArray())
+	{
+		for (Json::Value::iterator it = value.begin(); it != value.end(); it++)
+		{
+			nuiPropertyType type = static_cast<nuiPropertyType>((*it).get("type", 0).asInt());
+			std::string description = (*it).get("description", "").asString();
+			nuiProperty* prop = new nuiProperty(type, description);
+
+			prop->set((*it).get("value", "").asString(), false);
+			std::string key = (*it).get("name", "").asString();
+			if (key != "")
+			{
+				props.emplace(key, prop);
+			}
+		}
+	}
 }
 
 void nuiJsonRpcApi::setFailure(Json::Value &response)

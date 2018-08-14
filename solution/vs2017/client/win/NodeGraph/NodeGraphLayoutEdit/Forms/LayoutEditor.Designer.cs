@@ -678,6 +678,7 @@ namespace NodeGraphLayoutEdit
             this.commitChangesToolStripMenuItem.Name = "commitChangesToolStripMenuItem";
             this.commitChangesToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.commitChangesToolStripMenuItem.Text = "Commit Changes";
+            this.commitChangesToolStripMenuItem.Click += new System.EventHandler(this.commitChangesToolStripMenuItem_Click);
             // 
             // workflowManagmentToolStripMenuItem
             // 

@@ -77,7 +77,59 @@ nuiFrameworkManagerErrorCode::err nuiFrameworkManager::init()
 	{
 		return nuiFrameworkManagerErrorCode::InitFailed;
 	}
-};
+}
+
+nuiFrameworkManagerErrorCode::err nuiFrameworkManager::init(nuiModuleDescriptor * descriptor)
+{
+	nuiFactory& factory = nuiFactory::getInstance();
+	if (rootPipeline != NULL)
+	{
+		rootPipeline->stop();
+		delete rootPipeline;
+		rootPipeline = NULL;
+		delete dataObjectTree;
+		nuiPluginManager::getInstance().unregisterPipeline(descriptor->getName());
+	}
+
+	rootPipeline = (nuiPipelineModule*)(factory.createPipeline(descriptor));
+	if (rootPipeline != NULL)
+	{
+		nuiTreeNode<int, nuiModule*> *temp =
+			new nuiTreeNode<int, nuiModule*>(rootPipeline->property("id").asInteger(),
+				rootPipeline);
+		for (int i = 0; i < rootPipeline->getChildModuleCount(); i++)
+		{
+			temp->addChildNode(
+				new nuiTreeNode<int, nuiModule*>(
+					rootPipeline->getChildModuleAtIndex(i)->property("id").asInteger(),
+					rootPipeline->getChildModuleAtIndex(i)));
+		}
+		dataObjectTree = new nuiTree<int, nuiModule*>(temp);
+
+		nuiPluginManager::getInstance().registerPipeline(descriptor);
+		return nuiFrameworkManagerErrorCode::Success;
+	}
+	else
+	{
+		return nuiFrameworkManagerErrorCode::InitFailed;
+	}
+	return nuiFrameworkManagerErrorCode::err();
+}
+
+nuiFrameworkManagerErrorCode::err nuiFrameworkManager::closePipeline(std::string name)
+{
+	nuiFactory& factory = nuiFactory::getInstance();
+
+	rootPipeline->stop();
+
+	delete rootPipeline;
+	delete dataObjectTree;
+	nuiPluginManager::getInstance().unregisterPipeline(name);
+	rootPipeline = NULL;
+
+	return nuiFrameworkManagerErrorCode::Success;
+}
+
 
 std::vector<std::string>* nuiFrameworkManager::listModules()
 {

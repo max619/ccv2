@@ -46,7 +46,8 @@ nuiModule::nuiModule()
 
 nuiModule::~nuiModule()
 {
-	this->stop();
+	if(this->isStarted())
+		this->stop();
 
 	mtx->lock();
 	for (int i = 0; i < inputEndpointCount; i++)

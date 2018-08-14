@@ -10,7 +10,6 @@ MODULE_DECLARE(WebcamModule, "native", "Input module to grab video from webcamer
 nuiWebcamModule::nuiWebcamModule() : nuiModule() {
 	MODULE_INIT();
 
-	capture = new cv::VideoCapture();
 	img = NULL;
 
 
@@ -24,7 +23,7 @@ nuiWebcamModule::nuiWebcamModule() : nuiModule() {
 }
 
 nuiWebcamModule::~nuiWebcamModule() {
-	delete capture;
+	
 }
 
 void nuiWebcamModule::update() {
@@ -46,21 +45,31 @@ void nuiWebcamModule::update() {
 	this->output->unlock();
 }
 
+void nuiWebcamModule::stop()
+{
+	nuiModule::stop();
+	delete capture;
+}
+
 void nuiWebcamModule::start() {
+	capture = new cv::VideoCapture();
 	if (!capture->isOpened())
 		capture->open(camid);
 	LOG(NUI_DEBUG, "Starting nuiWebcamModule");
 	nuiModule::start();
 }
 
+void nuiWebcamModule::onSetupThread()
+{
+	
+}
+
+void nuiWebcamModule::onExitThread()
+{
+	
+}
+
 void nuiWebcamModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
 {
-	if (name == "camid")
-	{
-		mutex.lock();
-		delete capture;
-		capture = new cv::VideoCapture();
-		capture->open(camid);
-		mutex.unlock();
-	}
+	
 }

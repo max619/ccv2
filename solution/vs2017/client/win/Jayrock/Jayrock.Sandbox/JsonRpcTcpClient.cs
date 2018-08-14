@@ -2,6 +2,7 @@
 using Jayrock.Json.Conversion;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -71,7 +72,9 @@ namespace Jayrock.JsonRpc
                         JsonConvert.Export(call, writer);
                     }
                     //var netstring = NetstringWriter.Encode(sb.ToString());
-
+#if DEBUG
+                    Debug.WriteLine(sb.ToString());
+#endif
                     var buffer = Encoding.UTF8.GetBytes(sb.ToString());
                     socket.Blocking = true;
 

@@ -40,12 +40,11 @@ nuiScreenCalibrationModule::nuiScreenCalibrationModule() : nuiModule()
 
 nuiScreenCalibrationModule::~nuiScreenCalibrationModule()
 {
-	delete this->_pOutput0;
+	/*delete this->_pOutput0;
 	delete this->_pOutputDataPacket0;
 	delete this->_pOutputDataPacket1;
-	delete this->_pInput;
+	delete this->_pInput;*/
 
-	delete screenpoints;
 	cvReleaseMat(&homography);
 }
 

@@ -57,6 +57,14 @@ public:
 	static Json::Value serialize_endpoint(nuiEndpointDescriptor *descriptor);
 	static Json::Value serialize_connection(nuiDataStreamDescriptor *descriptor);
 	static Json::Value serialize_properties(std::map<std::string, nuiProperty*> props);
+
+
+	static nuiModuleDescriptor* deserialize_workflow(Json::Value& value);
+	static nuiModuleDescriptor* deserialize_pipeline(Json::Value& value);
+	static nuiModuleDescriptor* deserialize_module(Json::Value& value);
+	static nuiEndpointDescriptor * deserialize_endpoint(Json::Value& value, int& index);
+	static nuiDataStreamDescriptor * deserialize_connection(Json::Value& value);
+	static void deserialize_properties(Json::Value& value, std::map<std::string, nuiProperty*>& props);
 protected:
 private:
 	nuiJsonRpcApi();
@@ -100,6 +108,7 @@ private:
 	bool nui_navigate_pop(const Json::Value& root, Json::Value& response);
 	bool nui_save_workflow(const Json::Value& root, Json::Value& response);
 	bool nui_save_configuration(const Json::Value& root, Json::Value& response);
+	bool nui_commit_pipeline(const Json::Value& root, Json::Value& response);
 };
 
 #endif // NUI_JSON_API

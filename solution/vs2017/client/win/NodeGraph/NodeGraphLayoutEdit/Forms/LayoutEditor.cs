@@ -656,7 +656,21 @@ namespace NodeGraphLayoutEdit
             {
                 var list = NuiState.Instance.GetLoadedModules();
                 var module = DialogsHeleper.AddModules(list);
-                this.nodeGraphPanel.View.AddModule(module);
+                if(module != null)
+                    this.nodeGraphPanel.View.AddModule(module);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        private void commitChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var pipeline = this.nodeGraphPanel.View.PipelineDescriptor;
+                NuiState.Instance.CommitPipeline(pipeline);
             }
             catch (Exception ex)
             {

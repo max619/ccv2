@@ -23,12 +23,14 @@ namespace NuiApiWrapper
     {
         [XmlAttribute]
         [Category("Info"), DisplayName("Name")]
-        [ReadOnly(true)]
         public string name { get; set; }
 
         [XmlAttribute]
         [Browsable(false)]
         public int type { get; set; }
+
+        [ReadOnly(true)]
+        public string description { get; set; }
 
         [XmlAttribute]
         [Category("Value"), DisplayName("Value")]
@@ -36,7 +38,7 @@ namespace NuiApiWrapper
 
         [Category("Info"), DisplayName("Type")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public string ReadableType => ((nuiPropertyType)type).ToString();
+        public nuiPropertyType ReadableType { get => ((nuiPropertyType)type); set => type = (int)value; }
 
         public override string ToString()
         {

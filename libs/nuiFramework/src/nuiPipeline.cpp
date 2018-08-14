@@ -27,6 +27,15 @@ nuiPipelineModule::nuiPipelineModule() : nuiModule()
 
 nuiPipelineModule::~nuiPipelineModule()
 {
+	for (int i = 0; i < getChildModuleCount(); i++)
+	{
+		nuiModule* module = getChildModuleAtIndex(i);
+		nuiModuleLoaded* loaded = nuiPluginManager::getInstance().getLoadedModule(module->getName());
+		if (loaded != NULL)
+			loaded->deallocate(module);
+		else
+			delete module;
+	}
 	for (int i = 0; i < inputEndpointCount; i++)
 	{
 		delete outputInternalEndpoints[i];

@@ -382,5 +382,14 @@ namespace NuiApiWrapper
 
             return response;
         }
+
+        public bool CommitPipeline(PipelineDescriptor pipeline)
+        {
+            var response = (bool)NuiState.Instance.client.Invoke(
+               typeof(bool),
+               "nui_commit_pipeline", pipeline);
+
+            return response;
+        }
     }
 }

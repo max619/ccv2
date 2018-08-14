@@ -13,8 +13,6 @@ oclRSWorldProcessor::oclRSWorldProcessor() : nuiOpenClAlgorithm(2)
 
 oclRSWorldProcessor::~oclRSWorldProcessor()
 {
-	nuiOpenClAlgorithm::~nuiOpenClAlgorithm();
-
 	_aligned_free(input);
 	_aligned_free(output);
 	clReleaseMemObject(inputMem);

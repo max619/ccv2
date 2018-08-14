@@ -125,13 +125,16 @@ struct nuiModuleLoaded
 		{
 			std::vector<void*>::iterator it;
 			//! \todo don't forget to test
-			for (it = instances.begin(); it != instances.end(); it++)
+			for (it = instances.begin(); it < instances.end(); it++)
 			{
 				if (*it == module)
+				{
 					instances.erase(it);
+					break;
+				}
 			}
 			// deallocate previously allocated module
-			this->deallocate(module);
+			this->deallocateF(module);
 		}
 	};
 
@@ -209,6 +212,8 @@ public:
 
 	//! registers newly created descriptor
 	nuiPluginFrameworkErrorCode::err registerPipeline(nuiModuleDescriptor* descr);
+
+	nuiPluginFrameworkErrorCode::err unregisterPipeline(std::string name);
 
 	//! gets descriptor for module or pipeline with specified name
 	nuiModuleDescriptor* getDescriptor(const std::string name);

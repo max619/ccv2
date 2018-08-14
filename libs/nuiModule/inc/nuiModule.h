@@ -35,7 +35,7 @@ class nuiModule;
 typedef nuiModule* (*nuiFactoryCreateCallback)();
 
 #define MODULE_DECLARE_EX(name, module, author, description) \
-	static std::string module_name = #name; \
+	static std::string module_name = "nui"#name; \
 	static std::string module_author = author; \
 	static std::string module_description = description; \
 	std::string nui##name##::getName() { return module_name; } \

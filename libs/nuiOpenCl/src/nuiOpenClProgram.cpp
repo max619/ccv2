@@ -12,14 +12,9 @@ nuiOpenClAlgorithm::nuiOpenClAlgorithm(int functions)
 nuiOpenClAlgorithm::~nuiOpenClAlgorithm()
 {
 	int funcs = getFunctionsCount();
-
-	for (int i = 0; i < funcs; i++)
-	{
-		delete ocl[i];
-		delete functionsNames[i];
-	}
-	delete ocl;
-	delete functionsNames;
+	
+	delete [] ocl;
+	delete [] functionsNames;
 }
 
 char * nuiOpenClAlgorithm::getSourceCode(int id)

@@ -67,7 +67,7 @@ namespace Json
 		{
 			Json::Value response;
 			ssize_t nb = -1;
-			char buf[1500];
+			char buf[15000];
 
 			nb = recv(fd, buf, sizeof(buf), 0);
 

@@ -27,6 +27,7 @@ public:
 	virtual ~nuiWebcamModule();
 
 	void update();
+	void stop();
 	void start();
 
 private:
@@ -40,6 +41,9 @@ private:
 	std::mutex mutex;
 
 	MODULE_INTERNALS();
+protected:
+	void onSetupThread();
+	void onExitThread();
 };
 
 IMPLEMENT_ALLOCATOR(nuiWebcamModule)

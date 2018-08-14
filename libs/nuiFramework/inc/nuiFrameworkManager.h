@@ -76,6 +76,10 @@ public:
 	//! \todo what does init should mean for framework manager?
 	nuiFrameworkManagerErrorCode::err init();
 
+	nuiFrameworkManagerErrorCode::err init(nuiModuleDescriptor* descriptor);
+
+	nuiFrameworkManagerErrorCode::err closePipeline(std::string name);
+
 	//LIST METHODS ===============================================================
 
 	// ++ reviewed

@@ -499,6 +499,22 @@ nuiPluginFrameworkErrorCode::err nuiPluginManager::registerPipeline(nuiModuleDes
 	return nuiPluginFrameworkErrorCode::Success;
 }
 
+nuiPluginFrameworkErrorCode::err nuiPluginManager::unregisterPipeline(std::string name)
+{
+	std::vector<nuiModuleDescriptor*>::iterator it;
+	for (it = pipelinesLoaded.begin(); it != pipelinesLoaded.end(); it++)
+	{
+		if ((*it)->getName() == name)
+		{
+			nuiModuleDescriptor* old = (*it);
+			pipelinesLoaded.erase(it);
+			delete old;
+			return nuiPluginFrameworkErrorCode::Success;
+		}
+	}
+	return nuiPluginFrameworkErrorCode::UnexpectedError;
+}
+
 nuiModuleLoaded* nuiPluginManager::getLoadedModule(const std::string name)
 {
 	std::vector<nuiModuleLoaded*>::iterator it;

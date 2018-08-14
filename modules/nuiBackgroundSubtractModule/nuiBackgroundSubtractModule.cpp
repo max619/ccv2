@@ -68,16 +68,19 @@ void nuiBackgroundSubtractModule::start() {
 
 void nuiBackgroundSubtractModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
 {
-	if (name == "history")
+	if (bg != NULL)
 	{
-		bg->setHistory(history);
-	} 
-	else if (name == "threshold")
-	{
-		bg->setVarThreshold(threshold);
-	}
-	else if (name == "detectshadows")
-	{
-		bg->setDetectShadows(detectshadows);
+		if (name == "history")
+		{
+			bg->setHistory(history);
+		}
+		else if (name == "threshold")
+		{
+			bg->setVarThreshold(threshold);
+		}
+		else if (name == "detectshadows")
+		{
+			bg->setDetectShadows(detectshadows);
+		}
 	}
 }

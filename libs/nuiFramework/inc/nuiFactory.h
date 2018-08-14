@@ -44,14 +44,15 @@ public:
 	//! registers pipeline descriptor
 	nuiPluginFrameworkErrorCode::err registerPipelineDescriptor(nuiModuleDescriptor* descriptor);
 
-private:
-	nuiFactory();
-	nuiFactory(const nuiFactory&);
-
 	//! Creates pipeline given pipeline descriptor
 	nuiModule* createPipeline(nuiModuleDescriptor* descriptor);
 	//! Creates module given module descriptor
 	nuiModule* createModule(nuiModuleLoaded* module);
+
+private:
+	nuiFactory();
+	nuiFactory(const nuiFactory&);
+
 };
 
 #endif //NUI_FACTORY_H
