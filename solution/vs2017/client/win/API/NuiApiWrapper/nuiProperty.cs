@@ -25,7 +25,7 @@ namespace NuiApiWrapper
         [Category("Info"), DisplayName("Name")]
         public string name { get; set; }
 
-        [XmlAttribute]
+        [XmlIgnore]
         [Browsable(false)]
         public int type { get; set; }
 
@@ -36,6 +36,7 @@ namespace NuiApiWrapper
         [Category("Value"), DisplayName("Value")]
         public string value { get; set; }
 
+        [XmlAttribute]
         [Category("Info"), DisplayName("Type")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public nuiPropertyType ReadableType { get => ((nuiPropertyType)type); set => type = (int)value; }

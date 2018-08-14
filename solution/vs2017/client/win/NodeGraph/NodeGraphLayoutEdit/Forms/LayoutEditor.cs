@@ -548,6 +548,10 @@ namespace NodeGraphLayoutEdit
         {
             try
             {
+                if (!NuiState.Instance.IsConnected)
+                    return;
+
+
                 var inst = TryGetInstance(e.ChangedItem);
                 if (inst != null && inst is nuiProperty && propertyGrid1.SelectedObject is ModuleNode)
                 {

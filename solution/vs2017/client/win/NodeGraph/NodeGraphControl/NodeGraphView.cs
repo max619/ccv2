@@ -192,7 +192,7 @@ namespace NodeGraphControl
 
         private void PlaceNodes()
         {
-            var rootNodes = GetRootNodes();
+            var rootNodes = GetRootNodes().ToList();
 
             int y = 0;
 
@@ -588,6 +588,23 @@ namespace NodeGraphControl
                     foreach (var c in p_connections)
                     {
                         module.connections.Remove(c);
+                    }
+                }
+            }
+        }
+
+        internal void RemoveFromModuleFromPipeline(NodeGraphNode i_Node)
+        {
+            if(i_Node is ModuleNode)
+            {
+                var module = (ModuleNode)i_Node;
+
+                foreach(var m in PipelineDescriptor.modules)
+                {
+                    if(m.GetId() == module.Descriptor.GetId())
+                    {
+                        PipelineDescriptor.modules.Remove(m);
+                        break;
                     }
                 }
             }

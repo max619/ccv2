@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using NodeGraphControl.Utils;
@@ -142,14 +143,22 @@ namespace NodeGraphControl
 
             if (v_InputNodeId != 0x0FFFFFFF)
             {
-                this.m_InputConnector = p_View.NodeCollection[v_InputNodeId].GetConnector(v_InputNodeConnectorIdx, ConnectorType.OutputConnector);
+                var node = p_View.NodeCollection.Where((x) => x is ModuleNode).Cast<ModuleNode>().FirstOrDefault((x) => x.Descriptor.GetId() == v_InputNodeId);
+                if (node != null)
+                    this.m_InputConnector = node.GetConnector(v_InputNodeConnectorIdx, ConnectorType.OutputConnector);
+                else
+                    return;
             }
             else
                 this.m_InputConnector = p_View.NodeConnectorCollection[v_InputNodeConnectorIdx];
 
             if (v_OutputNodeId != 0x0FFFFFFF)
             {
-                this.m_OutputConnector = p_View.NodeCollection[v_OutputNodeId].GetConnector(v_OutputNodeConnectorIdx, ConnectorType.InputConnector);
+                var node = p_View.NodeCollection.Where((x) => x is ModuleNode).Cast<ModuleNode>().FirstOrDefault((x) => x.Descriptor.GetId() == v_OutputNodeId);
+                if (node != null)
+                    this.m_OutputConnector = node.GetConnector(v_OutputNodeConnectorIdx, ConnectorType.InputConnector);
+                else
+                    return;
             }
             else
                 this.m_OutputConnector = p_View.NodeConnectorCollection[v_OutputNodeConnectorIdx];

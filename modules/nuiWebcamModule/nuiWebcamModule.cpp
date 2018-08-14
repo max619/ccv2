@@ -11,6 +11,7 @@ nuiWebcamModule::nuiWebcamModule() : nuiModule() {
 	MODULE_INIT();
 
 	img = NULL;
+	capture = NULL;
 
 
 	this->output = new nuiEndpoint(this);
@@ -23,7 +24,7 @@ nuiWebcamModule::nuiWebcamModule() : nuiModule() {
 }
 
 nuiWebcamModule::~nuiWebcamModule() {
-	
+	frame.release();
 }
 
 void nuiWebcamModule::update() {
@@ -48,7 +49,8 @@ void nuiWebcamModule::update() {
 void nuiWebcamModule::stop()
 {
 	nuiModule::stop();
-	delete capture;
+	if(capture != NULL)
+		delete capture;
 }
 
 void nuiWebcamModule::start() {

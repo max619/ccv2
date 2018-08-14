@@ -883,7 +883,7 @@ namespace NodeGraphControl
                         layer++;
 
                         //! Simply load new pipeline
-                        this.LoadPipeline(NuiState.Instance.NavigatePush(hitIndex));
+                        //this.LoadPipeline(NuiState.Instance.NavigatePush(hitIndex));
 
                         this.View.ViewZoom = 1;
                         return;
@@ -895,7 +895,7 @@ namespace NodeGraphControl
                         layer--;
 
                         //! Simply load previous pipeline
-                        this.LoadPipeline(NuiState.Instance.NavigatePop());
+                        //this.LoadPipeline(NuiState.Instance.NavigatePop());
                         this.View.ViewZoom = 1;
                         return;
                     }
@@ -1390,6 +1390,7 @@ namespace NodeGraphControl
                     this.DeleteLinkConnectors(i_Connector);
                 }
 
+                this.View.RemoveFromModuleFromPipeline(i_Node);
                 this.View.NodeCollection.Remove(i_Node);
             }
             Refresh();

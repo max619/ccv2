@@ -29,7 +29,9 @@ namespace NuiApiWrapper
             }
         }
 
-        JsonRpcClient client;
+        public bool IsConnected => Client == null ? false : Client.IsConnected;
+
+        public JsonRpcClient Client { get; set; }
 
         //! list of modules available for building pipelines
         private List<ModuleDescriptor> availableModules;
@@ -46,13 +48,13 @@ namespace NuiApiWrapper
         public void Connect(string url = "http://localhost:8080/")
         {
             if (url.IndexOf("http") > -1)
-                client = new JsonRpcClient();
+                Client = new JsonRpcClient();
             else if (url.IndexOf("tcp") > -1)
-                client = new JsonRpcTcpClient();
+                Client = new JsonRpcTcpClient();
             else
                 throw new ArgumentException("Defined unknown protocol", nameof(url));
-            client.Url = url;
-            client.Connect();
+            Client.Url = url;
+            Client.Connect();
         }
 
 
@@ -65,7 +67,10 @@ namespace NuiApiWrapper
         //! should really be module index and return null if we can navigate into selected module
         public PipelineDescriptor NavigatePush(int moduleIdx)
         {
-            PipelineDescriptor newPipeline = (PipelineDescriptor)NuiState.Instance.client.Invoke(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            PipelineDescriptor newPipeline = (PipelineDescriptor)NuiState.Instance.Client.Invoke(
                 typeof(PipelineDescriptor),
                 "nui_navigate_push");
 
@@ -78,7 +83,10 @@ namespace NuiApiWrapper
         //! move out of current pipeline
         public PipelineDescriptor NavigatePop()
         {
-            PipelineDescriptor newPipeline = (PipelineDescriptor)NuiState.Instance.client.Invoke(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            PipelineDescriptor newPipeline = (PipelineDescriptor)NuiState.Instance.Client.Invoke(
                 typeof(PipelineDescriptor),
                 "nui_navigate_pop");
 
@@ -96,8 +104,11 @@ namespace NuiApiWrapper
         //! lists dynamic modules
         public string[] ListDynamic()
         {
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
             string[] listDynamic = (string[])(new ArrayList((ICollection)
-                NuiState.Instance.client.Invoke(
+                NuiState.Instance.Client.Invoke(
                     typeof(PipelineDescriptor),
                     "nui_list_dynamic")).ToArray(typeof(string)));
 
@@ -107,8 +118,11 @@ namespace NuiApiWrapper
         //! list pipeline modules
         public string[] ListPipeline()
         {
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
             string[] listPipelines = (string[])(new ArrayList((ICollection)
-                NuiState.Instance.client.Invoke(
+                NuiState.Instance.Client.Invoke(
                     typeof(PipelineDescriptor),
                     "nui_list_pipeline")).ToArray(typeof(string)));
 
@@ -117,6 +131,9 @@ namespace NuiApiWrapper
 
         public bool UpdateProperty(string pipeline, string key, string value, int moduleIndex)
         {
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
             var val = new
             {
                 pipeline = pipeline,
@@ -124,7 +141,7 @@ namespace NuiApiWrapper
                 value = value,
                 index = moduleIndex.ToString()
             };
-            return (bool)NuiState.Instance.client.Invoke(
+            return (bool)NuiState.Instance.Client.Invoke(
                     typeof(bool),
                     "nui_update_moduleProperty", val);
         }
@@ -135,21 +152,30 @@ namespace NuiApiWrapper
         /************************************************************************/
         public bool WorkflowStart()
         {
-            return ((bool)NuiState.Instance.client.Invoke(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            return ((bool)NuiState.Instance.Client.Invoke(
                     typeof(bool),
                     "nui_workflow_start"));
         }
 
         public bool WorkflowStop()
         {
-            return ((bool)NuiState.Instance.client.Invoke(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            return ((bool)NuiState.Instance.Client.Invoke(
                     typeof(bool),
                     "nui_workflow_stop"));
         }
 
         public bool WorkflowQuit()
         {
-            return ((bool)NuiState.Instance.client.Invoke(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            return ((bool)NuiState.Instance.Client.Invoke(
                     typeof(bool),
                     "nui_workflow_quit"));
         }
@@ -160,7 +186,10 @@ namespace NuiApiWrapper
         //! creates entirely new pipeline descriptor
         public PipelineDescriptor CreatePipeline(string name)
         {
-            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.Client.InvokeVargs(
                 typeof(PipelineDescriptor),
                 "nui_create_pipeline",
                 name);
@@ -171,7 +200,10 @@ namespace NuiApiWrapper
         //! creates new module descriptor in pipeline
         public ModuleDescriptor CreateModule(string pipelineName, string moduleName)
         {
-            ModuleDescriptor module = (ModuleDescriptor)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            ModuleDescriptor module = (ModuleDescriptor)NuiState.Instance.Client.InvokeVargs(
                 typeof(PipelineDescriptor),
                 "nui_create_module",
                 pipelineName, moduleName);
@@ -184,7 +216,10 @@ namespace NuiApiWrapper
             int srcModuleIdx, int srcModulePort,
             int dstModuleIdx, int dstModulePort)
         {
-            bool status = (bool)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            bool status = (bool)NuiState.Instance.Client.InvokeVargs(
                 typeof(PipelineDescriptor),
                 "nui_create_module",
                 pipelineName, srcModuleIdx, srcModulePort, dstModuleIdx, dstModulePort);
@@ -198,7 +233,10 @@ namespace NuiApiWrapper
         /************************************************************************/
         public PipelineDescriptor UpdatePipeline(string pipelineName, string newName = null, string newDescription = null, string author = null)
         {
-            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.Client.InvokeVargs(
                 typeof(PipelineDescriptor),
                 "nui_update_pipeline",
                 pipelineName, newName, newDescription, author);
@@ -209,7 +247,10 @@ namespace NuiApiWrapper
         public PipelineDescriptor UpdatePipelineProperty(string pipelineName,
             string key, object value, string description)
         {
-            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.Client.InvokeVargs(
                 typeof(PipelineDescriptor),
                 "nui_update_pipelineProperty",
                 pipelineName, key, value, description);
@@ -220,6 +261,9 @@ namespace NuiApiWrapper
         public bool UpdateModuleProperty(string pipelineName,
             int moduleIdx, string key, object value)
         {
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
             var args = new
             {
                 pipeline = pipelineName,
@@ -227,7 +271,7 @@ namespace NuiApiWrapper
                 value = value.ToString(),
                 index = moduleIdx
             };
-            Response<ModuleDescriptor> pipeline = (Response<ModuleDescriptor>)NuiState.Instance.client.Invoke(
+            Response<ModuleDescriptor> pipeline = (Response<ModuleDescriptor>)NuiState.Instance.Client.Invoke(
                 typeof(Response<ModuleDescriptor>),
                 "nui_update_moduleProperty",
                 args);
@@ -237,17 +281,20 @@ namespace NuiApiWrapper
 
         public EndpointDescriptor UpdateEndpoint(string type, int endpointIdx, string descriptor, int newIndex = -1)
         {
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
             EndpointDescriptor endpoint;
             if (newIndex < 0)
             {
-                endpoint = (EndpointDescriptor)NuiState.Instance.client.InvokeVargs(
+                endpoint = (EndpointDescriptor)NuiState.Instance.Client.InvokeVargs(
                     typeof(EndpointDescriptor),
                     "nui_update_endpoint",
                     type, endpointIdx, descriptor, null);
             }
             else
             {
-                endpoint = (EndpointDescriptor)NuiState.Instance.client.InvokeVargs(
+                endpoint = (EndpointDescriptor)NuiState.Instance.Client.InvokeVargs(
                     typeof(EndpointDescriptor),
                     "nui_update_endpoint",
                     type, endpointIdx, descriptor, newIndex);
@@ -260,7 +307,10 @@ namespace NuiApiWrapper
             int srcModuleIdx, int srcModulePort,
             int dstModuleIdx, int dstModulePort, params KeyValuePair<string, object>[] keyValues)
         {
-            var connection = (ConnectionDescriptor)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var connection = (ConnectionDescriptor)NuiState.Instance.Client.InvokeVargs(
                 typeof(ConnectionDescriptor),
                 "nui_update_endpoint",
                 pipelineName, srcModuleIdx, srcModulePort,
@@ -271,7 +321,10 @@ namespace NuiApiWrapper
 
         public int UpdateEndpointCount(string pipelineName, string type, int newCount)
         {
-            var count = (int)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var count = (int)NuiState.Instance.Client.InvokeVargs(
                 typeof(int),
                 "nui_update_endpointCount",
                 pipelineName, type, newCount);
@@ -285,7 +338,10 @@ namespace NuiApiWrapper
         /************************************************************************/
         public bool DeletePipeline(string pipelineName)
         {
-            var status = (bool)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var status = (bool)NuiState.Instance.Client.InvokeVargs(
                 typeof(bool),
                 "nui_delete_pipeline",
                 pipelineName);
@@ -295,7 +351,10 @@ namespace NuiApiWrapper
 
         public PipelineDescriptor DeleteModule(string pipelineName, int moduleIndex)
         {
-            var pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var pipeline = (PipelineDescriptor)NuiState.Instance.Client.InvokeVargs(
                  typeof(PipelineDescriptor),
                  "nui_delete_module",
                  pipelineName, moduleIndex);
@@ -307,7 +366,10 @@ namespace NuiApiWrapper
             int srcModuleIdx, int srcModulePort,
             int dstModuleIdx, int dstModulePort)
         {
-            var pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var pipeline = (PipelineDescriptor)NuiState.Instance.Client.InvokeVargs(
                 typeof(PipelineDescriptor),
                 "nui_delete_connection",
                 pipelineName, srcModuleIdx, srcModulePort, dstModuleIdx, dstModulePort);
@@ -322,8 +384,11 @@ namespace NuiApiWrapper
 
         public PipelineDescriptor GetPipeline(string pipelineName)
         {
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
             var args = new { pipeline = pipelineName };
-            var pipeline = (PipelineDescriptor)NuiState.Instance.client.Invoke(
+            var pipeline = (PipelineDescriptor)NuiState.Instance.Client.Invoke(
                 typeof(PipelineDescriptor),
                 "nui_get_pipeline",
                 args);
@@ -333,7 +398,10 @@ namespace NuiApiWrapper
 
         public ModuleDescriptor GetModule(string pipelineName, int moduleIdx)
         {
-            var module = (ModuleDescriptor)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var module = (ModuleDescriptor)NuiState.Instance.Client.InvokeVargs(
                 typeof(ModuleDescriptor),
                 "nui_get_module",
                 pipelineName, moduleIdx);
@@ -343,7 +411,10 @@ namespace NuiApiWrapper
 
         public ConnectionDescriptor GetConnection(string pipelineName, int connectionIdx)
         {
-            var connection = (ConnectionDescriptor)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var connection = (ConnectionDescriptor)NuiState.Instance.Client.InvokeVargs(
                 typeof(ConnectionDescriptor),
                 "nui_get_connection",
                 pipelineName, connectionIdx);
@@ -357,7 +428,10 @@ namespace NuiApiWrapper
         /************************************************************************/
         public bool Save(string pipelineName, string fileName)
         {
-            var response = (bool)NuiState.Instance.client.InvokeVargs(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var response = (bool)NuiState.Instance.Client.InvokeVargs(
                 typeof(bool),
                 "nui_save_pipeline",
                 pipelineName, fileName);
@@ -367,7 +441,10 @@ namespace NuiApiWrapper
 
         public bool SaveConfiguration()
         {
-            var response = (bool)NuiState.Instance.client.Invoke(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var response = (bool)NuiState.Instance.Client.Invoke(
                 typeof(bool),
                 "nui_save_configuration");
 
@@ -376,7 +453,10 @@ namespace NuiApiWrapper
 
         public List<ModuleDescriptor> GetLoadedModules()
         {
-            var response = (List<ModuleDescriptor>)NuiState.Instance.client.Invoke(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var response = (List<ModuleDescriptor>)NuiState.Instance.Client.Invoke(
                typeof(List<ModuleDescriptor>),
                "nui_get_availible_modules");
 
@@ -385,7 +465,10 @@ namespace NuiApiWrapper
 
         public bool CommitPipeline(PipelineDescriptor pipeline)
         {
-            var response = (bool)NuiState.Instance.client.Invoke(
+            if (!IsConnected)
+                throw new InvalidOperationException("Transport connection is closed");
+
+            var response = (bool)NuiState.Instance.Client.Invoke(
                typeof(bool),
                "nui_commit_pipeline", pipeline);
 

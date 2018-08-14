@@ -135,9 +135,9 @@ nuiModule* nuiFactory::createPipeline(nuiModuleDescriptor* descriptor)
 		// if endpoint_module descriptors not found
 
 		nuiModule* sourceModule = (sourceModuleDescriptor == descriptor) ?
-			pipeline : pipeline->getChildModuleAtIndex(dataStreamDescriptor->sourceModuleID);
+			pipeline : pipeline->getChildModuleAtId(dataStreamDescriptor->sourceModuleID);
 		nuiModule* destinationModule = (destinationModuleDescriptor == descriptor) ?
-			pipeline : pipeline->getChildModuleAtIndex(dataStreamDescriptor->destinationModuleID);
+			pipeline : pipeline->getChildModuleAtId(dataStreamDescriptor->destinationModuleID);
 
 		nuiEndpoint* sourceEndpoint = NULL;
 		nuiEndpoint* destinationEndpoint = NULL;

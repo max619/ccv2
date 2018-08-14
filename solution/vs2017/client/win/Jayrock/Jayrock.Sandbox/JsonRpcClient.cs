@@ -38,6 +38,8 @@ namespace Jayrock.JsonRpc
 
     public class JsonRpcClient : HttpWebClientProtocol
     {
+        public virtual bool IsConnected => true;
+
         protected int _id;
         protected static readonly object[] _zeroArgs = new object[0];
 

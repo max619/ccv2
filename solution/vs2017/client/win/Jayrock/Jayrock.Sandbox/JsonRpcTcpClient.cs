@@ -16,6 +16,8 @@ namespace Jayrock.JsonRpc
     public class JsonRpcTcpClient : JsonRpcClient
     {
 
+        public override bool IsConnected => socket == null ? false : socket.Connected;
+
         Mutex mtx;
 
         Regex ipRegex = new Regex(@".+\/(\d+\.\d+\.\d+\.\d+):(\d+)");

@@ -242,10 +242,25 @@ int nuiPipelineModule::getChildModuleCount()
 	return modules.size();
 }
 
-nuiModule *nuiPipelineModule::getChildModuleAtIndex(int index)
+nuiModule *nuiPipelineModule::getChildModuleAtId(int index)
 {
-	return modules[index];
+	std::map<int, nuiModule*>::iterator find = modules.find(index);
+	if (find != modules.end())
+		return modules[index];
+	return NULL;
 }
+nuiModule * nuiPipelineModule::getChildModuleAtIndex(int index)
+{
+	size_t counter = 0;
+	for (std::map<int, nuiModule*>::iterator iter = modules.begin(); iter != modules.end(); iter++)
+	{
+		if (counter == index)
+			return iter->second;
+		counter++;
+	}
+	return NULL;
+}
+
 void nuiPipelineModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)
 {
 

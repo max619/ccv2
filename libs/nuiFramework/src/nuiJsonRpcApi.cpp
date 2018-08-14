@@ -1002,7 +1002,7 @@ nuiModuleDescriptor * nuiJsonRpcApi::deserialize_module(Json::Value & value)
 		for (Json::Value::iterator it = jOutputEndpoints.begin(); it != jOutputEndpoints.end(); it++)
 		{
 			int index = 0;
-			module->addInputEndpointDescriptor(deserialize_endpoint(*it, index), index);
+			module->addOutputEndpointDescriptor(deserialize_endpoint(*it, index), index);
 		}
 
 	Json::Value& connections = value.get("connections", Json::Value());

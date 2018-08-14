@@ -42,6 +42,7 @@ public:
 	void removeChildModule(nuiModule* child);
 	void removeChildModule(int index);
 	int getChildModuleCount();
+	nuiModule *getChildModuleAtId(int index);
 	nuiModule *getChildModuleAtIndex(int index);
 	MODULE_INTERNALS();
 protected:
