@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>MSBuild $(SolutionDir)nuiCore.sln /property:Configuration=$(Configuration) /p:Platform=$(Platform)
+MSBuild  $(SolutionDir)client\win\NodeGraph\NodeGraph.sln /property:Configuration=$(Configuration) /p:Platform="Any CPU"
+xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.pdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.exp"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.lib"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ilk"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.iobj"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ipdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ilk"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.pdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ipdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.iobj"
+
+xcopy /y /d /e "$(SolutionDir)client\win\NodeGraph\NodeGraphLayoutEdit\bin\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\*.pdb"
+del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
+"$(SolutionDir)..\..\utils\7z\7z.exe" a -sfx7z.sfx  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group"</NMakeBuildCommandLine>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>MSBuild $(SolutionDir)nuiCore.sln /property:Configuration=$(Configuration) /p:Platform=$(Platform)
+MSBuild  $(SolutionDir)client\win\NodeGraph\NodeGraph.sln /property:Configuration=$(Configuration) /p:Platform="Any CPU"
+xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.pdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.exp"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.lib"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ilk"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.iobj"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ipdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ilk"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.pdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ipdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.iobj"
+
+xcopy /y /d /e "$(SolutionDir)client\win\NodeGraph\NodeGraphLayoutEdit\bin\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\*.pdb"
+del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
+"$(SolutionDir)..\..\utils\7z\7z.exe" a -sfx7z.sfx  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group"</NMakeBuildCommandLine>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>MSBuild $(SolutionDir)nuiCore.sln /property:Configuration=$(Configuration) /p:Platform=$(Platform)
+MSBuild  $(SolutionDir)client\win\NodeGraph\NodeGraph.sln /property:Configuration=$(Configuration) /p:Platform="Any CPU"
+xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.pdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.exp"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.lib"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ilk"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.iobj"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ipdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ilk"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.pdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ipdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.iobj"
+
+xcopy /y /d /e "$(SolutionDir)client\win\NodeGraph\NodeGraphLayoutEdit\bin\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\*.pdb"
+del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
+"$(SolutionDir)..\..\utils\7z\7z.exe" a -sfx7z.sfx  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group"</NMakeBuildCommandLine>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>MSBuild $(SolutionDir)nuiCore.sln /property:Configuration=$(Configuration) /p:Platform=$(Platform)
+MSBuild  $(SolutionDir)client\win\NodeGraph\NodeGraph.sln /property:Configuration=$(Configuration) /p:Platform="Any CPU"
+xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.pdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.exp"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.lib"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ilk"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.iobj"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ipdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ilk"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.pdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ipdb"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.iobj"
+
+xcopy /y /d /e "$(SolutionDir)client\win\NodeGraph\NodeGraphLayoutEdit\bin\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\"
+del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\*.pdb"
+del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
+"$(SolutionDir)..\..\utils\7z\7z.exe" a -sfx7z.sfx  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group"</NMakeBuildCommandLine>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -92,7 +92,7 @@
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>xcopy /e /y "$(SolutionDir)..\..\data" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
-xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
+xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*d.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
 xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc10\tbb.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
     </PreBuildEvent>
     <ProjectReference>
@@ -129,7 +129,7 @@ xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc1
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>xcopy /e /y "$(SolutionDir)..\..\data" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
-xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
+xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*1.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
 xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc10\tbb.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

@@ -166,11 +166,23 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\API\NuiApiWrapper\NuiApiWrapper.csproj">
-      <Project>{1BC9E504-3731-49F2-AED3-390984486F6D}</Project>
+      <Project>{1bc9e504-3731-49f2-aed3-390984486f6d}</Project>
       <Name>NuiApiWrapper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Jayrock\Jayrock.Json\Jayrock.Json.csproj">
+      <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
+      <Name>Jayrock.Json</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Jayrock\Jayrock.Sandbox\Jayrock.Sandbox.csproj">
+      <Project>{405b6aff-52d4-4326-84f8-814fbf89aa12}</Project>
+      <Name>Jayrock.Sandbox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Jayrock\Jayrock\Jayrock.csproj">
+      <Project>{a178a4bb-ce12-4bf3-8b17-6df0d82120c8}</Project>
+      <Name>Jayrock</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NodeGraphControl\GraphControl.csproj">
-      <Project>{AD33EFC3-C5CD-4F6F-A958-22E23F1F0B8B}</Project>
+      <Project>{ad33efc3-c5cd-4f6f-a958-22e23f1f0b8b}</Project>
       <Name>GraphControl</Name>
     </ProjectReference>
   </ItemGroup>

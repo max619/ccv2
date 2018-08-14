@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "INSTALL", "INSTALL\INSTALL.vcxproj", "{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Debug|Win32.Build.0 = Debug|Win32
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Debug|x64.ActiveCfg = Debug|x64
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Debug|x64.Build.0 = Debug|x64
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Release|Any CPU.ActiveCfg = Release|Win32
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Release|Win32.ActiveCfg = Release|Win32
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Release|Win32.Build.0 = Release|Win32
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Release|x64.ActiveCfg = Release|x64
+		{7D110FAC-4E0B-4A48-9A2C-7EB2A2BCD160}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		{A62FABCB-B5E4-4FEE-A0B4-B004AEA78E95} = {39DB0429-B02B-4FCB-97E6-FB1DB6B0B608}
+		{DB34BFFE-533F-4FFA-A784-46508142E2CA} = {2DEC5F21-9A6E-484E-8B54-44AF04E99AD5}
+		{70A18341-3B6E-460D-B9A6-4F583D786C69} = {2DEC5F21-9A6E-484E-8B54-44AF04E99AD5}
+		{2D5C91FF-2601-4134-A3E1-3D6A50B9B24C} = {2DEC5F21-9A6E-484E-8B54-44AF04E99AD5}
+		{A6F3D524-2274-4117-BF4B-3155232CE0FC} = {2D270F82-ED55-45D4-B96E-3043334BFA36}
+		{7D404C9F-03D5-4E7F-A9C0-2792104C603F} = {2D270F82-ED55-45D4-B96E-3043334BFA36}
+		{C07E7C37-CAE5-422F-B072-3F9DC71B0DB2} = {2D270F82-ED55-45D4-B96E-3043334BFA36}
+		SolutionGuid = {6B652BF8-6B7B-4E44-A90F-B8CCBF039EC7}
+	EndGlobalSection
+EndGlobal

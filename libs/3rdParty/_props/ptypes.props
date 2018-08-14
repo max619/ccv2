@@ -8,11 +8,11 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\..\..\libs\3rdParty\ptypes-2.1.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\libs\3rdParty\ptypes-2.1.1\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\build\libs\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ptypes.lib</AdditionalDependencies>
     </Lib>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\libs\3rdParty\ptypes-2.1.1\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\build\libs\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ptypes.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

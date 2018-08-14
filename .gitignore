@@ -179,5 +179,5 @@ Makefile.in
 /depcomp
 /install-sh
 /missing
-
+/install
 .svn/
