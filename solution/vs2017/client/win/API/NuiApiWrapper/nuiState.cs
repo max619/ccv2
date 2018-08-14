@@ -468,11 +468,39 @@ namespace NuiApiWrapper
             if (!IsConnected)
                 throw new InvalidOperationException("Transport connection is closed");
 
+            RemoveIndexesGaps(pipeline);
+
             var response = (bool)NuiState.Instance.Client.Invoke(
                typeof(bool),
                "nui_commit_pipeline", pipeline);
 
             return response;
+        }
+
+        private void RemoveIndexesGaps(PipelineDescriptor pipeline)
+        {
+            for (int i = 0; i < pipeline.modules.Count; i++)
+            {
+                ModuleDescriptor module = pipeline.modules[i];
+                if (module.GetId() != i)
+                {
+                    int oldid = module.GetId();
+                    module.SetId(i);
+
+                    if (module.connections != null)
+                        foreach (var c in module.connections)
+                            c.sourceModule = i;
+
+                    foreach (var c in pipeline.connections)
+                    {
+                        if (c.sourceModule == oldid)
+                            c.sourceModule = i;
+
+                        if (c.destinationModule == oldid)
+                            c.destinationModule = i;
+                    }
+                }
+            }
         }
     }
 }
