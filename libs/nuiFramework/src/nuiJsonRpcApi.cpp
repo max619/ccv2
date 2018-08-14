@@ -95,6 +95,7 @@ bool nuiJsonRpcApi::init(std::string address, int port)
 	ADDRPCMETHOD(nui_save_workflow);
 	ADDRPCMETHOD(nui_get_module_properties);
 	ADDRPCMETHOD(nui_save_configuration);
+	ADDRPCMETHOD(nui_get_availible_modules);
 
 	return true;
 };
@@ -673,6 +674,24 @@ bool nuiJsonRpcApi::nui_get_module_properties(const Json::Value & root, Json::Va
 
 	descr->get*/
 	return false;
+}
+
+bool nuiJsonRpcApi::nui_get_availible_modules(const Json::Value & root, Json::Value & response)
+{
+	response["id"] = root["id"];
+	std::vector<nuiModuleLoaded*>& modules = nuiPluginManager::getInstance().getLoadedModules();
+	Json::Value loadedmods;
+
+	for (std::vector<nuiModuleLoaded*>::iterator it = modules.begin(); it < modules.end(); it++)
+	{
+		loadedmods.append(serialize_module((*it)->getDescriptor()));
+	}
+
+	response["result"] = loadedmods;
+
+	setSuccess(response);
+	response["data_type"] = "nuiModuleLoaded_List";
+	return true;
 }
 
 bool nuiJsonRpcApi::nui_get_connection(const Json::Value& root, Json::Value& response)

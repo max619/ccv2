@@ -373,5 +373,14 @@ namespace NuiApiWrapper
 
             return response;
         }
+
+        public List<ModuleDescriptor> GetLoadedModules()
+        {
+            var response = (List<ModuleDescriptor>)NuiState.Instance.client.Invoke(
+               typeof(List<ModuleDescriptor>),
+               "nui_get_availible_modules");
+
+            return response;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NuiApiWrapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,16 @@ namespace NodeGraphLayoutEdit.Dialogs
             dialog.ShowDialog();
             endpoint = dialog.Endpoint;
             return dialog.IsOk;
+        }
+
+        public static ModuleDescriptor AddModules(List<ModuleDescriptor> modules)
+        {
+            var dialog = new AddModuleDialog(modules);
+            dialog.ShowDialog();
+            if (dialog.isOk)
+                return dialog.SelectedDescriptor;
+            else
+                return null;
         }
     }
 }

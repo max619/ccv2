@@ -510,6 +510,11 @@ nuiModuleLoaded* nuiPluginManager::getLoadedModule(const std::string name)
 	return NULL;
 }
 
+std::vector<nuiModuleLoaded*>& nuiPluginManager::getLoadedModules()
+{
+	return modulesLoaded;
+}
+
 //int nuiPluginManager::getDynamicLibrariesPathsCount()
 //{
 //	return dynamicLibrariesPaths.size();;

@@ -216,9 +216,8 @@ public:
 	//! gets control structure for loaded module
 	nuiModuleLoaded* getLoadedModule(const std::string name);
 
-	int getDynamicLibrariesPathsCount();
-	std::string& getDynamicLibraryPath(int index);
-
+	std::vector<nuiModuleLoaded*>& getLoadedModules();
+	
 	Json::Value getCurrentConfiguration();
 
 	void writeJsonToFile(Json::Value& value, std::string path);

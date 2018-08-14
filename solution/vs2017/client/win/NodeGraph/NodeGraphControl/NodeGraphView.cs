@@ -184,7 +184,7 @@ namespace NodeGraphControl
             }
 
             PlaceNodes();
-            
+
 
             this.m_SelectedItems = new List<NodeGraphNode>();
 
@@ -196,7 +196,7 @@ namespace NodeGraphControl
 
             int y = 0;
 
-            foreach(var n in rootNodes)
+            foreach (var n in rootNodes)
             {
                 int x = 0;
                 SetRootNodesPosition(ref x, ref y, n);
@@ -216,7 +216,7 @@ namespace NodeGraphControl
             var outputLinks = m_Links.Where(f => n.Connectors.Contains(f.Input)).ToList();
             n.X = x;
             n.Y = y;
-            foreach(var link in outputLinks)
+            foreach (var link in outputLinks)
             {
                 x = n.X + 250;
                 var childNode = link.Output.Parent;
@@ -228,11 +228,11 @@ namespace NodeGraphControl
 
         private IEnumerable<NodeGraphNode> GetRootNodes()
         {
-            foreach(var n in m_NodeCollection)
+            foreach (var n in m_NodeCollection)
             {
                 //if (n.Connectors.Where(x => x.Type == ConnectorType.InputConnector).FirstOrDefault() == null)
                 //    yield return n;
-                if(!m_Links.Select((x)=>x.Output.Parent).Contains(n))
+                if (!m_Links.Select((x) => x.Output.Parent).Contains(n))
                 {
                     yield return n;
                 }
@@ -420,14 +420,14 @@ namespace NodeGraphControl
                         int old_y = int.Parse(reader.GetAttribute("Y"));
                         int dx = ParentPanel.ViewSpaceMousePosition.X - old_x;
                         int dy = ParentPanel.ViewSpaceMousePosition.Y - old_y;
-                        ReadTill("SelectedNodes", reader);                        
+                        ReadTill("SelectedNodes", reader);
                         while (TryReadTill("NodeGraphNode", reader))
                         {
                             var type = ReadType(reader);
                             var node = (NodeGraphNode)Activator.CreateInstance(type, reader, this);
                             node.X += dx;
                             node.Y += dy;
-                            if(node is ModuleNode)
+                            if (node is ModuleNode)
                             {
                                 var m = (ModuleNode)node;
                                 m.Descriptor.SetId(PipelineDescriptor.GetNextIndex());
@@ -489,6 +489,109 @@ namespace NodeGraphControl
             throw new ArgumentException("Module with id=" + NodeId + " not found");
         }
 
+        public void AddModule(ModuleDescriptor descriptor)
+        {
+            var node = new ModuleNode(descriptor, this);
+
+            var x = int.MaxValue;
+            var y = int.MaxValue;
+
+            foreach (var m in m_NodeCollection)
+            {
+                if (x > m.X)
+                    x = m.X;
+                if (y > m.Y)
+                    y = m.Y;
+            }
+
+            if (x == int.MaxValue)
+                x = 0;
+            if (y == int.MaxValue)
+                y = 0;
+
+            node.X = x - node.Width - 10;
+            node.Y = y - node.Height - 10;
+            node.UpdateHitRectangle();
+            m_NodeCollection.Add(node);
+
+            descriptor.SetId(PipelineDescriptor.GetNextIndex());
+            PipelineDescriptor.modules.Add(descriptor);
+        }
+
+        public void AddLinkToDescriptorIfNeeded(NodeGraphLink link)
+        {
+            var inputidPort = link.Input.Descriptor.index;
+            var otputidPort = link.Output.Descriptor.index;
+            if (link.Input.Parent is ModuleNode && link.Output.Parent is ModuleNode)
+            {
+                var inputid = ((ModuleNode)link.Input.Parent).Descriptor.GetId();
+                var outputid = ((ModuleNode)link.Output.Parent).Descriptor.GetId();
+
+                var connection = new ConnectionDescriptor
+                {
+                    deepCopy = 1,
+                    asyncMode = 1,
+                    destinationModule = outputid,
+                    sourceModule = inputid,
+                    destinationPort = otputidPort,
+                    sourcePort = inputidPort
+                };
+
+                if (((ModuleNode)link.Input.Parent).Descriptor.connections == null)
+                    ((ModuleNode)link.Input.Parent).Descriptor.connections = new List<ConnectionDescriptor>();
+
+                ((ModuleNode)link.Input.Parent).Descriptor.connections.Add(connection);
+
+                PipelineDescriptor.connections.Add(connection);
+                link.ConnectionDescriptor = connection;
+            }
+        }
+
+        internal void DeleteLinksFromPipeline(List<NodeGraphLink> linksToDelete)
+        {
+            foreach (var link in linksToDelete)
+            {
+                var p_connections = new List<ConnectionDescriptor>();
+                foreach (var connection in PipelineDescriptor.connections)
+                {
+                    if (connection.destinationModule == link.ConnectionDescriptor.destinationModule &&
+                        connection.destinationPort == link.ConnectionDescriptor.destinationPort &&
+                        connection.sourceModule == link.ConnectionDescriptor.sourceModule &&
+                        connection.sourcePort == link.ConnectionDescriptor.sourcePort)
+                    {
+                        p_connections.Add(connection);
+                    }
+                }
+
+                foreach (var c in p_connections)
+                {
+                    PipelineDescriptor.connections.Remove(c);
+                }
+
+
+                foreach (var module in PipelineDescriptor.modules)
+                {
+                    p_connections.Clear();
+
+                    if (module.connections == null)
+                        continue;
+
+                    foreach (var connection in module.connections)
+                        if (connection.destinationModule == link.ConnectionDescriptor.destinationModule &&
+                            connection.destinationPort == link.ConnectionDescriptor.destinationPort &&
+                            connection.sourceModule == link.ConnectionDescriptor.sourceModule &&
+                            connection.sourcePort == link.ConnectionDescriptor.sourcePort)
+                        {
+                            p_connections.Add(connection);
+                        }
+
+                    foreach (var c in p_connections)
+                    {
+                        module.connections.Remove(c);
+                    }
+                }
+            }
+        }
     }
 }
 

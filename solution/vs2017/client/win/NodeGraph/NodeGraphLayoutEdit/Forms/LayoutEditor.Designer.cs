@@ -124,7 +124,11 @@ namespace NodeGraphLayoutEdit
             this.workflowManagmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitWorkflowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listAvailibleModulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.servicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.libraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,9 +151,6 @@ namespace NodeGraphLayoutEdit
             this.termsTrademarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nodeGraphPanel = new NodeGraphControl.NodeGraphPanel();
             this.contextMenuStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -659,7 +660,8 @@ namespace NodeGraphLayoutEdit
             this.commitChangesToolStripMenuItem,
             this.workflowManagmentToolStripMenuItem,
             this.loadSettingsToolStripMenuItem,
-            this.saveSettingsToolStripMenuItem});
+            this.saveSettingsToolStripMenuItem,
+            this.listAvailibleModulesToolStripMenuItem});
             this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
             this.networkToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
             this.networkToolStripMenuItem.Text = "Network";
@@ -702,12 +704,40 @@ namespace NodeGraphLayoutEdit
             this.stopWorkflowToolStripMenuItem.Text = "Stop";
             this.stopWorkflowToolStripMenuItem.Click += new System.EventHandler(this.stopWorkflowToolStripMenuItem_Click);
             // 
+            // restartToolStripMenuItem
+            // 
+            this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
+            this.restartToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.restartToolStripMenuItem.Text = "Restart";
+            this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
+            // 
             // quitWorkflowToolStripMenuItem
             // 
             this.quitWorkflowToolStripMenuItem.Name = "quitWorkflowToolStripMenuItem";
             this.quitWorkflowToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.quitWorkflowToolStripMenuItem.Text = "Quit";
             this.quitWorkflowToolStripMenuItem.Click += new System.EventHandler(this.quitWorkflowToolStripMenuItem_Click);
+            // 
+            // loadSettingsToolStripMenuItem
+            // 
+            this.loadSettingsToolStripMenuItem.Name = "loadSettingsToolStripMenuItem";
+            this.loadSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.loadSettingsToolStripMenuItem.Text = "Load settings";
+            this.loadSettingsToolStripMenuItem.Click += new System.EventHandler(this.loadSettingsToolStripMenuItem_Click);
+            // 
+            // saveSettingsToolStripMenuItem
+            // 
+            this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
+            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.saveSettingsToolStripMenuItem.Text = "Save settings";
+            this.saveSettingsToolStripMenuItem.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
+            // 
+            // listAvailibleModulesToolStripMenuItem
+            // 
+            this.listAvailibleModulesToolStripMenuItem.Name = "listAvailibleModulesToolStripMenuItem";
+            this.listAvailibleModulesToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.listAvailibleModulesToolStripMenuItem.Text = "List availible modules";
+            this.listAvailibleModulesToolStripMenuItem.Click += new System.EventHandler(this.listAvailibleModulesToolStripMenuItem_Click);
             // 
             // servicesToolStripMenuItem
             // 
@@ -894,27 +924,6 @@ namespace NodeGraphLayoutEdit
             this.statusStrip.Text = "statusStrip1";
             this.statusStrip.Visible = false;
             // 
-            // restartToolStripMenuItem
-            // 
-            this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-            this.restartToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
-            this.restartToolStripMenuItem.Text = "Restart";
-            this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
-            // 
-            // loadSettingsToolStripMenuItem
-            // 
-            this.loadSettingsToolStripMenuItem.Name = "loadSettingsToolStripMenuItem";
-            this.loadSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.loadSettingsToolStripMenuItem.Text = "Load settings";
-            this.loadSettingsToolStripMenuItem.Click += new System.EventHandler(this.loadSettingsToolStripMenuItem_Click);
-            // 
-            // saveSettingsToolStripMenuItem
-            // 
-            this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
-            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.saveSettingsToolStripMenuItem.Text = "Save settings";
-            this.saveSettingsToolStripMenuItem.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
-            // 
             // nodeGraphPanel
             // 
             this.nodeGraphPanel.BackColor = System.Drawing.Color.Black;
@@ -975,7 +984,7 @@ namespace NodeGraphLayoutEdit
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "LayoutEditor";
-            this.Text = "CL Studio - Graph Editor";
+            this.Text = "CCV 2.0 Studio - Graph Editor";
             this.contextMenuStrip.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -1086,6 +1095,7 @@ namespace NodeGraphLayoutEdit
         private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem listAvailibleModulesToolStripMenuItem;
     }
 }
 

@@ -1285,6 +1285,7 @@ namespace NodeGraphControl
                 this.View.Links.Remove(i_LinkToDelete);
             }
 
+            this.View.DeleteLinksFromPipeline(v_LinksToDelete);
 
             Refresh();
         }
@@ -1320,17 +1321,19 @@ namespace NodeGraphControl
                 this.m_InputLink != this.m_OutputLink &&
                 this.m_InputLink.Type != this.m_OutputLink.Type)
             {
+                NodeGraphLink link;
                 if (m_InputLink.Type == ConnectorType.OutputConnector)
                 {
                     if (IsLinked(m_OutputLink)) DeleteLinkConnectors(m_OutputLink);
-                    this.View.Links.Add(new NodeGraphLink(m_InputLink, m_OutputLink));
+                    link = new NodeGraphLink(m_InputLink, m_OutputLink);
                 }
                 else
                 {
                     if (IsLinked(m_InputLink)) DeleteLinkConnectors(m_InputLink);
-                    this.View.Links.Add(new NodeGraphLink(m_OutputLink, m_InputLink));
+                    link = new NodeGraphLink(m_OutputLink, m_InputLink);
                 }
-
+                this.View.Links.Add(link);
+                this.View.AddLinkToDescriptorIfNeeded(link);
 
             }
             m_InputLink = null;

@@ -649,5 +649,19 @@ namespace NodeGraphLayoutEdit
                 HandleError(ex);
             }
         }
+
+        private void listAvailibleModulesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var list = NuiState.Instance.GetLoadedModules();
+                var module = DialogsHeleper.AddModules(list);
+                this.nodeGraphPanel.View.AddModule(module);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
     }
 }

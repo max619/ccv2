@@ -94,6 +94,7 @@ private:
 	bool nui_get_pipeline(const Json::Value& root, Json::Value& response);
 	bool nui_get_module(const Json::Value& root, Json::Value& response);
 	bool nui_get_module_properties(const Json::Value& root, Json::Value& response);
+	bool nui_get_availible_modules(const Json::Value& root, Json::Value& response);
 	bool nui_get_connection(const Json::Value& root, Json::Value& response);
 	bool nui_navigate_push(const Json::Value& root, Json::Value& response);
 	bool nui_navigate_pop(const Json::Value& root, Json::Value& response);
