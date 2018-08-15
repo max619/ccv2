@@ -50,6 +50,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(SolutionDir)$(Configuration)\$(CurrentPlatformName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -68,6 +69,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\libs\3rdParty\XgetOpt\;..\..\libs\nuiSystem\inc;..\..\libs\nuiFramework\inc;..\..\libs\nuiModule\inc;..\..\libs\3rdParty\cJSON;..\inc;..\..\libs\3rdParty\ptypes-2.1.1\include;..\..\libs\3rdParty\ptypes-2.1.1\include\WIN32-Code\;..\..\libs\3rdParty\libevent-1.4.13-stable\compat\;..\..\libs\3rdParty\libevent-1.4.13-stable;..\..\libs\3rdParty\libevent-1.4.13-stable\WIN32-Code\;..\..\libs\3rdParty\json-cpp\include;..\..\libs\3rdParty\json-rpc\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
