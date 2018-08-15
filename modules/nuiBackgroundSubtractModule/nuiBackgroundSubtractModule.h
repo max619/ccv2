@@ -29,8 +29,10 @@ public:
 
 	void update();
 	void start();
+	void stop();
 
 private:
+	cv::Mat foreFrame;
 	nuiEndpoint * input;
 	nuiEndpoint* frameOutput;
 	nuiEndpoint* bgOutput;

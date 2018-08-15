@@ -133,7 +133,13 @@ void nuiEndpoint::setData(nuiDataPacket *dataPacket)
 {
 	mtx->lock();
 	if (canBeSettedData(dataPacket))
+	{
+		if (this->dataPacket != NULL)
+		{
+			delete dataPacket;
+		}
 		this->dataPacket = dataPacket;
+	}
 	mtx->unlock();
 }
 

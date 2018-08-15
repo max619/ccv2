@@ -17,6 +17,9 @@ nuiGaussianBlurFilter::nuiGaussianBlurFilter() : nuiModule() {
 	this->setOutputEndpoint(0, this->output);
 
 	this->outputDataPacket = new nuiGaussianBlurFilterDataPacket();
+
+	LinkPropertyAndSetDefaultVal("blur_radius_x", NUI_PROPERTY_INTEGER, blursize.width, 5);
+	LinkPropertyAndSetDefaultVal("blur_radius_y", NUI_PROPERTY_INTEGER, blursize.height, 5);
 }
 
 nuiGaussianBlurFilter::~nuiGaussianBlurFilter() {
@@ -30,21 +33,16 @@ void nuiGaussianBlurFilter::update() {
 	if (packet == NULL) return;
 	packet->unpackData(data);
 	IplImage* frame = (IplImage*)data;
-	filterFrame = cvCloneImage(frame);
-	cv::Mat newFrame = cv::cvarrToMat(filterFrame, true);
-	cv::Mat blur = cv::cvarrToMat(filterFrame);
-	int amount = this->property("amount").asInteger();
-	if (dev) cv::cvtColor(newFrame, blur, CV_BGR2GRAY, 3);
-	if (!this->property("disable").asBool()) cv::GaussianBlur(blur, blur, cv::Size(amount, amount), 4, 4);
-	IplImage* oldImage = new IplImage(blur);
-	this->outputDataPacket->packData(oldImage);
+	cv::Mat newFrame = cv::cvarrToMat(frame);
+	cv::GaussianBlur(newFrame, newFrame, blursize, 4, 4);
+	this->outputDataPacket->packData(frame);
 	this->output->setData(this->outputDataPacket);
 	this->output->transmitData();
 	this->output->unlock();
 	/*newFrame.release();
 	blur.release();*/
-	cvReleaseImage(&filterFrame);
-	nuiReleaseDataPacket(&packet);
+	if (packet->isLocalCopy())
+		delete packet;
 }
 
 void nuiGaussianBlurFilter::start() {

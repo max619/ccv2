@@ -34,6 +34,7 @@ private:
 	nuiDataPacket* outputDataPacket;
 
 	IplImage* filterFrame;
+	CvSize blursize;
 
 	bool dev;
 

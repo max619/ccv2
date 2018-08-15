@@ -190,6 +190,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nuiScreenCalibrationModule"
 		{2D5C91FF-2601-4134-A3E1-3D6A50B9B24C} = {2D5C91FF-2601-4134-A3E1-3D6A50B9B24C}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{B5C0A409-5D9A-4636-B815-04A3BF065255}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nuiTouchInjector", "..\..\utils\nuiTouchInjector\nuiTouchInjector.vcxproj", "{0CBF7430-51F2-41BE-A4CE-DFBA421CDB54}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E1C28E7D-466C-4D0A-AEB1-CFFD0F6F5645} = {E1C28E7D-466C-4D0A-AEB1-CFFD0F6F5645}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -351,6 +358,12 @@ Global
 		{3B7E2342-3416-49E1-AB93-08ACBF536304}.Release|Win32.ActiveCfg = Release|Win32
 		{3B7E2342-3416-49E1-AB93-08ACBF536304}.Release|Win32.Build.0 = Release|Win32
 		{3B7E2342-3416-49E1-AB93-08ACBF536304}.Release|x64.ActiveCfg = Release|Win32
+		{0CBF7430-51F2-41BE-A4CE-DFBA421CDB54}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0CBF7430-51F2-41BE-A4CE-DFBA421CDB54}.Debug|Win32.Build.0 = Debug|Win32
+		{0CBF7430-51F2-41BE-A4CE-DFBA421CDB54}.Debug|x64.ActiveCfg = Debug|Win32
+		{0CBF7430-51F2-41BE-A4CE-DFBA421CDB54}.Release|Win32.ActiveCfg = Release|Win32
+		{0CBF7430-51F2-41BE-A4CE-DFBA421CDB54}.Release|Win32.Build.0 = Release|Win32
+		{0CBF7430-51F2-41BE-A4CE-DFBA421CDB54}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -381,6 +394,7 @@ Global
 		{E1C28E7D-466C-4D0A-AEB1-CFFD0F6F5645} = {2D270F82-ED55-45D4-B96E-3043334BFA36}
 		{325A828F-B2DC-4B4A-832D-558182E5F133} = {6A0C656A-FE97-4C93-961E-5E764EF010EB}
 		{3B7E2342-3416-49E1-AB93-08ACBF536304} = {E54B6C2F-FD72-4266-A610-BF9FC7EFA34E}
+		{0CBF7430-51F2-41BE-A4CE-DFBA421CDB54} = {B5C0A409-5D9A-4636-B815-04A3BF065255}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B652BF8-6B7B-4E44-A90F-B8CCBF039EC7}

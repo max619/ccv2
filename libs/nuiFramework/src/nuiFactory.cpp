@@ -73,8 +73,12 @@ nuiModule* nuiFactory::createPipeline(nuiModuleDescriptor* descriptor)
 	for (int i = 0; i < descriptor->getChildModulesCount(); i++)
 	{
 		nuiModuleDescriptor* childDescriptor = descriptor->getChildModuleDescriptor(i);
-		if (childDescriptor != NULL)
+		nuiModuleLoaded* loadedmodule = nuiPluginManager::getInstance().getLoadedModule(childDescriptor->getName());
+		if (childDescriptor != NULL && loadedmodule != NULL)
 		{
+			nuiModuleDescriptor* loadedmoduleDescriptor = loadedmodule->getDescriptor();
+			childDescriptor->setAuthor(loadedmoduleDescriptor->getAuthor());
+			childDescriptor->setDescription(loadedmoduleDescriptor->getDescription());
 			nuiModule* childModule = create(childDescriptor->getName());
 			if (childModule == NULL)
 				continue;

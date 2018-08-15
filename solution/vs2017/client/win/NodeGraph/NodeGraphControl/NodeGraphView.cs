@@ -218,11 +218,13 @@ namespace NodeGraphControl
             n.Y = y;
             foreach (var link in outputLinks)
             {
-                x = n.X + 250;
+                x = n.X + n.Width + 50;
                 var childNode = link.Output.Parent;
                 SetRootNodesPosition(ref x, ref y, childNode);
-                y += 200;
+                y += n.Height + 25;
             }
+            //y -= n.Height + 25;
+
             n.UpdateHitRectangle();
         }
 

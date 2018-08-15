@@ -203,7 +203,7 @@ void nuiDataStream::sendData(nuiDataPacket *dataPacket)
 {
 	//! \todo may leave method without unlocking mutex. consider using scopelock.
 	mtx->lock();
-
+	bool sent = false;
 	nuiDataPacket *addingData = dataPacket;
 	if (isDeepCopy()) // try to copy datapacket to addingData
 	{
@@ -223,7 +223,7 @@ void nuiDataStream::sendData(nuiDataPacket *dataPacket)
 		semaphore->wait();
 
 		packetData.push(addingData);
-
+		sent = true;
 		if (isOverflow())
 		{
 			void *dataToBeDeleted = packetData.front();
@@ -231,6 +231,7 @@ void nuiDataStream::sendData(nuiDataPacket *dataPacket)
 				free(dataToBeDeleted);
 			packetData.pop();
 			packetData.push(addingData);
+			sent = true;
 
 			semaphore->post(); // release immediately
 		}
@@ -250,6 +251,7 @@ void nuiDataStream::sendData(nuiDataPacket *dataPacket)
 			packetData.pop();
 		}
 		packetData.push(addingData);
+		sent = true;
 		if (isAsyncMode())
 		{
 			if (asyncThread != NULL)
@@ -261,6 +263,7 @@ void nuiDataStream::sendData(nuiDataPacket *dataPacket)
 		if (packetData.empty())
 		{
 			packetData.push(addingData);
+			sent = true;
 			if (isAsyncMode())
 			{
 				if (asyncThread != NULL)
@@ -271,6 +274,9 @@ void nuiDataStream::sendData(nuiDataPacket *dataPacket)
 		}
 	}
 	mtx->unlock();
+
+	if (!sent)
+		delete addingData;
 
 	if (hasDataToSend() && (!isAsyncMode()))
 		processData();
