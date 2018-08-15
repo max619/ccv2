@@ -1,0 +1,9 @@
+version: 2.0.{branch}.{build}
+image: Visual Studio 2017
+configuration: Release
+platform: WIN32
+install:
+- cmd: git submodule update --init --recursive
+build:
+  project: solution\vs2017\nuiCore.sln
+  verbosity: minimal
