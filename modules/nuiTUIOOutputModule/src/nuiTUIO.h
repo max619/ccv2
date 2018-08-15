@@ -4,6 +4,14 @@
 // Author:		Anatoly Lushnikov
 // Copyright:	(c) 2012 NUI Group
 //////////////////////////////////////////////////////////////////////////
+/**
+* \file      nuiTUIOOutputModule.h
+* \author    Maxim Bagryantsev
+* \date      2018
+* \copyright Copyright 2012 NUI Group. All rights reserved.
+* \copyright Copyright 2018 Appollo Pro. All rights reserved.
+*/
+
 
 #ifndef NUI_TUIOOUTPUT_MODULE
 #define NUI_TUIOOUTPUT_MODULE
@@ -17,7 +25,6 @@
 #include <nuiTrackerStructs.h>
 #include <TuioServer.h>
 #include <FlashSender.h>
-#include "BlobTuioPointer.h"
 
 #define BLOB_POINTER_PAIR std::pair<long, TUIO2::TuioPointer*>
 #define BLOB_POINTER_MAP std::map<long, TUIO2::TuioPointer*>

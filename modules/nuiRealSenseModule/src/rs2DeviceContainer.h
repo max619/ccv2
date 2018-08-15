@@ -1,9 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        modules/rs2DeviceContainer.h
-// Purpose:     Example Module to be used for developments.
-// Author:      Maxim Bagryantsev
-// Copyright:   (c) 2018 Appollo Pro
-/////////////////////////////////////////////////////////////////////////////
+/**
+* \file      rs2DeviceContainer.h
+* \author    Maxim Bagryantsev
+* \date      2018
+* \copyright Copyright 2012 NUI Group. All rights reserved.
+* \copyright Copyright 2018 Appollo Pro. All rights reserved.
+*/
 
 #ifndef RS2_DEVICE_CONTAINER
 #define RS2_DEVICE_CONTAINER

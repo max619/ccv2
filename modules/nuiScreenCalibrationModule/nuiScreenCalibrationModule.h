@@ -1,9 +1,10 @@
-//////////////////////////////////////////////////////////////////////////
-// Name:		modules/nuiScreenCalibrationModule
-// Purpose:		Calibrate IplImage\BlobVector to fit screen
-// Author:		Max Bagryantsev
-// Copyright:	(c) 2018 Appollo Pro
-//////////////////////////////////////////////////////////////////////////
+/**
+* \file      nuiScreenCalibrationModule.h
+* \author    Maxim Bagryantsev
+* \date      2018
+* \copyright Copyright 2012 NUI Group. All rights reserved.
+* \copyright Copyright 2018 Appollo Pro. All rights reserved.
+*/
 
 #ifndef NUI_SCREENCALIBRATION_MODULE
 #define NUI_SCREENCALIBRATION_MODULE

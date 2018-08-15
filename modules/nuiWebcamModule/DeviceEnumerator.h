@@ -1,4 +1,13 @@
-#pragma once
+/**
+* \file      DeviceEnumerator.h
+* \author    Maxim Bagryantsev
+* \date      2018
+* \copyright Copyright 2012 NUI Group. All rights reserved.
+* \copyright Copyright 2018 Appollo Pro. All rights reserved.
+*/
+
+#ifndef NUI_DEVICE_ENUMERATOR
+#define NUI_DEVICE_ENUMERATOR
 
 #include <Windows.h>
 #include <dshow.h>
@@ -29,3 +38,5 @@ private:
 	std::string ConvertWCSToMBS(const wchar_t* pstr, long wslen);
 
 };
+
+#endif

@@ -68,21 +68,19 @@
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>MSBuild $(SolutionDir)nuiCore.sln /property:Configuration=$(Configuration) /p:Platform=$(Platform)
 MSBuild  $(SolutionDir)client\win\NodeGraph\NodeGraph.sln /property:Configuration=$(Configuration) /p:Platform="Any CPU"
-xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.pdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.exp"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.lib"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ilk"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.iobj"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ipdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ilk"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.pdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ipdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.iobj"
 
+xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
 xcopy /y /d /e "$(SolutionDir)client\win\NodeGraph\NodeGraphLayoutEdit\bin\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\*.pdb"
+xcopy /y /d /e "$(SolutionDir)..\..\build\utils\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\Utilities\"
+
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.pdb"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.exp"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.lib"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.ilk"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.iobj"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.ipdb"
 del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
+
 "$(SolutionDir)..\..\utils\7z\7z.exe" a -sfx7z.sfx  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group"</NMakeBuildCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -91,21 +89,19 @@ del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>MSBuild $(SolutionDir)nuiCore.sln /property:Configuration=$(Configuration) /p:Platform=$(Platform)
 MSBuild  $(SolutionDir)client\win\NodeGraph\NodeGraph.sln /property:Configuration=$(Configuration) /p:Platform="Any CPU"
-xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.pdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.exp"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.lib"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ilk"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.iobj"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ipdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ilk"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.pdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ipdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.iobj"
 
+xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
 xcopy /y /d /e "$(SolutionDir)client\win\NodeGraph\NodeGraphLayoutEdit\bin\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\*.pdb"
+xcopy /y /d /e "$(SolutionDir)..\..\build\utils\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\Utilities\"
+
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.pdb"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.exp"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.lib"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.ilk"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.iobj"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.ipdb"
 del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
+
 "$(SolutionDir)..\..\utils\7z\7z.exe" a -sfx7z.sfx  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group"</NMakeBuildCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -114,21 +110,19 @@ del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>MSBuild $(SolutionDir)nuiCore.sln /property:Configuration=$(Configuration) /p:Platform=$(Platform)
 MSBuild  $(SolutionDir)client\win\NodeGraph\NodeGraph.sln /property:Configuration=$(Configuration) /p:Platform="Any CPU"
-xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.pdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.exp"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.lib"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ilk"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.iobj"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ipdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ilk"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.pdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ipdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.iobj"
 
+xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
 xcopy /y /d /e "$(SolutionDir)client\win\NodeGraph\NodeGraphLayoutEdit\bin\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\*.pdb"
+xcopy /y /d /e "$(SolutionDir)..\..\build\utils\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\Utilities\"
+
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.pdb"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.exp"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.lib"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.ilk"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.iobj"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.ipdb"
 del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
+
 "$(SolutionDir)..\..\utils\7z\7z.exe" a -sfx7z.sfx  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group"</NMakeBuildCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,21 +131,19 @@ del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
     <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>MSBuild $(SolutionDir)nuiCore.sln /property:Configuration=$(Configuration) /p:Platform=$(Platform)
 MSBuild  $(SolutionDir)client\win\NodeGraph\NodeGraph.sln /property:Configuration=$(Configuration) /p:Platform="Any CPU"
-xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.pdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.exp"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.lib"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ilk"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.iobj"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\modules\*.ipdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ilk"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.pdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.ipdb"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\*.iobj"
 
+xcopy /y /d /e "$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0\"
 xcopy /y /d /e "$(SolutionDir)client\win\NodeGraph\NodeGraphLayoutEdit\bin\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\"
-del "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\CCV 2.0 Studio\*.pdb"
+xcopy /y /d /e "$(SolutionDir)..\..\build\utils\$(Platform)\$(Configuration)" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\Utilities\"
+
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.pdb"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.exp"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.lib"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.ilk"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.iobj"
+del /S "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group\*.ipdb"
 del  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe"
+
 "$(SolutionDir)..\..\utils\7z\7z.exe" a -sfx7z.sfx  "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\setup.exe" "$(SolutionDir)..\..\install\$(Platform)\$(Configuration)\NUI Group"</NMakeBuildCommandLine>
   </PropertyGroup>
   <ItemDefinitionGroup>

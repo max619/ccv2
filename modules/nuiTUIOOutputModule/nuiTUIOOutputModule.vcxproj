@@ -11,11 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BlobTuioPointer.cpp" />
     <ClCompile Include="src\nuiTUIO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\BlobTuioPointer.h" />
     <ClInclude Include="src\nuiTUIO.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals" />

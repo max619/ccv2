@@ -6,9 +6,12 @@
  * WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  * 
  * \author    Scott Halstvedt
- * \date      2011-2013
- * \copyright Copyright 2011 NUI Group. All rights reserved.
+ * \author    Maxim Bagryantsev
+ * \date      2012-2018
+ * \copyright Copyright 2012 NUI Group. All rights reserved.
+ * \copyright Copyright 2018 Appollo Pro. All rights reserved.
  */
+
 
 #ifndef NUI_PROPERTY_H
 #define NUI_PROPERTY_H

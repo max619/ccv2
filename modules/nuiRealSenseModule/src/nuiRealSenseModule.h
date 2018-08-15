@@ -1,10 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        modules/nuiRealSenseModule.h
-// Purpose:     Intel Realsense cameras IO module.
-// Author:      Maxim Bagryantsev
-// Copyright:   (c) 2018 Appollo Pro
-/////////////////////////////////////////////////////////////////////////////
-
+/**
+* \file      nuiRealSenseModule.h
+* \author    Maxim Bagryantsev
+* \date      2018
+* \copyright Copyright 2012 NUI Group. All rights reserved.
+* \copyright Copyright 2018 Appollo Pro. All rights reserved.
+*/
 
 #ifndef NUI_REALSENSE_MODULE_H
 #define NUI_REALSENSE_MODULE_H

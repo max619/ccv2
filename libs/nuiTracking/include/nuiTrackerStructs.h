@@ -13,7 +13,7 @@ nui##modulename##DataPacket::nui##modulename##DataPacket() : nuiDataPacket()\
 \
 nui##modulename##DataPacket::~nui##modulename##DataPacket()\
 {\
-	if (data != NULL && isLocalCopy())\
+	if (data != NULL)\
 	{\
 		BlobVector* vec = (BlobVector*)data;\
 		releaseBlobVector(vec);\

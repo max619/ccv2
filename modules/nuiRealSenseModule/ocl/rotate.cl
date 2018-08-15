@@ -1,3 +1,11 @@
+/**
+* \file      rotate.cl
+* \author    Maxim Bagryantsev
+* \date      2018
+* \copyright Copyright 2012 NUI Group. All rights reserved.
+* \copyright Copyright 2018 Appollo Pro. All rights reserved.
+*/
+
 constant sampler_t smplr = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP | CLK_FILTER_NEAREST;
 
 __kernel void rotateWorld(float4 quat, read_only image2d_t imageA, write_only image2d_t imageC)

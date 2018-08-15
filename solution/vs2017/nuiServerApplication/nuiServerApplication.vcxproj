@@ -63,6 +63,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <TargetName>ccv_server</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>$(SolutionDir)..\..\build\libs\$(PlatformName)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <TargetName>ccv_server</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -92,8 +97,8 @@
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>xcopy /e /y "$(SolutionDir)..\..\data" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
-xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*d.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
-xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc10\tbb.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+xcopy /i /e /d /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*d.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
+xcopy /i /e /d /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc10\tbb.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
     </PreBuildEvent>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -129,8 +134,8 @@ xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc1
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>xcopy /e /y "$(SolutionDir)..\..\data" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
-xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*1.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
-xcopy /d /i /e /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc10\tbb.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
+xcopy /i /e /d /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\x86\vc10\bin\*341.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"
+xcopy /i /e /d /y "$(SolutionDir)\..\..\libs\3rdParty\opencv\common\tbb\ia32\vc10\tbb.dll" "$(SolutionDir)..\..\build\bin\$(PlatformName)\$(Configuration)\"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

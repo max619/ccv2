@@ -2,8 +2,10 @@
  * \file      nuiPS3Module.h
  *            Capture video from PS3 camera using PS3Eye SDK from Code Laboratories
  * \author    Anatoly Lushnikov
- * \date      2012-2013
+ * \author    Maxim Bagryantsev
+ * \date      2012-2018
  * \copyright Copyright 2012 NUI Group. All rights reserved.
+ * \copyright Copyright 2018 Appollo Pro. All rights reserved.
  */
 
  //! \todo : Singleton?

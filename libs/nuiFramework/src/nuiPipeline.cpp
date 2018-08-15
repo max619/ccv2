@@ -3,8 +3,10 @@
  * \author    Anatoly Churikov
  * \author    Anatoly Lushnikov
  * \author    Scott Halstvedt
- * \date      2012-2013
+ * \author    Maxim Bagryantsev
+ * \date      2012-2018
  * \copyright Copyright 2012 NUI Group. All rights reserved.
+ * \copyright Copyright 2018 Appollo Pro. All rights reserved.
  */
 
 #include "nuiPipeline.h"

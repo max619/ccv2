@@ -9,8 +9,10 @@
  * \author    Scott Halstvedt
  * \author    Anatoly Lushnikov
  * \author    Anatoly Churikov
- * \date      2012-2013
- * \copyright Copyright 2011 NUI Group. All rights reserved.
+ * \author    Maxim Bagryantsev
+ * \date      2012-2018
+ * \copyright Copyright 2012 NUI Group. All rights reserved.
+ * \copyright Copyright 2018 Appollo Pro. All rights reserved.
  */
 
 #include "nuiFactory.h"

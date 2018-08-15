@@ -21,7 +21,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\nuiBenchmark.cpp" />
-    <ClCompile Include="..\..\src\nuiDataPacket.cpp" />
     <ClCompile Include="..\..\src\nuiDataStream.cpp" />
     <ClCompile Include="..\..\src\nuiEndpoint.cpp" />
     <ClCompile Include="..\..\src\nuiModule.cpp" />

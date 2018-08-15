@@ -1,9 +1,11 @@
-//////////////////////////////////////////////////////////////////////////
-// Name:		modules/nuiTUIOOutputModule
-// Purpose:		Output TUIO
-// Author:		Anatoly Lushnikov
-// Copyright:	(c) 2012 NUI Group
-//////////////////////////////////////////////////////////////////////////
+/**
+* \file      nuiTUIOOutputModule.cpp
+* \author    Maxim Bagryantsev
+* \date      2018
+* \copyright Copyright 2012 NUI Group. All rights reserved.
+* \copyright Copyright 2018 Appollo Pro. All rights reserved.
+*/
+
 
 //#include "ofxNCore.h"
 #include "nuiTUIO.h"
@@ -49,9 +51,7 @@ void nuiTUIOOutputModule::update()
 void nuiTUIOOutputModule::start()
 {
 	if (this->hasProperty("host") && this->hasProperty("port"))
-	{/*
-		host = (char*)();
-		port = ;*/
+	{
 		server = new TUIO2::TuioServer(this->property("host").asString().c_str(), this->property("port").asInteger());
 	}
 	else
