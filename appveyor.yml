@@ -4,6 +4,16 @@ configuration: Release
 platform: WIN32
 install:
 - cmd: git submodule update --init --recursive
-build:
-  project: solution\vs2017\nuiCore.sln
-  verbosity: minimal
+build_script:
+- cmd: >-
+    cd solution\vs2017\
+
+    MSBuild nuiCore.sln /property:Configuration=Release /p:Platform=Win32
+
+test_script:
+- cmd: >-
+    cd ..\..\
+    
+    vstest.console build\tests\Win32\Release\nuiSystemTests.dll
+
+    vstest.console build\tests\Win32\Release\nuiModuleTests.dll
