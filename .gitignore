@@ -119,7 +119,6 @@ Desktop.ini
 *.egg
 *.egg-info
 dist
-bin
 eggs
 parts
 var
