@@ -14,6 +14,7 @@
 
 
 #include "nuiProperty.h"
+#include "..\inc\nuiProperty.h"
 
 #define CASTEDGET(x) x value = *(static_cast<x*>(val));
 
@@ -361,7 +362,6 @@ nuiProperty::nuiProperty(nuiPointList value, const std::string &description) {
 }
 
 void nuiProperty::init(const std::string &description) {
-	this->is_text = false;
 	this->readonly = false;
 	this->val = NULL;
 	this->val_min = 0;
@@ -423,6 +423,20 @@ void nuiProperty::set(nuiPointList value, bool trigger) {
 		return;
 	AUTOCONVERT(NUI_PROPERTY_POINTLIST, value);
 	if (trigger)this->fireCallback();
+}
+
+nuiLinkedProperty * nuiProperty::linkProperty(std::string name, int type, void * data, const std::string &description)
+{
+	nuiLinkedProperty* linkedProp = new nuiLinkedProperty();
+	linkedProp->type = type;
+	linkedProp->prop = data;
+	linkedProp->name = (char*)malloc(sizeof(char) * (name.size() + 1));
+	std::copy(name.begin(), name.end(), linkedProp->name);
+	linkedProp->name[name.size()] = '\0';
+	this->setDescription(description);
+	this->addCallback(__execLinkedPropertyCallback, linkedProp);
+
+	return linkedProp;
 }
 
 nuiProperty::~nuiProperty() {
@@ -594,12 +608,8 @@ void nuiProperty::fireCallback() {
 		it->first(this, it->second);
 }
 
-void nuiProperty::setText(bool is_text) {
-	this->is_text = is_text;
-}
-
 bool nuiProperty::isText() {
-	return this->is_text;
+	return type == NUI_PROPERTY_STRING;
 }
 
 nuiLinkedProperty::nuiLinkedProperty()

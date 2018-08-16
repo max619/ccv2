@@ -465,22 +465,17 @@ void nuiModule::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedP
 
 void nuiModule::linkProperty(std::string & name, int type, void * data, std::string& description)
 {
-	nuiLinkedProperty* linkedProp = new nuiLinkedProperty();
-	linkedProp->type = type;
-	linkedProp->prop = data; 
-	linkedProp->name = (char*)malloc(sizeof(char) * (name.size() + 1));
-	std::copy(name.begin(), name.end(), linkedProp->name);
-	linkedProp->name[name.size()] = '\0';
-	linkedProp->needCallback = true;
-	linkedProp->propUpdtCallback = __execPropertyUpdatedCallback;
-	linkedProp->userData = this;
 	if (!hasProperty(name))
 		properties[name] = new nuiProperty((nuiPropertyType)type, description);
 	nuiProperty& prop = property(name);
-	prop.setDescription(description);
-	linkedProperties[&prop] = linkedProp;
-	prop.addCallback(__execLinkedPropertyCallback, linkedProp);
+
+	nuiLinkedProperty* linkedProp = prop.linkProperty(name, type, data, description);
 	
+	linkedProp->propUpdtCallback = __execPropertyUpdatedCallback;
+	linkedProp->needCallback = true;
+	linkedProp->userData = this;
+	
+	linkedProperties[&prop] = linkedProp;	
 }
 
 void nuiModule::readLinkedProperties()

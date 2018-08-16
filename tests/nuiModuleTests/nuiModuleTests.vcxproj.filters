@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="TestClasses">
+      <UniqueIdentifier>{084df80d-7270-4c6f-ae78-76caba7ab4ee}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="nuiInputTestClass.cpp">
+      <Filter>TestClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="nuiIntDataPacket.cpp">
+      <Filter>TestClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="nuiOutputTestClass.cpp">
+      <Filter>TestClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="testModule.cpp">
+      <Filter>TestClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="nuiModuleTestOscillator.cpp" />
+    <ClCompile Include="nuiModuleTests.cpp" />
+    <ClCompile Include="nuiDataStreamTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nuiInputTestClass.h">
+      <Filter>TestClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="nuiIntDataPacket.h">
+      <Filter>TestClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="nuiOutputTestClass.h">
+      <Filter>TestClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="testModule.h">
+      <Filter>TestClasses</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

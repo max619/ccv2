@@ -104,6 +104,8 @@ public:
 	void set(float value, bool trigger = true);
     void set(nuiPointList value, bool trigger = true);
 
+	nuiLinkedProperty* linkProperty(std::string name, int type, void * data, const std::string &description = "");
+
     bool haveMin();
     bool haveMax();
     bool haveChoices();
@@ -114,7 +116,6 @@ public:
     void setMax(int val);
     void setChoices(const std::string &val);
 
-    void setText(bool is_text);
     bool isText();
 
     void addCallback(nuiPropertyCallback callback, void *userdata);
@@ -134,7 +135,6 @@ private:
     bool have_min;
     bool have_max;
     bool have_choices;
-    bool is_text;
     int val_min;
     int val_max;
     std::string val_choices;

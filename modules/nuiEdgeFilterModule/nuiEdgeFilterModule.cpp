@@ -53,7 +53,7 @@ void nuiEdgeFilterModule::update() {
 
 	if (packet->isLocalCopy())
 	{
-		nuiReleaseDataPacket(&packet);
+		delete packet;
 	}
 }
 
