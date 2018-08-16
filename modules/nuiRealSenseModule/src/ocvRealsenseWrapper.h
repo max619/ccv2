@@ -75,7 +75,7 @@ private:
 	IplImage* procres;
 	CvPoint2D32f* dstscreenpoints;
 	CvMat* perspectiveTransformMatrix;
-	bool isPlaneInit;
+	bool isPlaneInit, algorythmInited;
 	std::mutex mtx;
 	int pipeIndex;
 	

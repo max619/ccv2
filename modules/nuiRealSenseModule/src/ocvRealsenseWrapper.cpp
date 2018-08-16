@@ -15,12 +15,12 @@ ocvRealsenseWrapper::ocvRealsenseWrapper()
 	_img = NULL;
 	procres = NULL;
 	opened = false;
+	algorythmInited = false;
 	ctx.set_devices_changed_callback([&](rs2::event_information& info)
 	{
 		container.updateDevices(info);
 	});
 
-	nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
 
 	processor = new oclRSWorldProcessor();	
 
@@ -36,10 +36,7 @@ ocvRealsenseWrapper::ocvRealsenseWrapper()
 	rs2::context ctx;
 	container.initDevices(ctx);
 
-	if (factory.isOpenClSupported())
-	{
-		factory.initProgram(processor);
-	}
+	
 	mtx.unlock();
 }
 
@@ -89,6 +86,16 @@ bool ocvRealsenseWrapper::open(int index)
 		depth_scale = _depth_sensor.get_depth_scale();
 		depth_sensor = _depth_sensor;
 		opened = true;
+
+		if (!algorythmInited)
+		{
+			nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
+			if (factory.isOpenClSupported())
+			{
+				factory.initProgram(processor);
+			}
+			algorythmInited = true;
+		}
 	}
 	catch (_exception& ex)
 	{

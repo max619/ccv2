@@ -28,9 +28,6 @@
             "path": "modules\\nuiHighpassFilter.dll"
         },
         {
-            "path": "modules\\nuiPS3Module.dll"
-        },
-        {
             "path": "modules\\nuiVideoFileSource.dll"
         },
         {
