@@ -21,6 +21,7 @@
     <ClCompile Include="nuiModuleTestOscillator.cpp" />
     <ClCompile Include="nuiModuleTests.cpp" />
     <ClCompile Include="nuiDataStreamTest.cpp" />
+    <ClCompile Include="..\nuiSystemTests\nuiThreadTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nuiInputTestClass.h">

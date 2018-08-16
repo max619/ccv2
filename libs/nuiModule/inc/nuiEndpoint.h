@@ -15,7 +15,12 @@
 #include <vector>
 #include <map>
 
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
 #include "pasync.h"
+
+#endif
 #include "nuiUtils.h"
 #include "nuiThread.h"
 #include "nuiDataStream.h"

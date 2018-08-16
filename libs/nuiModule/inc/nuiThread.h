@@ -20,7 +20,13 @@
 #ifndef NUI_THREAD_H
 #define NUI_THREAD_H
 
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
 #include "pasync.h"
+
+#endif
+
 
 class nuiThread;
 

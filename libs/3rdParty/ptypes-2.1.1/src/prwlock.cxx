@@ -15,7 +15,12 @@
 #  include <pthread.h>
 #endif
 
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
 #include "pasync.h"
+
+#endif
 
 
 PTYPES_BEGIN

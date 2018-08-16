@@ -23,7 +23,12 @@
 #include <fstream>
 
 #include "nuiProperty.h"
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
 #include "pasync.h"
+
+#endif
 #include "nuiTimer.h"
 #include "nuiThread.h"
 #include "nuiEndpoint.h"

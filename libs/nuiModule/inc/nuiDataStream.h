@@ -14,7 +14,15 @@
 #include <string>
 #include <vector>
 #include <queue>
+
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
 #include "pasync.h"
+
+#endif
+
+
 #include "nuiThread.h"
 #include "nuiDataPacket.h"
 

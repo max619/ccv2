@@ -13,7 +13,6 @@
   <ItemGroup>
     <ClInclude Include="..\inc\nuiDebugLogger.h" />
     <ClInclude Include="..\inc\nuiProperty.h" />
-    <ClInclude Include="..\inc\nuiThread.h" />
     <ClInclude Include="..\inc\nuiTimer.h" />
     <ClInclude Include="..\inc\nuiTree.h" />
     <ClInclude Include="..\inc\nuiUtils.h" />
@@ -21,7 +20,6 @@
   <ItemGroup>
     <ClCompile Include="..\src\nuiDebugLogger.cpp" />
     <ClCompile Include="..\src\nuiProperty.cpp" />
-    <ClCompile Include="..\src\nuiThread.cpp" />
     <ClCompile Include="..\src\nuiTimer.cpp" />
     <ClCompile Include="..\src\nuiUtils.cpp" />
   </ItemGroup>

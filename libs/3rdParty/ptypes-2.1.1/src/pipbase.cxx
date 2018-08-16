@@ -27,7 +27,12 @@
 
 #include "pinet.h"
 #ifndef PTYPES_ST
-#  include "pasync.h"   // for mutex
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
+#include "pasync.h"
+
+#endif  // for mutex
 #endif
 
 

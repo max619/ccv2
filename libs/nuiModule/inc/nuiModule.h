@@ -15,11 +15,17 @@
 #define ALLOW_BENCHMARKING
 #endif // _DEBUG
 
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
+#include "pasync.h"
+
+#endif
+
 
 #include <string>
 #include <map>
 #include "nuiProperty.h"
-#include "pasync.h"
 
 #include "nuiTimer.h"
 #include "nuiThread.h"

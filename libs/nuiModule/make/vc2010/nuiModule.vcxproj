@@ -18,6 +18,7 @@
     <ClInclude Include="..\..\inc\nuiModule.h" />
     <ClInclude Include="..\..\inc\nuiPlugin.h" />
     <ClInclude Include="..\..\inc\nuiPreview.h" />
+    <ClInclude Include="..\..\inc\nuiThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\nuiBenchmark.cpp" />
@@ -25,6 +26,7 @@
     <ClCompile Include="..\..\src\nuiEndpoint.cpp" />
     <ClCompile Include="..\..\src\nuiModule.cpp" />
     <ClCompile Include="..\..\src\nuiPreview.cpp" />
+    <ClCompile Include="..\..\src\nuiThread.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{70A18341-3B6E-460D-B9A6-4F583D786C69}</ProjectGuid>

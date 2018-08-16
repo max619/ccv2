@@ -20,7 +20,12 @@
 #include "ptime.h"      // for dttotm()
 
 #ifndef PTYPES_ST
-#include "pasync.h"     // for mutex locking in logfile::vputf()
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
+#include "pasync.h"
+
+#endif    // for mutex locking in logfile::vputf()
 #endif
 
 

@@ -22,7 +22,12 @@
 
 #ifndef PTYPES_ST
 #  ifndef __PASYNC_H__
-#    include "pasync.h"  // for logfile.lock
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
+#include "pasync.h"
+
+#endif // for logfile.lock
 #  endif
 #endif
 

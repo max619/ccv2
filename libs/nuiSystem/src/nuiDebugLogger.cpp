@@ -14,7 +14,12 @@
 #include <stdlib.h>
 
 #include "nuiDebugLogger.h"
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
 #include "pasync.h"
+
+#endif
 
 #ifndef WIN32
 #include <syslog.h>

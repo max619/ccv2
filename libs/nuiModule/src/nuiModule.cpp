@@ -15,7 +15,12 @@
 #include <errno.h>
 #include <string.h>
 
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
 #include "pasync.h"
+
+#endif
 #include "nuiModule.h"
 #include "nuiDataStream.h"
 #include "nuiEndpoint.h"

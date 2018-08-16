@@ -10,7 +10,12 @@
  */
 
 #include "ptypes.h"
+#ifndef PT_PASYNC
+#define PT_PASYNC
+
 #include "pasync.h"
+
+#endif
 #include "pstreams.h"
 
 #ifdef WIN32

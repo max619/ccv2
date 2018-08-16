@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\nuiSystemTests\nuiThreadTests.cpp" />
     <ClCompile Include="nuiDataStreamTest.cpp" />
     <ClCompile Include="nuiInputTestClass.cpp" />
     <ClCompile Include="nuiIntDataPacket.cpp" />
