@@ -36,7 +36,7 @@ void nuiDebugVideoSink::update()
 #endif
 	this->input->lock();
 	void* data = NULL;
-	nuiDataPacket* packet = this->input->getData(); 
+	nuiDataPacket* packet = this->input->getData();
 	if (packet == NULL)
 	{
 		this->input->unlock();
@@ -48,8 +48,8 @@ void nuiDebugVideoSink::update()
 		this->input->unlock();
 		return;
 	}
-	
-	if (strcmp( packet->getDataPacketType(), "IplImage") == 0)
+
+	if (strcmp(packet->getDataPacketType(), "IplImage") == 0)
 	{
 		IplImage* frame = (IplImage*)data;
 		if (dispFrame == NULL)
@@ -59,7 +59,7 @@ void nuiDebugVideoSink::update()
 		else
 			cvCopy(frame, dispFrame);
 	}
-	else if(strcmp(packet->getDataPacketType(), "BlobVector") == 0)
+	else if (strcmp(packet->getDataPacketType(), "BlobVector") == 0)
 	{
 		BlobVector* blobs = (BlobVector*)data;
 
@@ -68,19 +68,11 @@ void nuiDebugVideoSink::update()
 
 		ZeroMemory(dispFrame->imageDataOrigin, dispFrame->height*dispFrame->width * sizeof(unsigned char));
 
-
-		for (size_t i =0; i<blobs->updatedBlobSize; i++)
+		std::map<int, Blob*> Blobs = blobs->getBlobs();
+		for (std::map<int, Blob*>::iterator it = Blobs.begin(); it != Blobs.end(); it++)
 		{
-			Blob& blob = *(blobs->updatedBlob[i]);
-			char str[11];
-			char area[50];
-			int number = blob.id;
-			sprintf(str, "%d", number);
-			sprintf(area, "R: %f", blob.keyPoint.response);
-			CvSize size = CvSize((int)blob.keyPoint.size, (int)blob.keyPoint.size);
-			cvEllipse(dispFrame, cvPoint(blob.keyPoint.pt.x, blob.keyPoint.pt.y), size, 0, 0, 360, cvScalar(255), CV_FILLED, CV_AA);
-			cvPutText(dispFrame, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y - 15), &font, cvScalar(128));
-			cvPutText(dispFrame, area, cvPoint(blob.keyPoint.pt.x, blob.keyPoint.pt.y), &font, cvScalar(128));
+			Blob& blob = *it->second;
+			drawBlob(blob, dispFrame);
 		}
 	}
 	if (dispFrame != NULL)
@@ -94,7 +86,7 @@ void nuiDebugVideoSink::update()
 		cvWaitKey(1);
 	}
 
-	if(packet->isLocalCopy())
+	if (packet->isLocalCopy())
 		delete packet;
 	this->input->unlock();
 #ifdef ALLOW_BENCHMARKING	
@@ -105,15 +97,15 @@ void nuiDebugVideoSink::update()
 
 void nuiDebugVideoSink::start()
 {
-	
+
 	nuiModule::start();
-	
+
 	LOG(NUI_DEBUG, "starting video sink");
 }
 
 void nuiDebugVideoSink::stop()
 {
-	
+
 	nuiModule::stop();
 }
 
@@ -137,6 +129,44 @@ void nuiDebugVideoSink::onExitThread()
 		wndInit = false;
 		cvWaitKey(50);
 	}
+}
+
+void nuiDebugVideoSink::drawBlob(Blob & blob, IplImage * img)
+{
+	char str[150];
+	char area[50];
+	int number = blob.id;
+	sprintf(str, "%d", number);
+	sprintf(area, "R: %f", blob.keyPoint.response);
+	CvSize size = CvSize((int)blob.keyPoint.size, (int)blob.keyPoint.size);
+	cvEllipse(img, cvPoint(blob.keyPoint.pt.x, blob.keyPoint.pt.y), size, 0, 0, 360, cvScalar(255), CV_FILLED, CV_AA);
+	cvPutText(img, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y - 15), &font, cvScalar(128));
+	cvPutText(img, area, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y), &font, cvScalar(128));
+
+	sprintf(str, "CRE: %d", blob.createdAt);
+	cvPutText(img, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y + 15), &font, cvScalar(128));
+
+	sprintf(str, "UPD: %d", blob.lastUpdatedAt);
+	cvPutText(img, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y + 30), &font, cvScalar(128));
+
+	sprintf(str, "RM: %d", blob.removedAt);
+	cvPutText(img, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y + 45), &font, cvScalar(128));
+	switch (blob.state)
+	{
+	case NUI_BLOB_STATE_UNKNOWN: sprintf(str, "NUI_BLOB_STATE_UNKNOWN"); break;
+	case NUI_BLOB_STATE_PRE_CREATED: sprintf(str, "NUI_BLOB_STATE_PRE_CREATED"); break;
+	case NUI_BLOB_STATE_CREATED: sprintf(str, "NUI_BLOB_STATE_CREATED"); break;
+	case NUI_BLOB_STATE_UPDATED: sprintf(str, "NUI_BLOB_STATE_UPDATED"); break;
+	case NUI_BLOB_STATE_PRE_REMOVED: sprintf(str, "NUI_BLOB_STATE_PRE_REMOVED"); break;
+	case NUI_BLOB_STATE_REMOVED: sprintf(str, "NUI_BLOB_STATE_REMOVED"); break;
+	}
+	cvPutText(img, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y + 60), &font, cvScalar(128));
+
+	sprintf(str, "VEL: %f; x: %f; y:%f", blob.velocity, blob.vel.x, blob.vel.y);
+	cvPutText(img, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y + 75), &font, cvScalar(128));
+
+	sprintf(str, "AVG VEL: %f; x: %f; y:%f", blob.avgVelocity, blob.avel.x, blob.avel.y);
+	cvPutText(img, str, cvPoint(blob.keyPoint.pt.x - 15, blob.keyPoint.pt.y + 90), &font, cvScalar(128));
 }
 
 void nuiDebugVideoSink::propertyUpdated(std::string& name, nuiProperty* prop, nuiLinkedProperty* linkedProp, void* userdata)

@@ -41,6 +41,7 @@ protected:
 	void onExitThread();
 
 private:
+	void drawBlob(Blob& b, IplImage* img);
 	nuiEndpoint * input;
 
 	CvFont font;

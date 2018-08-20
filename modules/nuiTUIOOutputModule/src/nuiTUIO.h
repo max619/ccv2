@@ -42,7 +42,7 @@ public:
 protected:
 private:
 	nuiEndpoint * _pInput;
-
+	bool hostStarted;
 	// TUIO broadcast params
 	char*			host;
 	int				port;

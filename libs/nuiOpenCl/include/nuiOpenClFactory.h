@@ -44,6 +44,7 @@ private:
 	int SetupOpenCL(ocl_container * ocl, cl_device_type deviceType);
 	int CreateAndBuildProgram(ocl_container * ocl, const char* program);
 	int CreateAndBuildProgramFromFile(ocl_container * ocl, const char * path);
+	void EnumPlatformNames(std::vector<cl_platform_id>& platforms);
 
 
 };

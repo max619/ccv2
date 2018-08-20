@@ -19,11 +19,16 @@ public:
 	~blobTracker();
 	BlobVector* trackBlobs(std::vector<Blob>& input);
 	void setMaxDistance(float val);
+	int blobLive, minblobLive;
+	float easeCoeff;
+	bool applyEasingFunction;
 private:
 	bool isFirstFrameArrived;
-	std::vector<Blob> prevBlobs;
+	BlobVector* prevBlobs;
 	long idCounter;
 	float maxDist, maxDistSq;
+	int frame;
+	CvPoint2D32f applyEaseFunction(CvPoint2D32f new_pt, CvPoint2D32f old_pt, float coeff);
 
 };
 

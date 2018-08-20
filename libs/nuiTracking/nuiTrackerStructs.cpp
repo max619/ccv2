@@ -8,81 +8,140 @@
 
 #include "nuiTrackerStructs.h"
 
-BlobVector* vecToArr(std::vector<Blob> vec)
+//BlobVector* vecToArr(std::vector<Blob> vec)
+//{
+//	return vecToArr(vec, vec.size());
+//}
+//
+//BlobVector * vecToArr(std::vector<Blob> vec, size_t capacity)
+//{
+//	BlobVector* res = new BlobVector(capacity);
+//	memcpy_s(res->blobs, sizeof(Blob) * vec.size(), vec.data(), sizeof(Blob) * vec.size());
+//	res->size = vec.size();
+//	return res;
+//}
+
+
+BlobVector::BlobVector()
 {
-	return vecToArr(vec, vec.size());
+	
 }
 
-BlobVector * vecToArr(std::vector<Blob> vec, size_t capacity)
+BlobVector::~BlobVector()
 {
-	BlobVector* res = new BlobVector(capacity);
-	memcpy_s(res->blobs, sizeof(Blob) * vec.size(), vec.data(), sizeof(Blob) * vec.size());
-	res->size = vec.size();
+	for (std::map<int, Blob*>::iterator it = blobs.begin(); it != blobs.end(); it++)
+	{
+		delete it->second;
+	}
+}
+
+void BlobVector::addBlob(Blob* b)
+{
+	blobs.emplace(b->id, b);
+}
+
+Blob * BlobVector::getBlob(int id)
+{
+	std::map<int, Blob*>::iterator it = blobs.find(id);
+	return it != blobs.end() ? it->second : NULL;
+}
+
+std::vector<Blob*> BlobVector::getNewBlobs()
+{
+	return getBlobByState(NUI_BLOB_STATE_CREATED);
+}
+
+std::vector<Blob*> BlobVector::getUpdatedBlobs()
+{
+	return getBlobByState(NUI_BLOB_STATE_UPDATED);
+}
+
+std::vector<Blob*> BlobVector::getRemovedBlobs()
+{
+	return getBlobByState(NUI_BLOB_STATE_REMOVED);
+}
+
+std::vector<Blob*> BlobVector::getBlobByState(const BlobState state)
+{
+	std::vector<Blob*> res = std::vector<Blob*>();
+	for (std::map<int, Blob*>::iterator it = blobs.begin(); it != blobs.end(); it++)
+	{
+		if (it->second->state == state)
+			res.push_back(it->second);
+	}
 	return res;
 }
 
-void releaseBlobVector(BlobVector *& b)
+std::map<int, Blob*>& BlobVector::getBlobs()
 {
-	free(b->blobs);
-	free(b->newBlobs);
-	free(b->removedBlobs);
-	free(b->updatedBlob);
-	delete b;
-	b = NULL;
+	return blobs;
 }
 
-BlobVector* cloneBlobVector(BlobVector* vec)
+void BlobVector::removeBlob(Blob * b)
 {
-	BlobVector* res = new BlobVector(vec->size);
-	if (vec->size != 0)
-	{
-		memcpy_s(res->blobs, sizeof(Blob) * vec->size, vec->blobs, sizeof(Blob) * vec->size);
-	}
-	res->size = vec->size;
-	res->newBlobsSize = vec->newBlobsSize;
-	res->removedBlobsSize = vec->removedBlobsSize;
-	res->updatedBlobSize = vec->updatedBlobSize;
-	res->targetResolution = vec->targetResolution;
+	blobs.erase(b->id);
+}
+
+BlobVector * BlobVector::clone()
+{
+	BlobVector* res = new BlobVector();
 	
-
-	for (size_t i = 0; i < res->newBlobsSize; i++)
+	for (std::map<int, Blob*>::iterator it = this->blobs.begin(); it != this->blobs.end(); it++)
 	{
-		res->newBlobs[i] = reinterpret_cast<Blob*>((size_t)res->blobs +  (size_t)vec->newBlobs[i] - (size_t)vec->blobs);
-	}
-	for (size_t i = 0; i < res->removedBlobsSize; i++)
-	{
-		res->removedBlobs[i] = reinterpret_cast<Blob*>((size_t)res->blobs +  (size_t)vec->removedBlobs[i] - (size_t)vec->blobs );
-	}
-	for (size_t i = 0; i < res->updatedBlobSize; i++)
-	{
-		res->updatedBlob[i] = reinterpret_cast<Blob*>((size_t)res->blobs + (size_t)vec->updatedBlob[i] - (size_t)vec->blobs);
+		Blob* b = it->second;
+		if (b != NULL)
+		{
+			res->addBlob(b->clone());
+		}
 	}
 
-
+	res->frame = this->frame;
+	res->targetResolution = this->targetResolution;
 	return res;
 }
 
-BlobVector::BlobVector(size_t cap)
+Blob * BlobVector::findClosestBlob(Blob* b, float maxDist)
 {
-	if (cap > 0)
+	float min = 99999999.f;
+	Blob* rb = NULL;
+	for (std::map<int, Blob*>::iterator it = blobs.begin(); it != blobs.end(); it++)
 	{
-		blobs = (Blob*)malloc(sizeof(Blob)*cap);
-		newBlobs = (Blob**)malloc(sizeof(void*)*cap);
-		removedBlobs = (Blob**)malloc(sizeof(void*)*cap);
-		updatedBlob = (Blob**)malloc(sizeof(void*)*cap);
-	}
-	else
-	{
-		blobs = NULL;
-		newBlobs = NULL;
-		removedBlobs = NULL;
-		updatedBlob = NULL;
+		Blob* _b = it->second;
+		CvPoint p = _b->keyPoint.pt - b->keyPoint.pt;
+		float sqDist = p.x * p.x + p.y * p.y;
+		if (sqDist < maxDist && sqDist < min)
+		{
+			min = sqDist;
+			rb = _b;
+		}
 	}
 
-	
-	capacity = cap;
-	updatedBlobSize = 0;
-	newBlobsSize = 0;
-	removedBlobsSize = 0;
-	size = 0;
+	return rb;
+}
+
+int BlobVector::getFrame()
+{
+	return frame;
+}
+
+void BlobVector::setFrame(int frame)
+{
+	this->frame = frame;
+}
+
+clock_t BlobVector::getTime()
+{
+	return time;
+}
+
+void BlobVector::setTime(clock_t t)
+{
+	this->time = t;
+}
+
+Blob * Blob::clone()
+{
+	Blob* b = (Blob*)malloc(sizeof(Blob));
+	memcpy_s(b, sizeof(Blob), this, sizeof(Blob));
+	return b;
 }

@@ -71,27 +71,37 @@ void nuiScreenCalibrationModule::update()
 		this->_pOutput0->lock();
 		this->_pOutput0->clear();
 		IplImage* img = cvCloneImage((IplImage*)data);
-		cvWarpPerspective(img, img, homography);
+		IplImage* res = cvCreateImage(destsize, IPL_DEPTH_8U, img->nChannels);
+		cvWarpPerspective(img, res, homography);
 
-		this->_pOutputDataPacket1->packData(img);
+		this->_pOutputDataPacket1->packData(res);
 		this->_pOutput0->setData(_pOutputDataPacket1);
 		this->_pOutput0->transmitData();
 		this->_pOutput0->unlock();
 
 		cvReleaseImage(&img);
+		cvReleaseImage(&res);
 	}
 	else if (strcmp(packet->getDataPacketType(), "BlobVector") == 0)
 	{
 		this->_pOutput0->lock();
 		this->_pOutput0->clear();
-		BlobVector* vec = cloneBlobVector((BlobVector*)data);
-		float* hmat = reinterpret_cast<float*>(homography->data.fl);
-		for (size_t i = 0; i < vec->size; i++)
+		BlobVector* vec = ((BlobVector*)data)->clone();
+		float* hmat = homography->data.fl;
+		std::map<int, Blob*>& Blobs = vec->getBlobs();
+		for (std::map<int, Blob*>::iterator it = Blobs.begin(); it != Blobs.end(); it++)
 		{
-			Blob& b = vec->blobs[i];
-			b.keyPoint.pt.x = hmat[0] * b.keyPoint.pt.x + hmat[1] * b.keyPoint.pt.y + hmat[2];
-			b.keyPoint.pt.y = hmat[3] * b.keyPoint.pt.x + hmat[4] * b.keyPoint.pt.y + hmat[5];
-			vec->blobs[i] = b;
+			Blob* b = it->second;
+			float newx = hmat[0] * b->keyPoint.pt.x + hmat[1] * b->keyPoint.pt.y + hmat[2];
+			float newy = hmat[3] * b->keyPoint.pt.x + hmat[4] * b->keyPoint.pt.y + hmat[5];
+			float check = hmat[6] * b->keyPoint.pt.x + hmat[7] * b->keyPoint.pt.y + hmat[8];
+			float mul = 1.f / check;
+			newx = newx * mul;
+			newy = newy * mul;
+			check = check * mul;
+			//assert(check == 1.);
+			b->keyPoint.pt.x = newx;
+			b->keyPoint.pt.y = newy;
 		}
 		vec->targetResolution.height = destsize.height;
 		vec->targetResolution.width = destsize.width;
@@ -101,7 +111,7 @@ void nuiScreenCalibrationModule::update()
 		this->_pOutput0->transmitData();
 		this->_pOutput0->unlock();
 
-		releaseBlobVector(vec);
+		delete vec;
 	}
 
 	if (packet->isLocalCopy())
@@ -112,7 +122,12 @@ void nuiScreenCalibrationModule::update()
 void nuiScreenCalibrationModule::start()
 {
 	cvGetPerspectiveTransform(screenpoints, dstpoints, homography);
-
+	float* hmat = homography->data.fl;
+	char mat[500];
+	sprintf(mat, "0: %f; 1: %f; 2: %f; 3: %f; 4: %f; 5: %f; 6: %f; 7: %f; 8: %f;",
+		hmat[0], hmat[1], hmat[2], hmat[3], hmat[4],
+		hmat[5], hmat[6], hmat[7], hmat[8]);
+	std::cout << mat << std::endl;
 	nuiModule::start();
 }
 

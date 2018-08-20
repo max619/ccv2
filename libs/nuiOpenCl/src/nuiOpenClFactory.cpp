@@ -129,6 +129,8 @@ cl_platform_id nuiOpenClFactory::FindOpenCLPlatform(const char* preferredPlatfor
 		return NULL;
 	}
 
+	EnumPlatformNames(platforms);
+
 	// Check if one of the available platform matches the preferred requirements
 	for (cl_uint i = 0; i < numPlatforms; i++)
 	{
@@ -415,5 +417,41 @@ Finally:
 	}
 
 	return err;
+}
+
+void nuiOpenClFactory::EnumPlatformNames(std::vector<cl_platform_id>& platforms)
+{
+	for (std::vector<cl_platform_id>::iterator it = platforms.begin(); it < platforms.end(); it++)
+	{
+		cl_platform_id platform = *it;
+		size_t stringLength = 0;
+		cl_int err = CL_SUCCESS;
+		bool match = false;
+
+		// In order to read the platform's name, we first read the platform's name string length (param_value is NULL).
+		// The value returned in stringLength
+		err = clGetPlatformInfo(platform, CL_PLATFORM_NAME, 0, NULL, &stringLength);
+		if (CL_SUCCESS != err)
+		{
+			LogError("Error: clGetPlatformInfo() to get CL_PLATFORM_NAME length returned '%s'.\n", TranslateOpenCLError(err));
+			continue;
+		}
+
+		// Now, that we know the platform's name string length, we can allocate enough space before read it
+		char* name = new char[stringLength + 1];
+
+		// Read the platform's name string
+		// The read value returned in platformName
+		err = clGetPlatformInfo(platform, CL_PLATFORM_NAME, stringLength, name, NULL);
+		if (CL_SUCCESS != err)
+		{
+			LogError("Error: clGetplatform_ids() to get CL_PLATFORM_NAME returned %s.\n", TranslateOpenCLError(err));
+			continue;
+		}
+
+		name[stringLength] = '\0';
+
+		std::cout << "Found platform: " << name << std::endl;
+	}
 }
 

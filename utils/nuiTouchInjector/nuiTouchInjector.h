@@ -31,6 +31,7 @@ public:
 
 	void run();
 private: 
+	UINT32 pointerId;
 	TuioClient * tuioClient;
 	OscReceiver* receiver;
 	bool running;

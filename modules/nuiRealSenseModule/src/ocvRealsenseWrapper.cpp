@@ -61,6 +61,16 @@ bool ocvRealsenseWrapper::open(int index)
 	mtx.lock();
 	try
 	{
+		if (!algorythmInited)
+		{
+			nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
+			if (factory.isOpenClSupported())
+			{
+				factory.initProgram(processor);
+			}
+			algorythmInited = true;
+		}
+
 		pipe = container.getPipeline(index, frameSize.width, frameSize.height, fps);
 		pipeIndex = index;
 						
@@ -85,17 +95,7 @@ bool ocvRealsenseWrapper::open(int index)
 		}
 		depth_scale = _depth_sensor.get_depth_scale();
 		depth_sensor = _depth_sensor;
-		opened = true;
-
-		if (!algorythmInited)
-		{
-			nuiOpenClFactory& factory = nuiOpenClFactory::getInstance();
-			if (factory.isOpenClSupported())
-			{
-				factory.initProgram(processor);
-			}
-			algorythmInited = true;
-		}
+		opened = true;	
 	}
 	catch (_exception& ex)
 	{

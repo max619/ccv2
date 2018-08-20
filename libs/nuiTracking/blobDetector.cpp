@@ -46,6 +46,12 @@ std::vector<Blob> blobDetector::detectBlobs(cv::Mat img)
 		b.id = -1;
 		b.keyPoint = *it;
 		blobs.push_back(b);
+		b.avgVelocity = 0;
+		b.velocity = 0;
+		b.avel.x = 0;
+		b.avel.y = 0;
+		b.vel.x = 0;
+		b.vel.y = 0;
 	}
 
 	return blobs;

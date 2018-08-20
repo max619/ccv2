@@ -14,6 +14,9 @@ blobTracker::blobTracker()
 {
 	isFirstFrameArrived = false;
 	idCounter = 0;
+	frame = 0;
+	applyEasingFunction = false;
+	easeCoeff = 1.f;
 }
 
 
@@ -23,94 +26,151 @@ blobTracker::~blobTracker()
 
 BlobVector* blobTracker::trackBlobs(std::vector<Blob>& input)
 {
+	clock_t curTime = clock();
+
 	if (!isFirstFrameArrived)
 	{
-		BlobVector* vector = vecToArr(input);
+		BlobVector* vector = new BlobVector();
 		size_t i = 0;
 		for (std::vector<Blob>::iterator it = input.begin(); it < input.end(); it++)
 		{
 			(*it).id = idCounter;
-			idCounter++; 
-			vector->newBlobs[i] = &(vector->blobs[i]);
-			vector->newBlobsSize += 1;
-			i++;
+			(*it).createdAt = frame;
+			(*it).state = NUI_BLOB_STATE_PRE_CREATED;
+			vector->addBlob((*it).clone());
+			idCounter++;
 		}
-
-		prevBlobs = input;
+		vector->setTime(curTime);
+		prevBlobs = vector;
 		isFirstFrameArrived = true;
-		
-		return vector;
+		return vector->clone();
+	}
 
-	}	
-
-	BlobVector* vector = vecToArr(input, input.size() + prevBlobs.size());
-	std::vector<int> referenced;
-	for (size_t i = 0; i < prevBlobs.size(); i++)
-		referenced.push_back(0);
-	size_t i = 0;
+	std::vector<Blob> newBlobs;
 	for (std::vector<Blob>::iterator it = input.begin(); it < input.end(); it++)
 	{
-		float dist = 10000.f;
-		std::vector<Blob>::iterator min;
-		size_t j = 0, dst = -1;
-		for (std::vector<Blob>::iterator pit = prevBlobs.begin(); pit < prevBlobs.end(); pit++)
+		Blob* parentBlob = prevBlobs->findClosestBlob(&(*it), maxDistSq);
+		if (parentBlob != NULL && frame - parentBlob->createdAt > minblobLive)
 		{
-			cv::Point2f prevpt = (*pit).keyPoint.pt;
-			cv::Point2f newpt = (*it).keyPoint.pt;
-
-			cv::Point2f dstVec = newpt - prevpt;
-			float sqdist = dstVec.x * dstVec.x + dstVec.y * dstVec.y;
-
-			if (sqdist < maxDistSq && sqdist < dist)
+			if (parentBlob->lastUpdatedAt == frame)
+				continue;
+			parentBlob->lastUpdatedAt = frame;
+			if (parentBlob->state == NUI_BLOB_STATE_PRE_CREATED)
 			{
-				dist = sqdist;
-				min = pit;
-				dst = j;
+				parentBlob->state = NUI_BLOB_STATE_CREATED;
+				parentBlob->avel.x = 0;
+				parentBlob->avel.y = 0;
+				parentBlob->vel.x = 0;
+				parentBlob->vel.y = 0;
+				parentBlob->avgVelocity = 0;
+				parentBlob->velocity = 0;
 			}
-			j++;
+			else if (parentBlob->state != NUI_BLOB_STATE_REMOVED)
+				parentBlob->state = NUI_BLOB_STATE_UPDATED;
+			CvPoint2D32f oldpt = parentBlob->keyPoint.pt;
+			parentBlob->keyPoint = (*it).keyPoint;
+			if (applyEasingFunction)
+				parentBlob->keyPoint.pt = applyEaseFunction((*it).keyPoint.pt, oldpt, easeCoeff);
+			float dx = parentBlob->keyPoint.pt.x - oldpt.x;
+			float dy = parentBlob->keyPoint.pt.y - oldpt.y;
+			float t = ((curTime - prevBlobs->getTime()) / 1000.f);
+			float v = sqrtf(dx * dx + dy * dy) / t;
+			float vx = dx / t;
+			float vy = dy / t;
+			parentBlob->avel.x = (parentBlob->avel.x + vx) / 2;
+			parentBlob->avel.y = (parentBlob->avel.y + vy) / 2;
+			parentBlob->vel.x = vx;
+			parentBlob->vel.y = vy;
+			parentBlob->avgVelocity = (parentBlob->avgVelocity + v) / 2;
+			parentBlob->velocity = v;
 		}
-
-		if (dist != 10000.f)
+		else if (parentBlob == NULL)
 		{
-			(*it).id = (*min).id;
-			vector->blobs[i] = (*it);
-			vector->updatedBlob[vector->updatedBlobSize] = &(vector->blobs[i]);
-			vector->updatedBlobSize += 1;
+			newBlobs.push_back(*it);
 		}
-		else
-		{
-			(*it).id = idCounter;
-			vector->blobs[i] = (*it);
-			vector->newBlobs[vector->newBlobsSize] = &(vector->blobs[i]);
-			vector->newBlobsSize += 1;
-			idCounter++;
-		}		
-		if (dst != -1)
-		{
-			referenced.at(dst) += 1;
-		}
-		i++;
 	}
-	
-	for (size_t i = 0; i < referenced.size(); i++)
+
+	for (std::vector<Blob>::iterator it = newBlobs.begin(); it < newBlobs.end(); it++)
 	{
-		int refs = referenced.at(i);
-		if (refs == 0)
+		(*it).createdAt = frame;
+		(*it).state = NUI_BLOB_STATE_PRE_CREATED;
+		(*it).id = idCounter;
+		idCounter++;
+		prevBlobs->addBlob((*it).clone());
+	}
+
+	std::vector<Blob*> blobs = prevBlobs->getBlobByState(NUI_BLOB_STATE_PRE_CREATED);
+	for (std::vector<Blob*>::iterator it = blobs.begin(); it < blobs.end(); it++)
+	{
+		if (frame - (*it)->createdAt > minblobLive)
 		{
-			vector->blobs[vector->size] = prevBlobs.at(i);
-			vector->removedBlobs[vector->removedBlobsSize] = &(vector->blobs[vector->size]);
-			vector->removedBlobsSize += 1;
-			vector->size += 1;
+			prevBlobs->removeBlob((*it));
+			delete (*it);
 		}
 	}
 
-	prevBlobs = input;
+	blobs = prevBlobs->getBlobByState(NUI_BLOB_STATE_CREATED);
+	for (std::vector<Blob*>::iterator it = blobs.begin(); it < blobs.end(); it++)
+	{
+		if (frame - (*it)->lastUpdatedAt > blobLive)
+		{
+			(*it)->state = NUI_BLOB_STATE_PRE_REMOVED;
+			(*it)->removedAt = frame;
+		}
+	}
 
-	return vector;
+	blobs = prevBlobs->getBlobByState(NUI_BLOB_STATE_UPDATED);
+	for (std::vector<Blob*>::iterator it = blobs.begin(); it < blobs.end(); it++)
+	{
+		if (frame - (*it)->lastUpdatedAt > blobLive)
+		{
+			(*it)->state = NUI_BLOB_STATE_PRE_REMOVED;
+			(*it)->removedAt = frame;
+		}
+	}
+
+	blobs = prevBlobs->getBlobByState(NUI_BLOB_STATE_REMOVED);
+	for (std::vector<Blob*>::iterator it = blobs.begin(); it < blobs.end(); it++)
+	{
+		if (frame - (*it)->removedAt > blobLive)
+		{
+			prevBlobs->removeBlob((*it));
+			delete (*it);
+		}
+	}
+
+	blobs = prevBlobs->getBlobByState(NUI_BLOB_STATE_PRE_REMOVED);
+	for (std::vector<Blob*>::iterator it = blobs.begin(); it < blobs.end(); it++)
+	{
+		if (frame - (*it)->removedAt > blobLive)
+		{
+			(*it)->state = NUI_BLOB_STATE_REMOVED;
+		}
+	}
+
+
+	frame++;
+	prevBlobs->setFrame(frame);
+	prevBlobs->setTime(curTime);
+	return prevBlobs->clone();
 }
 
 void blobTracker::setMaxDistance(float val)
 {
 	maxDist = val;
 	maxDistSq = val * val;
+}
+
+CvPoint2D32f blobTracker::applyEaseFunction(CvPoint2D32f new_pt, CvPoint2D32f old_pt, float coeff)
+{
+	float dx = new_pt.x - old_pt.x;
+	float dy = new_pt.y - old_pt.y;
+
+	float d = dx * dx + dy * dy;
+
+	float xc = 1 / (coeff * d);
+	dx = dx * (1 - (xc > 1 ? 1 : xc));
+	dy = dy * (1 - (xc > 1 ? 1 : xc));
+
+	return CvPoint2D32f(old_pt.x + dx, old_pt.y + dy);
 }

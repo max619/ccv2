@@ -17,6 +17,7 @@
 
 nuiTouchInjector::nuiTouchInjector(int port)
 {
+	pointerId = 0;
 	this->settings = NULL;
 	this->receiver = new UdpReceiver(port);
 	this->tuioClient = new TuioClient(receiver);
@@ -102,6 +103,7 @@ void nuiTouchInjector::addTouchPoint(TuioPointer * pointer)
 		return;
 
 	POINTER_TOUCH_INFO* touch = fromTuioPointer(pointer);
+	touch->pointerInfo.pointerFlags = POINTER_FLAG_DOWN | POINTER_FLAG_INRANGE | POINTER_FLAG_INCONTACT;
 
 	BOOL success = InjectTouchInput(1, touch);
 	if (success)
@@ -123,6 +125,8 @@ void nuiTouchInjector::updateTouchPoint(TuioPointer * pointer)
 		{
 			
 			POINTER_TOUCH_INFO* touch = fromTuioPointer(pointer);
+
+			touch->pointerInfo.pointerFlags = POINTER_FLAG_DOWN | POINTER_FLAG_INRANGE | POINTER_FLAG_INCONTACT;
 			BOOL success = InjectTouchInput(1, touch);
 			if (success)
 				this->touchPoints[pointer->getPointerID()] = touch;
@@ -172,7 +176,7 @@ void nuiTouchInjector::removeTouchPoint(TuioPointer * pointer)
 	touchPoints.erase(it);
 	free(ptr);
 
-	std::cout << "tracked points " << touchPoints.size() << std::endl;
+	//std::cout << "tracked points " << touchPoints.size() << std::endl;
 }
 
 POINTER_TOUCH_INFO * nuiTouchInjector::fromTuioPointer(TuioPointer * pointer)
@@ -182,9 +186,9 @@ POINTER_TOUCH_INFO * nuiTouchInjector::fromTuioPointer(TuioPointer * pointer)
 
 	touch->pointerInfo.pointerType = PT_TOUCH; //we're sending touch input
 	touch->pointerInfo.pointerId = pointer->getPointerID();          //contact 0
+	//pointerId++;
 	touch->pointerInfo.ptPixelLocation.x = static_cast<LONG>(pointer->getPosition().getX() * settings->getScreenWidth() + settings->getXOffset());
 	touch->pointerInfo.ptPixelLocation.y = static_cast<LONG>(pointer->getPosition().getY() * settings->getScreenHeight() + settings->getYOffset());
-	touch->pointerInfo.pointerFlags = POINTER_FLAG_DOWN | POINTER_FLAG_INRANGE | POINTER_FLAG_INCONTACT;
 	touch->touchFlags = TOUCH_FLAG_NONE;
 	touch->touchMask = TOUCH_MASK_CONTACTAREA | TOUCH_MASK_ORIENTATION | TOUCH_MASK_PRESSURE;
 	touch->orientation = 90;

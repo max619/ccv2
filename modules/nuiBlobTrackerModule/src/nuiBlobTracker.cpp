@@ -51,6 +51,11 @@ nuiBlobTrackerModule::nuiBlobTrackerModule() : nuiModule()
 	LinkPropertyAndSetDefaultVal("thresholdStep", NUI_PROPERTY_FLOAT, p.thresholdStep, 10.f);
 	
 	LinkPropertyAndSetDefaultVal("maxDistance", NUI_PROPERTY_FLOAT, maxdist, 20.f);
+
+	LinkPropertyAndSetDefaultVal("blob_life", NUI_PROPERTY_INTEGER, bTracker->blobLive, 5);
+	LinkPropertyAndSetDefaultVal("min_blob_life", NUI_PROPERTY_INTEGER, bTracker->minblobLive, 3);
+	LinkPropertyAndSetDefaultVal("apply_ease_func", NUI_PROPERTY_BOOL, bTracker->applyEasingFunction, true);
+	LinkPropertyAndSetDefaultVal("ease_func_coeff", NUI_PROPERTY_FLOAT, bTracker->beginCoeff, 0.01f);
 	p.minRepeatability = 2;
 	bDetector = new blobDetector(p);
 
@@ -92,7 +97,7 @@ void nuiBlobTrackerModule::update()
 	if (packet->isLocalCopy())
 		delete packet;
 
-	releaseBlobVector(trackedblobsPtr);
+	delete trackedblobsPtr;
 
 #ifdef ALLOW_BENCHMARKING	
 	benchmark.stopBenchmarking("nuiBlobTrackerModule::update blob detecting");
